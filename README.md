@@ -1,1 +1,1 @@
-# BioSim_G18_H-vard_Olav
+# BioSim_G18_Haavard_Olav
