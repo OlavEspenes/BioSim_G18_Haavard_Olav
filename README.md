@@ -5,7 +5,4 @@
 # dette går til helvete
 # hubbabubbalubbubb
 # hei bb
-# Ser hvordan det går nå.
-
-# if olav == goat
-# retunr true
+# dette går unna
