@@ -7,3 +7,4 @@ __author__ = ""
 __email__ = ""
 
 class Fauna:
+    def __init__(self, age, ):
