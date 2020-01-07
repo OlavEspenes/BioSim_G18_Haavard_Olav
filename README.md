@@ -5,3 +5,11 @@
 # dette går til helvete
 # hubbabubbalubbubb
 # hei bb
+
+
+
+
+
+
+# if olav == goat
+# retunr true
