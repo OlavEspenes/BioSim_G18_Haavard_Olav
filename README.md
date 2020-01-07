@@ -14,3 +14,6 @@
 #
 #
 # Mange nye megaspennende endringer. Hurra.
+
+# Jobba på nu olafus
+# dette kan gå med kniven på strupen
