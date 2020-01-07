@@ -4,3 +4,4 @@
 # Nå lager vi en konflikt nr 2.
 # dette går til helvete
 # hubbabubba
+# hei bb
