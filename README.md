@@ -17,3 +17,5 @@
 
 # Jobba på nu olafus
 # dette kan gå med kniven på strupen
+# Tror du virkelig det BB?
+# Fortsatt en dag på å melde seg av :))
