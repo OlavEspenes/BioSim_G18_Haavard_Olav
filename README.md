@@ -3,4 +3,4 @@
 # Test 07.01.2020
 # Nå lager vi en konflikt nr 2.
 # dette går til helvete
-# liten tvil om det.
+# liten tvil om det. o boii
