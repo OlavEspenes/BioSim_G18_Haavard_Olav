@@ -2,11 +2,14 @@
 
 class Landscape:
 
-    def __init__(self, type_biom, population, fodder, location):
-        self.type_biom = type_biom
+    def __init__(self, terrain):
+        # if tests
+
+        self.terrain = terrain
 
 
-
+    def map_terrain(self):
+        list_terrain = [[i for i in j] for j in self.terrain.split()]
 
 
 
