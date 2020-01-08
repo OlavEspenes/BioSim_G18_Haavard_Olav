@@ -7,4 +7,29 @@ __author__ = ""
 __email__ = ""
 
 class Fauna:
-    def __init__(self, age, ):
+
+    #@classmethod
+
+    para_dic =
+    def __init__(self, ):
+
+    #def plant_growing
+
+    def age(self):
+
+    def weight(self):
+
+    def fitness(self):
+
+    def migration(self):
+
+    def death(self):
+
+
+
+
+class Herbivore(Fauna):
+    para_dic =
+
+class Carnivore(Fauna):
+    para_dic = 
