@@ -58,9 +58,9 @@ class Herbivores:
             self.weight = weight
 
         self.fitness = None
-        self.update_fitness()
+        self.fitness_update()
 
-    def update_fitness(self):
+    def fitness_update(self):
         """
 
         :param self:
@@ -70,17 +70,29 @@ class Herbivores:
                          *(self.age - self.parameters['a_half'])))
         q_minus = (1 + e^(-self.parameters['phi_weight']
                           *(self.weight - self.parameters['w_half'])))
-        
+
+        self.fitness = q_plus*q_minus
+
+    def feeding(self):
+        """
+
+        :param self:
+        :return:
+        """
+
+        current_food = landscape_location.food() # Use attribute from landscape.
+        appetite = self.parameters['F']
+        if appetite <= current_food:
+            self.weight = self.weight + parameters['beta']*appetite
+            landscape_lcation.food() = 
+        elif 0 < current_food < appetite:
+            self.weight = self.weight + parameters['beta']*current_food
 
 
+        else
+            pass
 
 
-
-
-
-
-
-def __init__(self, age, weight):
 
 
 
