@@ -30,6 +30,12 @@ def set_parameters(cls, choose_parameters):
 
 
 
+def __init__(self, age, weight):
+
+
+
+
+
 
 
 if __name__=="__main__":
