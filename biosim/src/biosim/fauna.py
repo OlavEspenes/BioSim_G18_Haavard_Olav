@@ -36,4 +36,4 @@ class Herbivore(Fauna):
     para_dic =
 
 class Carnivore(Fauna):
-    para_dic = 
+    para_dic =
