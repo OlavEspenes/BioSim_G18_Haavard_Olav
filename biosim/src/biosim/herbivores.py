@@ -6,6 +6,9 @@
 __author__ = ""
 __email__ = ""
 
+import math
+import copy
+
 class Herbivores:
     default_h_parameters = {'w_birth': 8.0,
                             'sigma_birth': 4.0,
@@ -22,19 +25,54 @@ class Herbivores:
                             'xi': 1.2,
                             'omega': 0.4,
                             'F': 10.0}
-    h_parameters = copy.deepcopy(default_h_parameters)
+    parameters = copy.deepcopy(default_h_parameters)
 
 
-@classmethod
-def set_parameters(cls, choose_parameters):
+    @classmethod
+    def set_parameters(cls, choose_parameters):
     """
     :param cls:
     :param choose_parameters:
     :return:
     """
-    for key in choose_parameters:
-        if key in cls.h_parameters:
-            if key is
+        for key in choose_parameters:
+            if key in cls.parameters:
+                if key is
+
+
+    def __init__(self, age, weight):
+        """
+
+        :param self:
+        :param age:
+        :param weight:
+        :return:
+        """
+        if age < 0:
+            raise ValueError("Input value 'age' must be non-negative")
+        else:
+            self.age = age
+        if weight <= 0:
+            raise ValueError("Input value 'weight' must be positive")
+        else:
+            self.weight = weight
+
+        self.fitness = None
+        self.update_fitness()
+
+    def update_fitness(self):
+        """
+
+        :param self:
+        :return:
+        """
+        q_plus = (1 + e^(self.parameters['phi_age']
+                         *(self.age - self.parameters['a_half'])))
+        q_minus = (1 + e^(-self.parameters['phi_weight']
+                          *(self.weight - self.parameters['w_half'])))
+        
+
+
 
 
 
