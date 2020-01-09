@@ -27,6 +27,7 @@ class Landscape:
             nested[i] = list(e)
 
         self.cells = np.array(nested)
+
     """
     def assign_tile(self):
         self.kart = []
