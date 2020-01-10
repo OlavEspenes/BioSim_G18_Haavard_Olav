@@ -8,7 +8,7 @@ class Cell:
 
     def feeding_herbi(self):
         pass
-    
+
     def feeding_carni(self):
         pass
 
@@ -21,7 +21,7 @@ class Jungle(Cell):
     def __init__(self):
 
     def f_jungle(self):
-
+        pass
 
 class Ocean(Cell):
     def __init__(self):
