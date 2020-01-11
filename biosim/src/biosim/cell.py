@@ -24,9 +24,15 @@ class Cell:
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
                 self.weight = self.weight + h_parameters['beta'] * appetite
+                #function that reduces food in cell
+                #update fitness
                 landscape_location.food() =
             elif 0 < current_food < appetite:
                 self.weight = self.weight + parameters['beta'] * current_food
+                # function that reduces food in cell
+                # update fitness
+
+
 
     def feeding_carni(self):
         """Kills with a probability p.
