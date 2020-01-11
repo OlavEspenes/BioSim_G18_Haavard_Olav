@@ -11,34 +11,35 @@ class Landscape:
         self.cells = None
         self.herbivores_on_island = None
 
-    def array_map(self):
+    def string_to_matrix(self):
         """string made to nested list"""
         temp = copy.deepcopy(self.island.replace(" ", ""))
         list_map = [[i for i in j] for j in temp.split()]
-        array_map = np.array(list_map)
-        return array_map
+        return list_map
 
+    """
     def array_cont(self):
-        arrayed_map = self.array_map()
-        array_shape = np.shape(arrayed_map)
+        listed_map = self.string_to_matrix()
+        array_shape = np.shape(listed_map)
 
         nested = list(np.zeros(array_shape))
         for i, e in enumerate(nested):
             nested[i] = list(e)
 
         self.cells = np.array(nested)
-
     """
+
     def assign_tile(self):
         self.kart = []
-        for i, e in enumerate(self.array_map()):
+        for i, e in enumerate(self.string_to_matrix()):
             for j, n in enumerate(e):
                 if n is 'O':
                     self.kart.append(Ocean(i+1, j+1))
                 elif n is 'J':
                     self.kart.append(Jungle(i+1, j+1))
         return self.kart
-    """
+
+
     def fodder_added(self):
         pass
 

@@ -7,9 +7,8 @@ if __name__ == "__main__":
     OJO
     OOO""")
     olafius.array_map()
-    #kart = olafius.assign_tile()
-    #print(kart)
-    #print(kart[4].fodder)
-    #print()
-    olafius.array_cont()
-    print(nested)
+    kart = olafius.assign_tile()
+    print(kart)
+    print(kart[4].fodder)
+    print()
+
