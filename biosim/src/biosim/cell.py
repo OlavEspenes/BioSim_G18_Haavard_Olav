@@ -1,5 +1,5 @@
 
-
+import random
 class Cell:
 
     def __init__(self, herbi, carni, fodder, h_parameters, c_parameters):
@@ -42,14 +42,23 @@ class Cell:
         pass
 
 
-    def procreation(self):
+    def procreation(self):#kanskje? input liste? eller enkeltdyr?
         """Animals procreate by a certain probability.
         probability 0: w < c(w-birth + o-birth)
         Mother loose weight. Too much and no kiddie.
         """
-        pass
-
-
+        for animal in self.herbi:
+            weight = self.h_parameters['w_birth'] + np.random.normal() * \
+                     self.h_parameters['sigma_birth']
+            p = self.h_parameters('gamma') * self.herbi[animal].get('fitness')\
+                * (len(self.herbi) - 1)
+            if p > random.random() and self.h_parameters['omega']\
+                    > self.h_parameters['zeta'] * weight:
+                #add animal with age 0 and weight
+                self.herbi.append({'species':'Carnivore', 'age':0,
+                                   'weight':weight})
+            else:
+                #no animal and nothing happens
 
 class Jungle(Cell):
     def __init__(self):
