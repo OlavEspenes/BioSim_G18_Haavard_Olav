@@ -58,7 +58,13 @@ class BioSim:
         else
             raise ValueError("'species' must be Herbivores or Carnivores")
 
+        herbi_parameters = Landscape()
+        herbi_parameters.set_parameters_herbi(herbi_para)
 
+        corni_parameters = Landscape()
+        corni_parameters.set_parameters_corni(corni_para)
+        # Definerer valgte parametre for herbivores og carnivores før videre
+        # simulation.
 
 
 

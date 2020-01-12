@@ -1,17 +1,32 @@
 
 import random
+
+
 class Cell:
 
     def __init__(self, herbi, carni, fodder, herbi_parameters, carni_parameters):
-        self.herbi = []            # Liste med herbivores i gitt rute sortert etter fitness.
-        self.carni = []            # Liste med carnivores i gitt rute sortert etter fitness.
-        " Hvordan skal skal fitness kobles til riktig herbi/carni?
+
+
+        self.herbi = sorted(herbi, key=itemgetter('fitness'), reverse = True)
+            # Liste med herbivores med dictionary med egenskapene age, weight og fitness
+            # i gitt rute sortert etter fitness.
+
+        self.carni = sorted(carni, key=itemgetter('fitness'), reverse = True)
+            # Samme liste med dictionary for cornivores.
+        """
+        "Eksempel:
+    
+        self.herbi = [{'age': 10, 'fitness': 30, 'weight': 15},
+                        {'age': 5, 'fitness': 25, 'weight': 40},
+                        {'age': 15, 'fitness': 20, 'weight': 25}]
+        self.carni = [{'age': 3, 'fitness': 40, 'weight': 35},
+                        {'age': 5, 'fitness': 35, 'weight': 20},
+                        {'age': 8, 'fitness': 30, 'weight': 5}]
+        """
 
         self.fodder = None         # Hvor mye Fodder som er tilgjengelig i gitt rute.
         self.h_parameters = {}     # Parameters for herbivores.
         self.c_parameters = {}     # Parameters for carnivores.
-        self.h_weight = []         # Tom liste som fylles med weight for herbivores.
-        self.c_weight = []         # Tom liste som fylles med weight for carnivores.
 
         self.update_fitness()
         "Hvor skal update fitness plasseres?"
@@ -23,7 +38,7 @@ class Cell:
         for animal in self.herbi:
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
-                self.weight = self.weight + h_parameters['beta'] * appetite
+                self.herbi[] = self.weight + h_parameters['beta'] * appetite
                 #function that reduces food in cell
                 #update fitness
                 landscape_location.food() =
