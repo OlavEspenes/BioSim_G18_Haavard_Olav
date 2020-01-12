@@ -2,7 +2,7 @@
 import random
 class Cell:
 
-    def __init__(self, herbi, carni, fodder, h_parameters, c_parameters):
+    def __init__(self, herbi, carni, fodder, herbi_parameters, carni_parameters):
         self.herbi = []            # Liste med herbivores i gitt rute sortert etter fitness.
         self.carni = []            # Liste med carnivores i gitt rute sortert etter fitness.
         " Hvordan skal skal fitness kobles til riktig herbi/carni?

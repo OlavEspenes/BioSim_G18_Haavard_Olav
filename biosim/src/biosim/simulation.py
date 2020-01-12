@@ -51,6 +51,16 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
+        if species == 'Herbivores':
+            herbi_para = params
+        elif species == 'Carnivores':
+            carni_para = params
+        else
+            raise ValueError("'species' must be Herbivores or Carnivores")
+
+
+
+
 
     def set_landscape_parameters(self, landscape, params):
         """
