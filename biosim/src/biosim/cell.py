@@ -43,7 +43,9 @@ class Cell:
 
 
     def procreation(self):
-        """Animals procreate by a probability.
+        """Animals procreate by a certain probability.
+        probability 0: w < c(w-birth + o-birth)
+        Mother loose weight. Too much and no kiddie.
         """
         pass
 
@@ -56,7 +58,15 @@ class Jungle(Cell):
         """Fodder eaten or grown???
         Available fodder?
         """
+        pass
 
+class Savanna(Cell):
+    def __init__(self):
+
+    def f_savanna(self):
+        """Fodder eaten or grown???
+        Available fodder?
+        """
         pass
 
 class Ocean(Cell):
