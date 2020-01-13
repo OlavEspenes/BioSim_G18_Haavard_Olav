@@ -38,18 +38,24 @@ class Cell:
         self.h_parameters = herbi_para     # Parameters for herbivores.
         self.c_parameters = carni_para     # Parameters for carnivores.
 
-
     def feeding_herbi(self):
         """Eats plants and removes fodder from cell.
         Eats by fitness order and gains weight.
         """
-        for animal in self.herbi:
+        for animal,_ in enumerate(self.herbi):
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
                 self.herbi[animal]['weight'] = self.herbi[animal]['weight'] + h_parameters['beta'] * appetite
-                self.herbi[animal]['fitness'] = Animal.fitness_herbivores()
+                self.herbi[animal]['fitness'] = Animal.fitness_herbivores\
+                    (self.herbi[animal]['age'], self.herbi[animal]['weight'],
+                    self.h_parameters, self.c_parameters)
+
             elif 0 < current_food < appetite:
                 self.weight = self.weight + parameters['beta'] * current_food
+                self.herbi[animal]['fitness'] = Animal.fitness_herbivores \
+                    (self.herbi[animal]['age'], self.herbi[animal]['weight'],
+                     self.h_parameters, self.c_parameters)
+
                 # function that reduces food in cell
                 # update fitness
 
