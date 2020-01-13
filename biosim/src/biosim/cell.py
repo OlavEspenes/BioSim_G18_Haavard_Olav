@@ -1,10 +1,20 @@
+# -*- coding: utf-8 -*-
+
+"""
+"""
+
+__author__ = ""
+__email__ = ""
 
 import random
+import math
+import numpy as np
+from animal import Animal
 
 
 class Cell:
 
-    def __init__(self, herbi, carni, fodder, herbi_parameters, carni_parameters):
+    def __init__(self, herbi, carni, fodder, herbi_para, carni_para):
 
 
         self.herbi = sorted(herbi, key=itemgetter('fitness'), reverse = True)
@@ -25,11 +35,9 @@ class Cell:
         """
 
         self.fodder = None         # Hvor mye Fodder som er tilgjengelig i gitt rute.
-        self.h_parameters = {}     # Parameters for herbivores.
-        self.c_parameters = {}     # Parameters for carnivores.
+        self.h_parameters = herbi_para     # Parameters for herbivores.
+        self.c_parameters = carni_para     # Parameters for carnivores.
 
-        self.update_fitness()
-        "Hvor skal update fitness plasseres?"
 
     def feeding_herbi(self):
         """Eats plants and removes fodder from cell.
@@ -38,10 +46,8 @@ class Cell:
         for animal in self.herbi:
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
-                self.herbi[] = self.weight + h_parameters['beta'] * appetite
-                #function that reduces food in cell
-                #update fitness
-                landscape_location.food() =
+                self.herbi[animal]['weight'] = self.herbi[animal]['weight'] + h_parameters['beta'] * appetite
+                self.herbi[animal]['fitness'] = Animal.fitness_herbivores()
             elif 0 < current_food < appetite:
                 self.weight = self.weight + parameters['beta'] * current_food
                 # function that reduces food in cell
@@ -54,7 +60,7 @@ class Cell:
         Removes herbovore and gains weight.
         Fitness is revaluated
         """
-        pass
+
 
 
     def procreation(self):#kanskje? input liste? eller enkeltdyr?
