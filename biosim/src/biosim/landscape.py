@@ -332,16 +332,6 @@ class Landscape:
         pass
 
 
-class Jungle(Landscape):
-    def __init__(self, x, y):
-        self.fodder = 800
-        self.coordinates = (x, y)
-
-
-class Ocean(Landscape):
-    def __init__(self, x, y):
-        self.fodder = 0
-        self.coordinates = (x, y)
 
 
 
