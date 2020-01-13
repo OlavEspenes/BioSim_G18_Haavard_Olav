@@ -61,24 +61,31 @@ class Cell:
         Fitness is revaluated
         """
 
+        pass
 
 
-    def procreation(self):#kanskje? input liste? eller enkeltdyr?
+    def procreation_herbi(self):#kanskje? input liste? eller enkeltdyr?
         """Animals procreate by a certain probability.
         probability 0: w < c(w-birth + o-birth)
         Mother loose weight. Too much and no kiddie.
         """
-        for animal in self.herbi:
+        for animal, _ in self.herbi:
             weight = self.h_parameters['w_birth'] + np.random.normal() * \
                      self.h_parameters['sigma_birth']
-            p = self.h_parameters('gamma') * self.herbi[animal].get('fitness')\
+            p = self.h_parameters['gamma'] * self.herbi[animal].get('fitness')\
                 * (len(self.herbi) - 1)
-            if p > random.random() and self.h_parameters['omega']\
-                    > self.h_parameters['zeta'] * weight:
+            if p > random.random(): #and self.h_parameters['omega']\
+                    #> self.h_parameters['zeta'] * weight:
                 #add animal with age 0 and weight
-                self.herbi.append({'species':'Carnivore', 'age':0,
-                                   'weight':weight})
-            else:
+                check_mother_weight = self.herbi[i].get('weight') - weight * \
+                                      self.h_parameters['xi']
+                if check_mother_weight > 0:
+                    self.herbi.append({'species': 'Herbivore', 'age': 0,
+                                  'weight': weight})
+                    self.herbi[i]['weight'] = self.herbi[i].get('weight') - weight * \
+                                         self.h_parameters['xi']
+
+            #else:
                 #no animal and nothing happens
 
 class Jungle(Cell):
