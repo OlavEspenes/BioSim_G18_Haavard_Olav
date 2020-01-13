@@ -14,7 +14,7 @@ from animal import Animal
 
 class Cell:
 
-    def __init__(self, herbi, carni, fodder, herbi_para, carni_para):
+    def __init__(self, herbi, carni, fodder, herbi_para, carni_para, position):
 
 
         self.herbi = sorted(herbi, key=itemgetter('fitness'), reverse = True)
@@ -23,6 +23,7 @@ class Cell:
 
         self.carni = sorted(carni, key=itemgetter('fitness'), reverse = True)
             # Samme liste med dictionary for cornivores.
+        self.position = position
         """
         "Eksempel:
     
@@ -94,6 +95,7 @@ class Cell:
                 #no animal and nothing happens
 
     def migration(self):
+        """Make migration list as output from this class"""
         pass
 
     def age(self):
