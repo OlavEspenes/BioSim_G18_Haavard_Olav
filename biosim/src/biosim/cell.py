@@ -35,18 +35,10 @@ class Cell:
                         {'age': 8, 'fitness': 30, 'weight': 5}]
         """
 
-        self.fodder = None         # Hvor mye Fodder som er tilgjengelig i gitt rute.
+        self.fodder = fodder         # Hvor mye Fodder som er tilgjengelig i gitt rute.
         self.h_parameters = herbi_para     # Parameters for herbivores.
         self.c_parameters = carni_para     # Parameters for carnivores.
-
-    def fitness_herbivores(self, age, weight):
-        q_plus = (1 + math.e ** (self.herbi_para['phi_age']
-                                 * (age - self.herbi_para['a_half'])))
-        q_minus = (1 + math.e ** (-self.herbi_para['phi_weight']
-                                  * (weight - self.herbi_para['w_half'])))
-        self.fitness = (q_plus * q_minus) ** -1
-        return(self.fitness)
-
+        self.animal = Animal(herbi_para, cardi_para)
 
     def feeding_herbi(self):
         """Eats plants and removes fodder from cell.
@@ -55,17 +47,20 @@ class Cell:
         for animal,_ in enumerate(self.herbi):
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
-                self.herbi[animal]['weight'] = self.herbi[animal]['weight'] + h_parameters['beta'] * appetite
-                self.herbi[animal]['fitness'] = Animal.fitness_herbivores\
-                    (self.herbi[animal]['age'], self.herbi[animal]['weight'],
-                    self.h_parameters, self.c_parameters)
+                self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
+                                               + h_parameters['beta'] * appetite
+                self.herbi[animal]['fitness'] = self.animal.update_fitness_herbi\
+                    (self.herbi[animal]['age'], self.herbi[animal]['weight'])
+                self.fodder = self.fodder - appetite
 
             elif 0 < current_food < appetite:
-                self.weight = self.weight + parameters['beta'] * current_food
-                self.herbi[animal]['fitness'] = Animal.fitness_herbivores \
-                    (self.herbi[animal]['age'], self.herbi[animal]['weight'],
-                     self.h_parameters, self.c_parameters)
-
+                self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
+                                               + h_parameters['beta'] * current_food
+                self.herbi[animal]['fitness'] = self.animal.update_fitness_herbi\
+                    (self.herbi[animal]['age'], self.herbi[animal]['weight'])
+                self.fodder = 0
+            else:
+                pass
                 # function that reduces food in cell
                 # update fitness
 
@@ -76,8 +71,7 @@ class Cell:
         Removes herbovore and gains weight.
         Fitness is revaluated
         """
-
-        pass
+        
 
 
     def procreation_herbi(self):#kanskje? input liste? eller enkeltdyr?

@@ -19,7 +19,15 @@ class Animal:
         self.carni_para = carni_para
 
 
-    def fitness_herbivores(self, age, weight):
+    def update_fitness_herbi(self, age, weight):
+
+        if age < 0:
+            raise ValueError("'age' must be non-negative")
+
+        if weight <= 0:
+            raise ValueError("'weight' must be positive")
+
+
         q_plus = (1 + math.e ** (self.herbi_para['phi_age']
                                  * (age - self.herbi_para['a_half'])))
         q_minus = (1 + math.e ** (-self.herbi_para['phi_weight']
@@ -28,7 +36,14 @@ class Animal:
         return (self.fitness)
 
 
-    def fitness_carnivores(self, age, weight):
+    def update_fitness_carni(self, age, weight):
+
+        if age < 0:
+            raise ValueError("'age' must be non-negative")
+
+        if weight <= 0:
+            raise ValueError("'weight' must be positive")
+
         q_plus = (1 + math.e ** (self.carni_para['phi_age']
                                  * (age - self.carni_para['a_half'])))
         q_minus = (1 + math.e ** (-self.carni_para['phi_weight']
