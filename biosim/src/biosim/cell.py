@@ -69,7 +69,7 @@ class Cell:
         probability 0: w < c(w-birth + o-birth)
         Mother loose weight. Too much and no kiddie.
         """
-        for animal, _ in self.herbi:
+        for animal, _ in enumerate(self.herbi):
             weight = self.h_parameters['w_birth'] + np.random.normal() * \
                      self.h_parameters['sigma_birth']
             p = self.h_parameters['gamma'] * self.herbi[animal].get('fitness')\
@@ -84,9 +84,60 @@ class Cell:
                                   'weight': weight})
                     self.herbi[i]['weight'] = self.herbi[i].get('weight') - weight * \
                                          self.h_parameters['xi']
-
             #else:
                 #no animal and nothing happens
+
+    def migration(self):
+        pass
+
+    def age(self):
+        """Updates all ages by 1 year in
+        carni and herni lists
+        """
+        for i, _ in enumerate(self.carni):
+            self.carni[i]['age'] += 1
+        for i, _ in enumerate(self.herbi):
+            self.herbi[i]['age'] += 1
+
+    def weight_loss(self):
+        for i, _ in enumerate(self.carni):
+            self.carni[i]['weight'] -= \
+                self.carni[i]['weight'] * self.c_parameters['eta']
+        for i, _ in enumerate(self.herbi):
+            self.herbi[i]['weight'] -= \
+                self.herbi[i]['weight'] * self.h_parameters['eta']
+
+    def death(self):
+        """Goes through carni and herbi list and
+        deletes animals by a probability"""
+        should_del = []
+        should_del2 = []
+        for a, _ in enumerate(self.carni):
+            if self.carni[a].get('fitness') < 0:
+                should_del.append(self.carni[a])
+        for b, _ in enumerate(self.herbi):
+            if self.herbi[b].get('fitness') < 0:
+                should_del2.append(self.herbi[b])
+        for el in should_del:
+            self.carni.remove(el)
+        for el in should_del2:
+            self.herbi.remove(el)
+
+        should_del3 = []
+        should_del4 = []
+        for c, _ in enumerate(self.carni):
+            p_death = self.c_parameters['omega'] * (1 - self.carni[c].get('fitness'))
+            if p_death > random.random():
+                should_del3.append(self.carni[c])
+        for d, _ in enumerate(self.carni):
+            p_death = self.h_parameters['omega'] * (1 - self.herbi[d].get('fitness'))
+            if p_death > random.random():
+                should_del4.append(self.carni[d])
+        for el in should_del3:
+            self.carni.remove(el)
+        for el in should_del4:
+            self.herbi.remove(el)
+
 
 class Jungle(Cell):
     def __init__(self):
