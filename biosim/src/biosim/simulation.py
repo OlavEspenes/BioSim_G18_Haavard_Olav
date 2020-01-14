@@ -93,6 +93,8 @@ class BioSim:
 
         :param population: List of dictionaries specifying population
         """
+        pass
+
 
     @property
     def year(self):

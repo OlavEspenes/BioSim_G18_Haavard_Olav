@@ -295,9 +295,8 @@ class Landscape:
 
     def string_to_matrix(self):
         """string made to nested list"""
-        temp = copy.deepcopy(self.island.replace(" ", ""))
-        list_map = [[i for i in j] for j in temp.split()]
-        return list_map
+        temp_island = copy.deepcopy(self.island.replace(" ", ""))
+        self.island = [[i for i in j] for j in temp_island.split()]
 
     """
     def array_cont(self):
