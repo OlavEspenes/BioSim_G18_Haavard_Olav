@@ -48,14 +48,14 @@ class Cell:
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
                 self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
-                                               + h_parameters['beta'] * appetite
+                                               + self.h_parameters['beta'] * appetite
                 self.herbi[animal]['fitness'] = self.animal.update_fitness_herbi\
                     (self.herbi[animal]['age'], self.herbi[animal]['weight'])
                 self.fodder = self.fodder - appetite
 
-            elif 0 < current_food < appetite:
+            elif 0 < self.fodder < appetite:
                 self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
-                                               + h_parameters['beta'] * current_food
+                                               + self.h_parameters['beta'] * self.fodder
                 self.herbi[animal]['fitness'] = self.animal.update_fitness_herbi\
                     (self.herbi[animal]['age'], self.herbi[animal]['weight'])
                 self.fodder = 0
@@ -97,13 +97,10 @@ class Cell:
             #else:
                 #no animal and nothing happens
 
-    def migration(self):
-        """Make migration list as output from this class"""
-        pass
-
     def age(self):
         """Updates all ages by 1 year in
-        carni and herni lists
+        carni and herni lists.
+        Fitness should maybe also be updated???????????????????????????
         """
         for i, _ in enumerate(self.carni):
             self.carni[i]['age'] += 1
@@ -118,36 +115,47 @@ class Cell:
             self.herbi[i]['weight'] -= \
                 self.herbi[i]['weight'] * self.h_parameters['eta']
 
-    def death(self):
-        """Goes through carni and herbi list and
-        deletes animals by a probability"""
+    def simple_death(self, list_animal, parameters):
         should_del = []
-        should_del2 = []
-        for a, _ in enumerate(self.carni):
-            if self.carni[a].get('fitness') < 0:
-                should_del.append(self.carni[a])
-        for b, _ in enumerate(self.herbi):
-            if self.herbi[b].get('fitness') < 0:
-                should_del2.append(self.herbi[b])
+        for a, _ in enumerate(list_animal):
+            if list_animal[a].get('fitness') < 0:
+                should_del.append(list_animal[a])
         for el in should_del:
-            self.carni.remove(el)
-        for el in should_del2:
-            self.herbi.remove(el)
+            list_animal.remove(el)
 
-        should_del3 = []
-        should_del4 = []
-        for c, _ in enumerate(self.carni):
-            p_death = self.c_parameters['omega'] * (1 - self.carni[c].get('fitness'))
+        should_del2 = []
+        for b, _ in enumerate(list_animal):
+            p_death = parameters['omega'] * (
+                        1 - list_animal[b].get('fitness'))
             if p_death > random.random():
-                should_del3.append(self.carni[c])
-        for d, _ in enumerate(self.carni):
-            p_death = self.h_parameters['omega'] * (1 - self.herbi[d].get('fitness'))
-            if p_death > random.random():
-                should_del4.append(self.carni[d])
-        for el in should_del3:
-            self.carni.remove(el)
-        for el in should_del4:
-            self.herbi.remove(el)
+                should_del2.append(list_animal[b])
+        for el in should_del2:
+            list_animal.remove(el)
+
+    def natural_death(self): #NB!! make sure fitness is updated before use
+        """uses simple death function and updates herbi and carni
+        with fewer animals after natural death"""
+        self.simple_death(self.carni, self.c_parameters)
+        self.simple_death(self.herbi, self.h_parameters)
+
+
+    def who_will_migrate(self, list_animal, parameter):
+        """Make migration list as output from this function
+        and remove from list her in cell
+        """
+        migrating_herbi = []
+        for animal, _ in enumerate(list_animal):
+            p = parameter('mu') * list_animal[animal].get('fitness')
+            if p > random.random():
+                migrating_herbi.append(list_animal[animal])
+        for el in migrating_herbi:
+            list_animal.remove(el)
+        return migrating_herbi
+
+    def where_to_migrate(self):
+        herbi_migration_list = self.who_will_migrate(self.herbi, self.h_parameters)
+        carni_migration_list = self.who_will_migrate(self.carni, self.c_parameters)
+        
 
 
 class Jungle(Cell):
