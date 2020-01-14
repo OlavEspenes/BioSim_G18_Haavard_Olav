@@ -27,18 +27,27 @@ class Cell:
         """
         "Eksempel:
     
-        self.herbi = [{'age': 10, 'fitness': 30, 'weight': 15},
-                        {'age': 5, 'fitness': 25, 'weight': 40},
-                        {'age': 15, 'fitness': 20, 'weight': 25}]
-        self.carni = [{'age': 3, 'fitness': 40, 'weight': 35},
-                        {'age': 5, 'fitness': 35, 'weight': 20},
-                        {'age': 8, 'fitness': 30, 'weight': 5}]
+        self.herbi = [{'age': 10, 'fitness': 30, 'species: 'Herbivore', 'weight': 15},
+                        {'age': 5, 'fitness': 25, 'species: 'Herbivore', 'weight': 40},
+                        {'age': 15, 'fitness': 20, 'species: 'Herbivore', 'weight': 25}]
+        self.carni = [{'age': 3, 'fitness': 40, 'species: 'Carnivore', 'weight': 35},
+                        {'age': 5, 'fitness': 35, 'species: 'Carnivore', 'weight': 20},
+                        {'age': 8, 'fitness': 30, 'species: 'Carnivore', 'weight': 5}]
         """
 
         self.fodder = fodder         # Hvor mye Fodder som er tilgjengelig i gitt rute.
         self.h_parameters = herbi_para     # Parameters for herbivores.
         self.c_parameters = carni_para     # Parameters for carnivores.
         self.animal = Animal(herbi_para, cardi_para)
+        self.fitness = None
+
+    def update_fitness_sorted(self, animals):
+
+        # FERDIG. KOMMER I MORGEN.
+
+
+
+
 
     def feeding_herbi(self):
         """Eats plants and removes fodder from cell.
@@ -66,12 +75,122 @@ class Cell:
 
 
 
-    def feeding_carni(self):
+    def feeding_carni(self):   ## GÅ IGJENNNOM I MORGEN. SETTE PÅ SELF
         """Kills with a probability p.
         Removes herbovore and gains weight.
         Fitness is revaluated
         """
-        
+        dead_herbis = []
+        herbi = sorted(herbi, key=lambda i: i['fitness'])
+        for hunter, _ in enumerate(carni):
+            appetite = carni_para['F']
+
+            for preyer, _ in (enumerate(herbi)):
+
+                if appetite > 0:
+
+                    if herbi[preyer]['weight'] <= appetite:
+
+                        if carni[hunter]['fitness'] <= herbi[preyer][
+                            'fitness']:
+                            continue
+                        elif 0 < carni[hunter]['fitness'] - herbi[preyer][
+                            'fitness'] < c_parameters['DeltaPhiMax']:
+
+                            propability = random.random() < ((carni[hunter][
+                                                                  'fitness'] -
+                                                              herbi[preyer][
+                                                                  'fitness']) /
+                                                             carni_para[
+                                                                 'DeltaPhiMax'])
+                            if propability is True:
+                                carni[hunter]['weight'] = carni[hunter][
+                                                              'weight'] + \
+                                                          c_parameters[
+                                                              'beta'] * \
+                                                          herbi[preyer][
+                                                              'weight']
+
+                                carni[hunter][
+                                    'fitness'] = animal.update_fitness_carni(
+                                    carni[hunter]['age'],
+                                    carni[hunter]['weight'])
+                                dead_herbis.append(herbi[preyer])
+                                appetite = appetite - herbi[preyer]['weight']
+
+
+                            else:
+                                continue
+
+                        else:
+                            carni[hunter]['weight'] = carni[hunter]['weight'] + \
+                                                      c_parameters['beta'] * \
+                                                      herbi[preyer]['weight']
+                            carni[hunter][
+                                'fitness'] = animal.update_fitness_carni(
+                                carni[hunter]['age'],
+                                carni[hunter]['weight'])
+                            dead_herbis.append(herbi[preyer])
+                            appetite = appetite - herbi[preyer]['weight']
+
+
+
+                    elif 0 < appetite < herbi['preyer']['weight']:
+
+                        if carni[hunter]['fitness'] <= herbi[preyer][
+                            'fitness']:
+                            continue
+                        elif 0 < carni[hunter]['fitness'] - herbi[preyer][
+                            'fitness'] < carni_para['DeltaPhiMax']:
+
+                            propability = random.random() < ((carni[hunter][
+                                                                  'fitness'] -
+                                                              herbi[preyer][
+                                                                  'fitness']) /
+                                                             carni_para[
+                                                                 'DeltaPhiMax'])
+
+                            if propability is True:
+
+                                carni[hunter]['weight'] = carni[hunter][
+                                                              'weight'] + \
+                                                          c_parameters[
+                                                              'beta'] * appetite
+                                carni[hunter]['fitness'] = animal.update_fitness_carni(
+                                    carni[hunter]['age'],
+                                    carni[hunter]['weight'])
+                                dead_herbis.append(herbi[preyer])
+                                appetite = appetite - appetite
+                                if appetite != 0:
+                                    raise ValueError("Wrong in appetite list")
+                                else:
+                                    break
+                            else:
+                                continue
+                        else:
+                            carni[hunter]['weight'] = carni[hunter]['weight'] + \
+                                                      c_parameters[
+                                                          'beta'] * appetite
+                            carni[hunter][
+                                'fitness'] = animal.update_fitness_carni(
+                                carni[hunter]['age'],
+                                carni[hunter]['weight'])
+
+                            dead_herbis.append(herbi[preyer])
+                            appetite = appetite - appetite
+
+                            if appetite != 0:
+                                raise ValueError("Wrong in appetite list")
+                            else:
+                                break
+                    else:
+                        break
+
+
+                else:
+                    break
+
+
 
 
     def procreation_herbi(self):#kanskje? input liste? eller enkeltdyr?
@@ -158,6 +277,12 @@ class Cell:
         
 
 
+
+if __name__ == "__main__":
+    print(Cell())
+
+
+
 class Jungle(Cell):
     def __init__(self):
 
@@ -178,6 +303,11 @@ class Savanna(Cell):
 
 class Ocean(Cell):
     def __init__(self):
+
+
+
+
+
 
 
 

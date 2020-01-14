@@ -27,13 +27,12 @@ class Animal:
         if weight <= 0:
             raise ValueError("'weight' must be positive")
 
-
         q_plus = (1 + math.e ** (self.herbi_para['phi_age']
                                  * (age - self.herbi_para['a_half'])))
         q_minus = (1 + math.e ** (-self.herbi_para['phi_weight']
                                   * (weight - self.herbi_para['w_half'])))
-        self.fitness = (q_plus * q_minus) ** -1
-        return (self.fitness)
+        self.fitness_herbi = (q_plus * q_minus) ** -1
+        return (self.fitness_herbi)
 
 
     def update_fitness_carni(self, age, weight):
