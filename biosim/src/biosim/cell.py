@@ -78,7 +78,8 @@ class Cell:
         Removes herbovore and gains weight.
         Fitness is revaluated
         """
-        dead_herbis = []
+        self.update_fitness_sorted(self.herbi, self.h_parameters)
+        self.update_fitness_sorted(self.carni, self.c_parameters)
         herbi = sorted(self.herbi, key=lambda i: i['fitness'])
 
         for hunter, _ in enumerate(self.carni):
@@ -233,6 +234,7 @@ class Cell:
                 self.herbi[i]['weight'] * self.h_parameters['eta']
 
     def death_function(self, list_animal, parameters):
+        self.update_fitness_sorted(list_animal, parameters)
         should_del = []
         for a, _ in enumerate(list_animal):
             if list_animal[a].get('fitness') < 0:
@@ -242,12 +244,12 @@ class Cell:
 
         should_del2 = []
         for b, _ in enumerate(list_animal):
-            p_death = parameters['omega'] * (
-                        1 - list_animal[b].get('fitness'))
+            p_death = parameters['omega'] * (1 - list_animal[b].get('fitness'))
             if p_death > random.random():
                 should_del2.append(list_animal[b])
         for el in should_del2:
             list_animal.remove(el)
+
 
     def death(self): #NB!! make sure fitness is updated before use
         """uses simple death function and updates herbi and carni
@@ -259,19 +261,22 @@ class Cell:
         """Make migration list as output from this function
         and remove from list her in cell
         """
-        migrating_herbi = []
+        self.update_fitness_sorted(list_animal, parameter)
+        migrant = []
+        emigrant = []
         for animal, _ in enumerate(list_animal):
-            p = parameter('mu') * list_animal[animal].get('fitness')
+            p = parameter['mu'] * list_animal[animal].get('fitness')
             if p > random.random():
-                migrating_herbi.append(list_animal[animal])
-        for el in migrating_herbi:
+                migrant.append(list_animal[animal])
+                emigrant.append(list_animal[animal])
+        for el in migrant:
             list_animal.remove(el)
-        return migrating_herbi
+        return emigrant
 
     def where_to_migrate(self):
-        herbi_migration_list = self.who_will_migrate(self.herbi, self.h_parameters)
-        carni_migration_list = self.who_will_migrate(self.carni, self.c_parameters)
-        
+        herbi_migration_list = [self.who_will_migrate(self.herbi, self.h_parameters)]
+        #carni_migration_list = self.who_will_migrate(self.carni, self.c_parameters)
+
 
 
 """
