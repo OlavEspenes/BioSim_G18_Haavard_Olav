@@ -4,8 +4,8 @@
 
 """
 
-__author__ = ""
-__email__ = ""
+__author__ = "Olav Vikøren Espenes & Håvard Brobakken Eig"
+__email__ = "olaves@nmbu.no, havarde@nmbu.no"
 
 import random
 import math
@@ -15,12 +15,9 @@ import numpy as np
 class Cell:
 
     def __init__(self, herbi, carni, fodder, herbi_para, carni_para, position):
-        self.herbi = herbi
-            # Liste med herbivores med dictionary med egenskapene age, weight og fitness
-            # i gitt rute sortert etter fitness.
 
+        self.herbi = herbi
         self.carni = carni
-            # Samme liste med dictionary for cornivores.
         self.position = position
         """
         "Eksempel:

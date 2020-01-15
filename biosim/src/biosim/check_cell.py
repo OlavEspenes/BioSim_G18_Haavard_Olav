@@ -61,7 +61,7 @@ if __name__ == "__main__":
     test = Cell(herbi, carni, fodder, h_parameters, c_parameters, position)
     #test.age()
     #test.feeding_herbi()
-    #test.feeding_carni()
+    test.feeding_carni()
     #test.birth()
     #test.weight_loss()
     test.where_to_migrate()
