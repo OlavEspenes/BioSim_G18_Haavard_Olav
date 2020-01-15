@@ -92,7 +92,7 @@ class Cell:
                             continue
                         elif 0 < self.carni[hunter]['fitness'] - \
                                 herbi[preyer]['fitness'] < \
-                                c_parameters['DeltaPhiMax']:
+                                self.c_parameters['DeltaPhiMax']:
 
                             propability = random.random() < \
                                           ((self.carni[hunter]['fitness'] -
