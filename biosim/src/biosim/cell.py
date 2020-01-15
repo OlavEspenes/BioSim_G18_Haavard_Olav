@@ -81,10 +81,10 @@ class Cell:
         dead_herbis = []
         herbi = sorted(self.herbi, key=lambda i: i['fitness'])
 
-        for hunter, _ in enumerate(self.carni):
+        for hunter,_ in enumerate(self.carni):
             dead_herbis = []
             appetite = self.c_parameters['F']
-            for preyer, _ in enumerate(herbi):
+            for preyer,_ in enumerate(herbi):
                 if appetite > 0:
                     if herbi[preyer]['weight'] <= appetite:
                         if self.carni[hunter]['fitness'] <= \
@@ -179,7 +179,7 @@ class Cell:
                 else:
                     break
 
-            for animal in dead_herbis:
+            for animal,_ in enumerate(dead_herbis):
                 if dead_herbis[animal] in self.herbi:
                     self.herbi.remove(dead_herbis[animal])
 
