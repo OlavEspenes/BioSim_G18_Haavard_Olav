@@ -27,19 +27,19 @@ class Cell:
         """
         "Eksempel:
     
-        self.herbi = [{'age': 10, 'fitness': 30, 'species: 'Herbivore', 'weight': 15},
-                        {'age': 5, 'fitness': 25, 'species: 'Herbivore', 'weight': 40},
-                        {'age': 15, 'fitness': 20, 'species: 'Herbivore', 'weight': 25}]
-        self.carni = [{'age': 3, 'fitness': 40, 'species: 'Carnivore', 'weight': 35},
-                        {'age': 5, 'fitness': 35, 'species: 'Carnivore', 'weight': 20},
-                        {'age': 8, 'fitness': 30, 'species: 'Carnivore', 'weight': 5}]
+        self.herbi = [{'age': 10, 'species: 'Herbivore', 'weight': 15},
+                        {'age': 5, 'species: 'Herbivore', 'weight': 40},
+                        {'age': 15, 'species: 'Herbivore', 'weight': 25}]
+        self.carni = [{'age': 3, 'species: 'Carnivore', 'weight': 35},
+                        {'age': 5, 'species: 'Carnivore', 'weight': 20},
+                        {'age': 8, 'species: 'Carnivore', 'weight': 5}]
         """
 
         self.fodder = fodder         # Hvor mye Fodder som er tilgjengelig i gitt rute.
         self.h_parameters = herbi_para     # Parameters for herbivores.
         self.c_parameters = carni_para     # Parameters for carnivores.
-        self.animal = Animal(herbi_para, cardi_para)
-        self.fitness = None
+
+    def fitness_singel_animal
 
     def update_fitness_sorted(self, input_list, parameters):
         for i in input_list:
@@ -56,26 +56,22 @@ class Cell:
         """Eats plants and removes fodder from cell.
         Eats by fitness order and gains weight.
         """
+        self.update_fitness_sorted(self.herbi, self.h_parameters)
         for animal,_ in enumerate(self.herbi):
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
                 self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
                                                + self.h_parameters['beta'] * appetite
-                self.herbi[animal]['fitness'] = self.animal.update_fitness_herbi\
-                    (self.herbi[animal]['age'], self.herbi[animal]['weight'])
                 self.fodder = self.fodder - appetite
 
             elif 0 < self.fodder < appetite:
                 self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
                                                + self.h_parameters['beta'] * self.fodder
-                self.herbi[animal]['fitness'] = self.animal.update_fitness_herbi\
-                    (self.herbi[animal]['age'], self.herbi[animal]['weight'])
                 self.fodder = 0
             else:
                 pass
+        self.update_fitness_sorted(self.herbi, self.h_parameters)
                 # function that reduces food in cell
-                # update fitness
-
 
 
     def feeding_carni(self):   ## GÅ IGJENNNOM I MORGEN. SETTE PÅ SELF
@@ -84,37 +80,32 @@ class Cell:
         Fitness is revaluated
         """
         dead_herbis = []
-        herbi = sorted(herbi, key=lambda i: i['fitness'])
-        for hunter, _ in enumerate(carni):
-            appetite = carni_para['F']
+        herbi = sorted(self.herbi, key=lambda i: i['fitness'])
 
-            for preyer, _ in (enumerate(herbi)):
-
+        for hunter, _ in enumerate(self.carni):
+            appetite = self.c_parameters['F']
+            for preyer, _ in enumerate(herbi):
                 if appetite > 0:
-
                     if herbi[preyer]['weight'] <= appetite:
 
-                        if carni[hunter]['fitness'] <= herbi[preyer][
-                            'fitness']:
+                        if self.carni[hunter]['fitness'] <= \
+                                herbi[preyer]['fitness']:
                             continue
-                        elif 0 < carni[hunter]['fitness'] - herbi[preyer][
-                            'fitness'] < c_parameters['DeltaPhiMax']:
+                        elif 0 < self.carni[hunter]['fitness'] - \
+                                herbi[preyer]['fitness'] < \
+                                c_parameters['DeltaPhiMax']:
 
-                            propability = random.random() < ((carni[hunter][
-                                                                  'fitness'] -
-                                                              herbi[preyer][
-                                                                  'fitness']) /
-                                                             carni_para[
-                                                                 'DeltaPhiMax'])
+                            propability = random.random() < \
+                                          ((self.carni[hunter]['fitness'] -
+                                            herbi[preyer]['fitness']) /
+                                           self.c_parameters['DeltaPhiMax'])
                             if propability is True:
-                                carni[hunter]['weight'] = carni[hunter][
-                                                              'weight'] + \
-                                                          c_parameters[
-                                                              'beta'] * \
-                                                          herbi[preyer][
-                                                              'weight']
+                                self.carni[hunter]['weight'] = \
+                                    self.carni[hunter]['weight'] + \
+                                    self.c_parameters['beta'] * \
+                                    herbi[preyer]['weight']
 
-                                carni[hunter][
+                                self.carni[hunter][
                                     'fitness'] = animal.update_fitness_carni(
                                     carni[hunter]['age'],
                                     carni[hunter]['weight'])
