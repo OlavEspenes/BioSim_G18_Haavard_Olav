@@ -45,8 +45,10 @@ if __name__ == "__main__":
     test = Cell(herbi, carni, fodder, parameters, parameters, position)
     test.age()
     test.feeding_herbi()
-    test.birth()
+    test.feeding_carni()
+    #test.birth()
     test.weight_loss()
+
 
 
     print(carni)

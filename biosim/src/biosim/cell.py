@@ -46,9 +46,8 @@ class Cell:
         return fitness
 
     def update_fitness_sorted(self, input_list, parameters):
-        for i in input_list:
-            i['fitness'] = fitness_singel_animal(input_list[i]['age'],
-                                  input_list[i]['weight'], parameters)
+        for i, j in enumerate(input_list):
+            j['fitness'] = self.fitness_single_animal(input_list[i]['age'], input_list[i]['weight'], parameters)
         sorted(input_list, key=lambda j: j['fitness'], reverse=True)
 
 
@@ -185,9 +184,6 @@ class Cell:
             if dead_animal in self.herbi:
                 new_list.append(e)
         item_list = new_list
-
-    def procreation(self, list_animal, parameters):#kanskje? input liste? eller enkeltdyr?
-
 
     def procreation(self, list_animal, parameters, species):
         """Animals procreate by a certain probability.
