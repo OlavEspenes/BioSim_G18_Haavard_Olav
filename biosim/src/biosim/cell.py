@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+
 """
 
 __author__ = ""
@@ -9,7 +10,6 @@ __email__ = ""
 import random
 import math
 import numpy as np
-from animal import Animal
 
 
 class Cell:
@@ -127,7 +127,7 @@ class Cell:
                             dead_herbis.append(herbi[preyer])
                             appetite = appetite - herbi[preyer]['weight']
 
-                    elif 0 < appetite < herbi['preyer']['weight']:
+                    elif 0 < appetite < herbi[preyer]['weight']:
 
                         if self.carni[hunter]['fitness'] <= \
                                 herbi[preyer]['fitness']:
@@ -135,11 +135,11 @@ class Cell:
 
                         elif 0 < self.carni[hunter]['fitness'] - \
                                 herbi[preyer]['fitness'] < \
-                                self.carni_para['DeltaPhiMax']:
+                                self.c_parameters['DeltaPhiMax']:
                             propability = random.random() < \
                                           ((self.carni[hunter]['fitness']
                                                - herbi[preyer]['fitness'])
-                                              / self.carni_para['DeltaPhiMax'])
+                                              / self.c_parameters['DeltaPhiMax'])
 
                             if propability is True:
                                 self.carni[hunter]['weight'] = \
@@ -179,6 +179,12 @@ class Cell:
                         break
                 else:
                     break
+
+
+        for dead_animal in dead_herbis:
+            if dead_animal in self.herbi:
+                new_list.append(e)
+        item_list = new_list
 
     def procreation(self, list_animal, parameters):#kanskje? input liste? eller enkeltdyr?
 
