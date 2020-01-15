@@ -37,7 +37,7 @@ class Cell:
         self.h_parameters = herbi_para     # Parameters for herbivores.
         self.c_parameters = carni_para     # Parameters for carnivores.
 
-    def fitness_singel_animal(self, age, weight, parameters):
+    def fitness_single_animal(self, age, weight, parameters):
         q_plus = (1 + math.e ** (parameters['phi_age']
                                  * (age - parameters['a_half'])))
         q_minus = (1 + math.e ** (-parameters['phi_weight']
@@ -105,7 +105,7 @@ class Cell:
                                     herbi[preyer]['weight']
 
                                 self.carni[hunter]['fitness'] = \
-                                    self.fitness_singel_animal(
+                                    self.fitness_single_animal(
                                     self.carni[hunter]['age'],
                                     self.carni[hunter]['weight'],
                                         self.c_parameters)
@@ -120,7 +120,7 @@ class Cell:
                                 herbi[preyer]['weight']
 
                             self.carni[hunter]['fitness'] = \
-                                self.fitness_singel_animal(
+                                self.fitness_single_animal(
                                     self.carni[hunter]['age'],
                                     self.carni[hunter]['weight'],
                                     self.c_parameters)
@@ -146,7 +146,7 @@ class Cell:
                                     self.carni[hunter]['weight'] + \
                                     self.c_parameters['beta'] * appetite
                                 self.carni[hunter]['fitness'] = \
-                                    self.fitness_singel_animal\
+                                    self.fitness_single_animal\
                                         (self.carni[hunter]['age'],
                                          self.carni[hunter]['weight'],
                                          self.c_parameters)
@@ -163,7 +163,7 @@ class Cell:
                                 self.carni[hunter]['weight'] + \
                                 self.c_parameters['beta'] * appetite
                             self.carni[hunter]['fitness'] = \
-                                self.fitness_singel_animal(
+                                self.fitness_single_animal(
                                 self.carni[hunter]['age'],
                                 self.carni[hunter]['weight'],
                                     self.c_parameters)
