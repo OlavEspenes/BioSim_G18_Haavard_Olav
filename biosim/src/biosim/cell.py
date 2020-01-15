@@ -41,12 +41,15 @@ class Cell:
         self.animal = Animal(herbi_para, cardi_para)
         self.fitness = None
 
-    def update_fitness_sorted(self, animals):
-
-        # FERDIG. KOMMER I MORGEN.
-
-
-
+    def update_fitness_sorted(self, input_list, parameters):
+        for i in input_list:
+            q_plus = (1 + math.e ** (parameters['phi_age']
+                                     * (i['age'] - parameters['a_half'])))
+            q_minus = (1 + math.e ** (-parameters['phi_weight']
+                                      * (i['weight'] - parameters[
+                        'w_half'])))
+            i['fitness'] = (q_plus * q_minus) ** -1
+        sorted(input_list, key=lambda j: j['fitness'], reverse=True)
 
 
     def feeding_herbi(self):
@@ -193,28 +196,31 @@ class Cell:
 
 
 
-    def procreation_herbi(self):#kanskje? input liste? eller enkeltdyr?
+    def procreation(self, list_animal, parameters):#kanskje? input liste? eller enkeltdyr?
         """Animals procreate by a certain probability.
         probability 0: w < c(w-birth + o-birth)
         Mother loose weight. Too much and no kiddie.
         """
-        for animal, _ in enumerate(self.herbi):
-            weight = self.h_parameters['w_birth'] + np.random.normal() * \
-                     self.h_parameters['sigma_birth']
-            p = self.h_parameters['gamma'] * self.herbi[animal].get('fitness')\
-                * (len(self.herbi) - 1)
+        for i, _ in enumerate(list_animal):
+            weight = parameters['w_birth'] + np.random.normal() * \
+                     parameters['sigma_birth']
+            p = parameters['gamma'] * list_animal[i].get('fitness')\
+                * (len(list_animal) - 1)
             if p > random.random(): #and self.h_parameters['omega']\
                     #> self.h_parameters['zeta'] * weight:
                 #add animal with age 0 and weight
-                check_mother_weight = self.herbi[i].get('weight') - weight * \
-                                      self.h_parameters['xi']
+                check_mother_weight = list_animal[i].get('weight') - weight * \
+                                      parameters['xi']
                 if check_mother_weight > 0:
-                    self.herbi.append({'species': 'Herbivore', 'age': 0,
+                    list_animal.append({'species': 'Herbivore', 'age': 0,
                                   'weight': weight})
-                    self.herbi[i]['weight'] = self.herbi[i].get('weight') - weight * \
-                                         self.h_parameters['xi']
+                    list_animal[i]['weight'] = list_animal[i].get('weight') - weight * \
+                                         parameters['xi']
             #else:
                 #no animal and nothing happens
+    def birth(self):
+        self.procreation(self.herbi, self.h_parameters)
+        self.procreation(self.carni, self.c_parameters)
 
     def age(self):
         """Updates all ages by 1 year in
@@ -234,7 +240,7 @@ class Cell:
             self.herbi[i]['weight'] -= \
                 self.herbi[i]['weight'] * self.h_parameters['eta']
 
-    def simple_death(self, list_animal, parameters):
+    def death_function(self, list_animal, parameters):
         should_del = []
         for a, _ in enumerate(list_animal):
             if list_animal[a].get('fitness') < 0:
@@ -251,12 +257,11 @@ class Cell:
         for el in should_del2:
             list_animal.remove(el)
 
-    def natural_death(self): #NB!! make sure fitness is updated before use
+    def death(self): #NB!! make sure fitness is updated before use
         """uses simple death function and updates herbi and carni
         with fewer animals after natural death"""
-        self.simple_death(self.carni, self.c_parameters)
-        self.simple_death(self.herbi, self.h_parameters)
-
+        self.death_function(self.carni, self.c_parameters)
+        self.death_function(self.herbi, self.h_parameters)
 
     def who_will_migrate(self, list_animal, parameter):
         """Make migration list as output from this function

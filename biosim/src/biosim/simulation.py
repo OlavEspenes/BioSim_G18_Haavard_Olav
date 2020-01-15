@@ -6,6 +6,7 @@
 __author__ = ""
 __email__ = ""
 
+from cell import Cell
 
 class BioSim:
     def __init__(
@@ -18,6 +19,17 @@ class BioSim:
         img_base=None,
         img_fmt="png",
     ):
+        self.island_map = island_map
+        self.ini_pop = ini_pop
+        self.carni = []
+        self.herbi = []
+        for i in self.ini_pop[1].get('pop'):
+            if i.get('species') == 'Herbivore':
+                self.herbi.append(i)
+            elif i.get('species') == 'Carnivore':
+                self.carni.append(i)
+
+
         """
         :param island_map: Multi-line string specifying island geography
         :param ini_pop: List of dictionaries specifying initial population
@@ -41,8 +53,7 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
-        self.island_map = island_map
-        self.ini_pop = ini_pop
+
 
     def set_animal_parameters(self, species, params):
         """
@@ -62,10 +73,9 @@ class BioSim:
         herbi_parameters.set_parameters_herbi(herbi_para)
 
         corni_parameters = Landscape()
-        corni_parameters.set_parameters_corni(corni_para)
+        corni_parameters.set_parameters_corni(carni_para)
         # Definerer valgte parametre for herbivores og carnivores før videre
         # simulation.
-
 
 
     def set_landscape_parameters(self, landscape, params):
@@ -75,6 +85,7 @@ class BioSim:
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape
         """
+        pass
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -86,6 +97,13 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
+        para = Landscape(self.island_map)
+        cell = Cell(self.herbi, self.carni, fodder, herbi_para, carni_para,
+                         position))
+        for i in range(num_years):
+
+
+
 
     def add_population(self, population):
         """
