@@ -15,13 +15,11 @@ from animal import Animal
 class Cell:
 
     def __init__(self, herbi, carni, fodder, herbi_para, carni_para, position):
-
-
-        self.herbi = sorted(herbi, key=itemgetter('fitness'), reverse = True)
+        self.herbi = herbi
             # Liste med herbivores med dictionary med egenskapene age, weight og fitness
             # i gitt rute sortert etter fitness.
 
-        self.carni = sorted(carni, key=itemgetter('fitness'), reverse = True)
+        self.carni = carni
             # Samme liste med dictionary for cornivores.
         self.position = position
         """
@@ -273,7 +271,7 @@ class Cell:
         
 
 
-
+"""
 if __name__ == "__main__":
     print(Cell())
 
@@ -283,24 +281,22 @@ class Jungle(Cell):
     def __init__(self):
 
     def f_jungle(self):
-        """Fodder eaten or grown???
-        Available fodder?
-        """
+        #Fodder eaten or grown???
+        #Available fodder?
+        
         pass
 
 class Savanna(Cell):
     def __init__(self):
 
     def f_savanna(self):
-        """Fodder eaten or grown???
-        Available fodder?
-        """
+        
         pass
 
 class Ocean(Cell):
     def __init__(self):
 
-
+"""
 
 
 
