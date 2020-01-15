@@ -82,6 +82,7 @@ class Cell:
         herbi = sorted(self.herbi, key=lambda i: i['fitness'])
 
         for hunter, _ in enumerate(self.carni):
+            dead_herbis = []
             appetite = self.c_parameters['F']
             for preyer, _ in enumerate(herbi):
                 if appetite > 0:
@@ -127,7 +128,6 @@ class Cell:
                             appetite = appetite - herbi[preyer]['weight']
 
                     elif 0 < appetite < herbi[preyer]['weight']:
-
                         if self.carni[hunter]['fitness'] <= \
                                 herbi[preyer]['fitness']:
                             continue
@@ -179,11 +179,11 @@ class Cell:
                 else:
                     break
 
+            for animal in dead_herbis:
+                if dead_herbis[animal] in self.herbi:
+                    self.herbi.remove(dead_herbis[animal])
 
-        for dead_animal in dead_herbis:
-            if dead_animal in self.herbi:
-                new_list.append(e)
-        item_list = new_list
+
 
     def procreation(self, list_animal, parameters, species):
         """Animals procreate by a certain probability.
