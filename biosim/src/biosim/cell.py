@@ -181,30 +181,36 @@ class Cell:
                     break
 
     def procreation(self, list_animal, parameters):#kanskje? input liste? eller enkeltdyr?
+
+
+    def procreation(self, list_animal, parameters, species):
         """Animals procreate by a certain probability.
         probability 0: w < c(w-birth + o-birth)
         Mother loose weight. Too much and no kiddie.
         """
+        newborns = []
         for i, _ in enumerate(list_animal):
             weight = parameters['w_birth'] + np.random.normal() * \
                      parameters['sigma_birth']
-            p = parameters['gamma'] * list_animal[i].get('fitness')\
-                * (len(list_animal) - 1)
+            p = parameters['gamma'] * list_animal[i].get('fitness') * (len(list_animal) - 1)
             if p > random.random(): #and self.h_parameters['omega']\
                     #> self.h_parameters['zeta'] * weight:
                 #add animal with age 0 and weight
                 check_mother_weight = list_animal[i].get('weight') - weight * \
                                       parameters['xi']
                 if check_mother_weight > 0:
-                    list_animal.append({'species': 'Herbivore', 'age': 0,
+                    newborns.append({'species': species, 'age': 0,
                                   'weight': weight})
-                    list_animal[i]['weight'] = list_animal[i].get('weight') - weight * \
-                                         parameters['xi']
-            #else:
-                #no animal and nothing happens
+                    list_animal[i]['weight'] = list_animal[i].get('weight') - \
+                                               weight * parameters['xi']
+        for add in newborns:
+            list_animal.append(add)
+
     def birth(self):
-        self.procreation(self.herbi, self.h_parameters)
-        self.procreation(self.carni, self.c_parameters)
+        self.update_fitness_sorted(self.herbi, self.h_parameters)
+        self.update_fitness_sorted(self.carni, self.c_parameters)
+        self.procreation(self.herbi, self.h_parameters,'herbivore')
+        self.procreation(self.carni, self.c_parameters,'carnivore')
 
     def age(self):
         """Updates all ages by 1 year in

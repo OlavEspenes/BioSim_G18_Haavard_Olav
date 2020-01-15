@@ -21,8 +21,8 @@ class BioSim:
     ):
         self.island_map = island_map
         self.ini_pop = ini_pop
-        self.carni = []
-        self.herbi = []
+        self.ini_carni = []
+        self.ini_herbi = []
         for i in self.ini_pop[1].get('pop'):
             if i.get('species') == 'Herbivore':
                 self.herbi.append(i)
@@ -98,8 +98,10 @@ class BioSim:
         Image files will be numbered consecutively.
         """
         para = Landscape(self.island_map)
-        cell = Cell(self.herbi, self.carni, fodder, herbi_para, carni_para,
+        cell = Cell(self.ini_herbi, self.ini_carni, fodder, herbi_para, carni_para,
                          position))
+        # Save lists in postitions.
+        # go through one year on each position.
         for i in range(num_years):
 
 
