@@ -35,17 +35,17 @@ if __name__ == "__main__":
                                 'DeltaPhiMax': 10.0}
     ini_pop = [{'loc': (1, 1)},
                {'pop': [{'species': 'Herbivore',
-                         'age': 3,
-                         'weight': 20}, {'species': 'Herbivore',
+                         'age': 2,
+                         'weight': 10}, {'species': 'Herbivore',
                                          'age': 3,
                                          'weight': 20},
                         {'species': 'Carnivore',
                          'age': 3,
-                         'weight': 20}, {'species': 'Herbivore',
-                                         'age': 3,
-                                         'weight': 20},
+                         'weight': 40}, {'species': 'Herbivore',
+                                         'age': 4,
+                                         'weight': 15},
                         {'species': 'Herbivore',
-                         'age': 3,
+                         'age': 5,
                          'weight': 20}, {'species': 'Carnivore',
                                          'age': 3,
                                          'weight': 20}, ]}]
@@ -59,16 +59,18 @@ if __name__ == "__main__":
     position = (1,1)
     fodder = 1000
     test = Cell(herbi, carni, fodder, h_parameters, c_parameters, position)
-    #test.age()
-    #test.feeding_herbi()
-    #test.feeding_carni()
-    #test.birth()
-    #test.weight_loss()
-    test.where_to_migrate()
-    #test.death()
 
-    print(carni)
-    print(herbi)
+    test.feeding_herbi()
+    test.feeding_carni()
+    test.birth()
+    test.age()
+    test.weight_loss()
+    test.death()
+    flykninger = test.send_out_emigrators() #gives us emigrants. two lists for each species
+    print('herbi som skal flytte',flykninger[0])#herbi
+    print('carni som skal flytte',flykninger[1])#carni
+    print('herbi igjen i cellen', herbi)
+    print('carni igjen i cellen', carni)
 
 
 

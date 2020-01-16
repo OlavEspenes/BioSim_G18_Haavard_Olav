@@ -7,6 +7,7 @@ __author__ = ""
 __email__ = ""
 
 from cell import Cell
+from landscape import Landscape
 
 class BioSim:
     def __init__(
@@ -87,6 +88,11 @@ class BioSim:
         """
         pass
 
+    def where_to_migrate(self, migrator_list):
+        mapsy = Landscape(self.island_map)
+        mapsy.string_to_matrix()
+
+
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
@@ -98,8 +104,7 @@ class BioSim:
         Image files will be numbered consecutively.
         """
         para = Landscape(self.island_map)
-        cell = Cell(self.ini_herbi, self.ini_carni, fodder, herbi_para, carni_para,
-                         position))
+        cell = Cell(self.ini_herbi, self.ini_carni, fodder, herbi_para, carni_para, position))
         # Save lists in postitions.
         # go through one year on each position.
         for i in range(num_years):

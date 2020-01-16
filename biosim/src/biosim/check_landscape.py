@@ -5,8 +5,4 @@ if __name__ == "__main__":
     OOO
     OJO
     OOO""")
-    olafius.array_map()
-    kart = olafius.assign_tile()
-    print(kart)
-    print(kart[4].fodder)
-    print()
+    olafius.string_to_array()

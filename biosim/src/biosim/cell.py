@@ -18,10 +18,11 @@ class Cell:
         self.herbi = herbi
             # Liste med herbivores med dictionary med egenskapene age, weight og fitness
             # i gitt rute sortert etter fitness.
-
         self.carni = carni
-            # Samme liste med dictionary for cornivores.
         self.position = position
+        self.fodder = fodder         # Hvor mye Fodder som er tilgjengelig i gitt rute.
+        self.h_parameters = herbi_para     # Parameters for herbivores.
+        self.c_parameters = carni_para     # Parameters for carnivores.
         """
         "Eksempel:
     
@@ -33,9 +34,6 @@ class Cell:
                         {'age': 8, 'species: 'Carnivore', 'weight': 5}]
         """
 
-        self.fodder = fodder         # Hvor mye Fodder som er tilgjengelig i gitt rute.
-        self.h_parameters = herbi_para     # Parameters for herbivores.
-        self.c_parameters = carni_para     # Parameters for carnivores.
 
     def fitness_single_animal(self, age, weight, parameters):
         q_plus = (1 + math.e ** (parameters['phi_age']
@@ -198,7 +196,6 @@ class Cell:
             p = parameters['gamma'] * list_animal[i].get('fitness') * (len(list_animal) - 1)
             if p > random.random(): #and self.h_parameters['omega']\
                     #> self.h_parameters['zeta'] * weight:
-                #add animal with age 0 and weight
                 check_mother_weight = list_animal[i].get('weight') - weight * \
                                       parameters['xi']
                 if check_mother_weight > 0:
@@ -237,7 +234,7 @@ class Cell:
         self.update_fitness_sorted(list_animal, parameters)
         should_del = []
         for a, _ in enumerate(list_animal):
-            if list_animal[a].get('fitness') < 0:
+            if list_animal[a].get('fitness') < 0 or list_animal[a].get('weight') < 0:
                 should_del.append(list_animal[a])
         for el in should_del:
             list_animal.remove(el)
@@ -273,9 +270,10 @@ class Cell:
             list_animal.remove(el)
         return emigrant
 
-    def where_to_migrate(self):
-        herbi_migration_list = [self.who_will_migrate(self.herbi, self.h_parameters)]
-        #carni_migration_list = self.who_will_migrate(self.carni, self.c_parameters)
+    def send_out_emigrators(self):
+        herbi_migration_list = self.who_will_migrate(self.herbi, self.h_parameters)
+        carni_migration_list = self.who_will_migrate(self.carni, self.c_parameters)
+        return herbi_migration_list, carni_migration_list
 
 
 

@@ -295,30 +295,25 @@ class Landscape:
 
     def string_to_matrix(self):
         """string made to nested list"""
-        temp_island = copy.deepcopy(self.island.replace(" ", ""))
-        self.island = [[i for i in j] for j in temp_island.split()]
+        self.island = [[i for i in j] for j in self.island.split()]
 
-    """
     def array_cont(self):
-        listed_map = self.string_to_matrix()
-        array_shape = np.shape(listed_map)
-
+        array_shape = np.shape(self.island)
         nested = list(np.zeros(array_shape))
         for i, e in enumerate(nested):
             nested[i] = list(e)
 
         self.cells = np.array(nested)
-    """
 
     def assign_tile(self):
-        self.kart = []
+        self.map = []
         for i, e in enumerate(self.string_to_matrix()):
             for j, n in enumerate(e):
                 if n is 'O':
-                    self.kart.append(Ocean(i+1, j+1))
+                    self.map.append(Ocean(i+1, j+1))
                 elif n is 'J':
-                    self.kart.append(Jungle(i+1, j+1))
-        return self.kart
+                    self.map.append(Jungle(i+1, j+1))
+        return self.map
 
 
     def fodder_added(self):
