@@ -22,7 +22,6 @@ class Landscape:
                                 'omega': 0.4,
                                 'F': 10.0}
 
-
     default_carnivores_para = {'w_birth': 6.0,
                                 'sigma_birth': 1.0,
                                 'beta': 0.75,
@@ -40,7 +39,14 @@ class Landscape:
                                 'F': 50.0,
                                 'DeltaPhiMax': 10.0}
 
-    parameters = [copy.deepcopy(default_herbivores_para), copy.deepcopy(default_carnivores_para)
+    parameters = [copy.deepcopy(default_herbivores_para),
+                  copy.deepcopy(default_carnivores_para)]
+
+    default_jungle_parameters = {'f_max': 800.0}
+    default_savannah_parameters = {'f_max': 300.0,
+                                  'alpha': 0.3}\
+    landscape_parameters = [copy.deepcopy(default_jungle_parameters),
+                            copy.deepcopy(default_savannah_parameters)]
 
 
     @classmethod
@@ -170,10 +176,9 @@ class Landscape:
                     "'Modelling the Ecosystem of Rossumøya' project"
                     "description".format(key))
 
+
     @classmethod
     def set_parameters_carni(cls, carni_para):
-
-
         for key in carni_para:
             if key in cls.parameters[1]:
                 if key is 'w_birth':
@@ -285,6 +290,36 @@ class Landscape:
                     "'Modelling the Ecosystem of Rossumøya' project"
                     "description".format(key))
 
+    @classmethod
+    def set_jungle_parameters(cls, jungle_para):
+        if jungle_para in cls.landscape_parameters[0]:
+            if jungle_para < 0:
+                raise ValueError("'f_max' must be positive")
+            else:
+                cls.landscape_parameters[0] = jungle_para
+        else:
+            raise KeyError(
+                "Your input is not a correct parameter."
+                "Valid key for jungle must be 'f_max'")
+
+    @classmethod
+    def set_savannah_parameters(cls, savannah_para):
+        for key in savannah_para:
+            if key in cls.landscape_parameters[1]:
+                if key is 'f_max':
+                    if savannah_para[key] < 0:
+                        raise ValueError("'f_max' must be positive")
+                    else:
+                        cls.landscape_parameters[1][key] = savannah_para[key]
+
+                elif key is 'alpha':
+                    if 0 <= savannah_para[key] <= 1:
+                        raise ValueError("'alpha' must be between 0 and 1")
+                    else:
+                        cls.landscape_parameters[1][key] = savannah_para[key]
+                else:
+                    pass
+
 
     def __init__(self, island):
         self.island = island
@@ -292,6 +327,8 @@ class Landscape:
         self.animal = []
         self.cells = None
         self.herbivores_on_island = None
+        self.h_parameters = self.parameters[0]
+        self.c_parameters = self.parameters[1]
 
     def string_to_matrix(self):
         """string made to nested list"""
@@ -324,6 +361,9 @@ class Landscape:
 
     def animals(self):
         pass
+
+class Savannah(Landscape):
+
 
 
 

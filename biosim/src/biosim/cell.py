@@ -4,8 +4,8 @@
 
 """
 
-__author__ = ""
-__email__ = ""
+__author__ = "Olav Vikøren Espenes & Håvard Brobakken Eig"
+__email__ = "olaves@nmbu.no, havarde@nmbu.no"
 
 import random
 import math

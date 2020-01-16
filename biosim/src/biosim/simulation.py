@@ -29,7 +29,7 @@ class BioSim:
                 self.herbi.append(i)
             elif i.get('species') == 'Carnivore':
                 self.carni.append(i)
-
+        self.landscape = Landscape()
 
         """
         :param island_map: Multi-line string specifying island geography
@@ -64,19 +64,11 @@ class BioSim:
         :param params: Dict with valid parameter specification for species
         """
         if species == 'Herbivores':
-            herbi_para = params
+            landscape.set_parameters_herbi(params)
         elif species == 'Carnivores':
-            carni_para = params
-        else
+            landscape.set_parameters_carni(params)
+        else:
             raise ValueError("'species' must be Herbivores or Carnivores")
-
-        herbi_parameters = Landscape()
-        herbi_parameters.set_parameters_herbi(herbi_para)
-
-        corni_parameters = Landscape()
-        corni_parameters.set_parameters_corni(carni_para)
-        # Definerer valgte parametre for herbivores og carnivores før videre
-        # simulation.
 
 
     def set_landscape_parameters(self, landscape, params):
@@ -86,7 +78,14 @@ class BioSim:
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape
         """
-        pass
+        if landscape == 'J':
+            landscape.set_jungle_parameters(params)
+        elif landscape == 'S':
+            landscape.set_savannah_parameters(params)
+        else:
+            raise ValueError("'landscape' must be 'J' (Jungel) "
+                             "or 'S' (savannah)")
+
 
     def where_to_migrate(self, migrator_list):
         mapsy = Landscape(self.island_map)

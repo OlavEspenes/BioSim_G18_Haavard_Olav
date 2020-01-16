@@ -59,6 +59,13 @@ if __name__ == "__main__":
     position = (1,1)
     fodder = 1000
     test = Cell(herbi, carni, fodder, h_parameters, c_parameters, position)
+    #test.age()
+    #test.feeding_herbi()
+    test.feeding_carni()
+    #test.birth()
+    #test.weight_loss()
+    test.where_to_migrate()
+    #test.death()
 
     test.feeding_herbi()
     test.feeding_carni()
