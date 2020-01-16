@@ -1,8 +1,9 @@
 from landscape import Landscape
 if __name__ == "__main__":
 
-    olafius = Landscape("""\
+    test = Landscape("""\
     OOO
     OJO
     OOO""")
-    olafius.string_to_array()
+    test.string_to_matrix()
+    print(test.assign_tile())

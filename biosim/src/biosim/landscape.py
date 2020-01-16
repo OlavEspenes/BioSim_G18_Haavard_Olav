@@ -333,25 +333,18 @@ class Landscape:
 
     def string_to_matrix(self):
         """string made to nested list"""
-        self.island = [[i for i in j] for j in self.island.split()]
+        return [[i for i in j] for j in self.island.split()]
 
-    def array_cont(self):
-        array_shape = np.shape(self.island)
-        nested = list(np.zeros(array_shape))
-        for i, e in enumerate(nested):
-            nested[i] = list(e)
-
-        self.cells = np.array(nested)
 
     def assign_tile(self):
-        self.map = []
+        map = []
         for i, e in enumerate(self.string_to_matrix()):
             for j, n in enumerate(e):
                 if n is 'O':
-                    self.map.append(Ocean(i+1, j+1))
+                    map.append(Ocean(i+1, j+1))
                 elif n is 'J':
-                    self.map.append(Jungle(i+1, j+1))
-        return self.map
+                    map.append(Jungle(i+1, j+1))
+        return map
 
 
     def fodder_added(self):
@@ -363,10 +356,20 @@ class Landscape:
     def animals(self):
         pass
 
-class Savannah(Landscape):
+#class Savannah(Landscape):
+
+class Ocean(Landscape):
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
 
 
-
+class Jungle(Landscape):
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        position = (self.x, self.y)
+        
 
 
 
