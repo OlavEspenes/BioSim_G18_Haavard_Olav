@@ -44,7 +44,8 @@ class Landscape:
 
     default_jungle_parameters = {'f_max': 800.0}
     default_savannah_parameters = {'f_max': 300.0,
-                                  'alpha': 0.3}\
+                                  'alpha': 0.3}
+
     landscape_parameters = [copy.deepcopy(default_jungle_parameters),
                             copy.deepcopy(default_savannah_parameters)]
 
