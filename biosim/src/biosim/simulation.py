@@ -91,6 +91,25 @@ class BioSim:
         mapsy = Landscape(self.island_map)
         mapsy.string_to_matrix()
 
+    def string_to_matrix(self):
+        """string made to nested list"""
+        return [[i for i in j] for j in self.island.split()]
+
+    def assign_tile(self):
+        map = []
+        for i, e in enumerate(self.string_to_matrix()):
+            for j, n in enumerate(e):
+                if n is 'O':
+                    map.append(Ocean(i + 1, j + 1))
+                elif n is 'J':
+                    map.append(Jungle(i + 1, j + 1))
+        return map
+
+    def simulation_one_year(self):
+
+        for r_number in rows:
+            for c_numer in columns:
+
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -102,11 +121,19 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
+
+
+
+
+
+
+
         para = Landscape(self.island_map)
         cell = Cell(self.ini_herbi, self.ini_carni, fodder, herbi_para, carni_para, position))
         # Save lists in postitions.
         # go through one year on each position.
         for i in range(num_years):
+
 
 
 

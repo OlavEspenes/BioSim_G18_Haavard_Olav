@@ -331,10 +331,11 @@ class Landscape:
         self.h_parameters = self.parameters[0]
         self.c_parameters = self.parameters[1]
 
+    def o
+
     def string_to_matrix(self):
         """string made to nested list"""
         return [[i for i in j] for j in self.island.split()]
-
 
     def assign_tile(self):
         map = []
@@ -345,6 +346,12 @@ class Landscape:
                 elif n is 'J':
                     map.append(Jungle(i+1, j+1))
         return map
+
+
+
+
+
+
 
 
     def fodder_added(self):
