@@ -330,6 +330,8 @@ class Landscape:
         self.herbivores_on_island = None
         self.h_parameters = self.parameters[0]
         self.c_parameters = self.parameters[1]
+        self.jungle_para = self.landscape_parameters[0]
+        self.savannah_para = self.landscape_parameters[1]
 
     def o
 

@@ -105,10 +105,27 @@ class BioSim:
                     map.append(Jungle(i + 1, j + 1))
         return map
 
-    def simulation_one_year(self):
+  #  [['O', 'O', 'O', 'K', 'K', 'O', 'O', 'O'],
+  #  ['O', 'O', 'O', 'L', 'L', 'L', 'O', 'O'],
+  #   ['O', 'O', 'O', 'O', 'L', 'O', 'O', 'O']]
 
-        for r_number in rows:
-            for c_numer in columns:
+
+
+
+    def simulation_one_year(self):
+        h_para = landscape.h_parameters
+        c_para = landscape.c_parameters
+        rows = len(island)
+        columns = len(island[1])
+        fodder_island = [[None]*columns]*rows
+        for row in rows:
+            for col in columns:
+                if island[row][columns] = 'S':
+                fodder = fodder_island[row][columns] + 
+
+
+
+
 
 
     def simulate(self, num_years, vis_years=1, img_years=None):
