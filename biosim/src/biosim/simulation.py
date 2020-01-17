@@ -120,10 +120,10 @@ class BioSim:
 
         for row in rows:
             for col in columns:
-                if self.island_map[row][col] is not None:
-                    herbi = herbivores[row][col]
-                    carni = carnivores[row][col]
-                    fodder =
+                if self.fodder_map[row][col] is not None:
+                    herbi = herbi_map[row][col]
+                    carni = carni_map[row][col]
+                    fodder = self.fodder_map[row][col]
                     cell = Cell(herbi, carni, fodder, h_para, c_para)
                     cell.feeding_herbi()
                     cell.feeding_carni()
@@ -131,17 +131,11 @@ class BioSim:
                     cell.age()
                     cell.weight_loss()
                     cell.death()
-                    emigrators = send_out_emigrators()
+                    emigrations = send_out_emigrators()
                     herbivores[row][col] = cell.herbi
                     carnivores[row][col] = cell.carni
-                    herbi_migration[row][col] = emigrators[0]
-                    carni_migration[row][col] = emigrators[1]
-
-
-
-
-
-
+                    herbi_migration[row][col] = emigrations[0]
+                    carni_migration[row][col] = emigrations[1]
 
 
     def simulate(self, num_years, vis_years=1, img_years=None):
