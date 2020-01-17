@@ -20,16 +20,16 @@ class BioSim:
         img_base=None,
         img_fmt="png",
     ):
-        self.island_map = island_map
         self.ini_pop = ini_pop
         self.ini_carni = []
         self.ini_herbi = []
         for i in self.ini_pop[1].get('pop'):
             if i.get('species') == 'Herbivore':
-                self.herbi.append(i)
+                self.ini_herbi.append(i)
             elif i.get('species') == 'Carnivore':
-                self.carni.append(i)
+                self.ini_carni.append(i)
         self.landscape = Landscape()
+        self.island_map = [[[i] for i in j] for j in island_map.split()]
 
         """
         :param island_map: Multi-line string specifying island geography
@@ -88,39 +88,29 @@ class BioSim:
 
 
     def where_to_migrate(self, migrator_list):
-        mapsy = Landscape(self.island_map)
-        mapsy.string_to_matrix()
+        pass
 
-    def string_to_matrix(self):
-        """string made to nested list"""
-        return [[i for i in j] for j in self.island.split()]
 
-    def assign_tile(self):
-        map = []
-        for i, e in enumerate(self.string_to_matrix()):
-            for j, n in enumerate(e):
-                if n is 'O':
-                    map.append(Ocean(i + 1, j + 1))
-                elif n is 'J':
-                    map.append(Jungle(i + 1, j + 1))
-        return map
-
-  #  [['O', 'O', 'O', 'K', 'K', 'O', 'O', 'O'],
-  #  ['O', 'O', 'O', 'L', 'L', 'L', 'O', 'O'],
-  #   ['O', 'O', 'O', 'O', 'L', 'O', 'O', 'O']]
+    #  [['O', 'O', 'O', 'K', 'K', 'O', 'O', 'O'],
+    #  ['O', 'O', 'O', 'L', 'L', 'L', 'O', 'O'],
+    #   ['O', 'O', 'O', 'O', 'L', 'O', 'O', 'O']]
 
 
 
 
     def simulation_one_year(self):
-        h_para = landscape.h_parameters
-        c_para = landscape.c_parameters
-        rows = len(island)
-        columns = len(island[1])
-        fodder_island = [[None]*columns]*rows
+        h_para = self.landscape.h_parameters
+        c_para = self.landscape.c_parameters
+        rows = range(len(self.island_map))
+        columns = range(len(self.island_map[1]))
+        #fodder_island = [[None]*columns*rows]
+
         for row in rows:
             for col in columns:
-                if island[row][columns] = 'S':
+                if self.island_map[row][col] == ['J']:
+                    cell = Cell(herbi, carni, fodder, h_para, c_para)
+
+                if island[row][col] == 'S':
                 fodder = fodder_island[row][columns] + 
 
 
@@ -138,20 +128,8 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
-
-
-
-
-
-
-
-        para = Landscape(self.island_map)
-        cell = Cell(self.ini_herbi, self.ini_carni, fodder, herbi_para, carni_para, position))
-        # Save lists in postitions.
-        # go through one year on each position.
         for i in range(num_years):
-
-
+            self.simulation_one_year()
 
 
 

@@ -14,7 +14,7 @@ import numpy as np
 
 class Cell:
 
-    def __init__(self, herbi, carni, fodder, herbi_para, carni_para, position):
+    def __init__(self, herbi, carni, fodder, herbi_para, carni_para):
         self.herbi = herbi
             # Liste med herbivores med dictionary med egenskapene age, weight og fitness
             # i gitt rute sortert etter fitness.

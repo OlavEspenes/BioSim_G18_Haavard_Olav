@@ -378,7 +378,7 @@ class Jungle(Landscape):
         self.x = x
         self.y = y
         position = (self.x, self.y)
-        
+
 
 
 
