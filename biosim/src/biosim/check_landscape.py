@@ -5,6 +5,4 @@ if __name__ == "__main__":
     OOO
     OJO
     OOO""")
-    test.string_to_matrix()
-    print(test.assign_tile())
-    test.c_parameters('mu')
+    print(test.jungle_para['f_max'])

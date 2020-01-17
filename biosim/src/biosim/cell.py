@@ -5,7 +5,7 @@
 """
 
 __author__ = "Olav Vikøren Espenes & Håvard Brobakken Eig"
-__email__ = "olaves@nmbu.no, havarde@nmbu.no"
+__email__ = "olaves@nmbu.no, havardei@nmbu.no"
 
 import random
 import math
@@ -16,23 +16,10 @@ class Cell:
 
     def __init__(self, herbi, carni, fodder, herbi_para, carni_para):
         self.herbi = herbi
-            # Liste med herbivores med dictionary med egenskapene age, weight og fitness
-            # i gitt rute sortert etter fitness.
         self.carni = carni
-        self.fodder = fodder         # Hvor mye Fodder som er tilgjengelig i gitt rute.
-        self.h_parameters = herbi_para     # Parameters for herbivores.
-        self.c_parameters = carni_para     # Parameters for carnivores.
-        """
-        "Eksempel:
-    
-        self.herbi = [{'age': 10, 'species: 'Herbivore', 'weight': 15},
-                        {'age': 5, 'species: 'Herbivore', 'weight': 40},
-                        {'age': 15, 'species: 'Herbivore', 'weight': 25}]
-        self.carni = [{'age': 3, 'species: 'Carnivore', 'weight': 35},
-                        {'age': 5, 'species: 'Carnivore', 'weight': 20},
-                        {'age': 8, 'species: 'Carnivore', 'weight': 5}]
-        """
-
+        self.fodder = fodder
+        self.h_parameters = herbi_para
+        self.c_parameters = carni_para
 
     def fitness_single_animal(self, age, weight, parameters):
         q_plus = (1 + math.e ** (parameters['phi_age']
@@ -44,9 +31,9 @@ class Cell:
 
     def update_fitness_sorted(self, input_list, parameters):
         for i, j in enumerate(input_list):
-            j['fitness'] = self.fitness_single_animal(input_list[i]['age'], input_list[i]['weight'], parameters)
+            j['fitness'] = self.fitness_single_animal(
+                input_list[i]['age'], input_list[i]['weight'], parameters)
         sorted(input_list, key=lambda j: j['fitness'], reverse=True)
-
 
     def feeding_herbi(self):
         """Eats plants and removes fodder from cell.
@@ -56,8 +43,7 @@ class Cell:
         for animal,_ in enumerate(self.herbi):
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
-                self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
-                                               + self.h_parameters['beta'] * appetite
+                self.herbi[animal]['weight'] = self.herbi[animal]['weight'] + self.h_parameters['beta'] * appetite
                 self.fodder = self.fodder - appetite
 
             elif 0 < self.fodder < appetite:
@@ -67,8 +53,6 @@ class Cell:
             else:
                 pass
         self.update_fitness_sorted(self.herbi, self.h_parameters)
-                # function that reduces food in cell
-
 
     def feeding_carni(self):
         """Kills with a probability p.
@@ -181,7 +165,6 @@ class Cell:
                 if dead_herbis[animal] in self.herbi:
                     self.herbi.remove(dead_herbis[animal])
 
-
     def procreation(self, list_animal, parameters, species):
         """Animals procreate by a certain probability.
         probability 0: w < c(w-birth + o-birth)
@@ -192,8 +175,7 @@ class Cell:
             weight = parameters['w_birth'] + np.random.normal() * \
                      parameters['sigma_birth']
             p = parameters['gamma'] * list_animal[i].get('fitness') * (len(list_animal) - 1)
-            if p > random.random(): #and self.h_parameters['omega']\
-                    #> self.h_parameters['zeta'] * weight:
+            if p > random.random() and list_animal[i].get('weight') > parameters['zeta'] * weight:
                 check_mother_weight = list_animal[i].get('weight') - weight * \
                                       parameters['xi']
                 if check_mother_weight > 0:

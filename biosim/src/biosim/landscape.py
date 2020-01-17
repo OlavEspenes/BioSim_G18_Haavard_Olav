@@ -321,7 +321,6 @@ class Landscape:
                 else:
                     pass
 
-
     def __init__(self, island):
         self.island = island
         self.fodder = 0
@@ -334,49 +333,7 @@ class Landscape:
         self.savannah_para = self.landscape_parameters[1]
 
 
-    def string_to_matrix(self):
-        """string made to nested list"""
-        return [[i for i in j] for j in self.island.split()]
 
-    def assign_tile(self):
-        map = []
-        for i, e in enumerate(self.string_to_matrix()):
-            for j, n in enumerate(e):
-                if n is 'O':
-                    map.append(Ocean(i+1, j+1))
-                elif n is 'J':
-                    map.append(Jungle(i+1, j+1))
-        return map
-
-
-
-
-
-
-
-
-    def fodder_added(self):
-        pass
-
-    def fodder_decreased(self):
-        pass
-
-    def animals(self):
-        pass
-
-#class Savannah(Landscape):
-
-class Ocean(Landscape):
-    def __init__(self,x,y):
-        self.x = x
-        self.y = y
-
-
-class Jungle(Landscape):
-    def __init__(self,x,y):
-        self.x = x
-        self.y = y
-        position = (self.x, self.y)
 
 
 

@@ -56,7 +56,7 @@ if __name__ == "__main__":
             herbi.append(i)
         elif i.get('species') == 'Carnivore':
             carni.append(i)
-    position = (1,1)
+    position = (1, 1)
     fodder = 1000
     test = Cell(herbi, carni, fodder, h_parameters, c_parameters)
     test.feeding_herbi()
@@ -66,10 +66,10 @@ if __name__ == "__main__":
     test.weight_loss()
     test.death()
     flykninger = test.send_out_emigrators()         #gives us emigrants. two lists for each species
-    print('herbi som skal flytte',flykninger[0])    #herbi
-    print('carni som skal flytte',flykninger[1])    #carni
-    print('herbi igjen i cellen', herbi)
-    print('carni igjen i cellen', carni)
+    print('herbi som skal flytte', len(flykninger[0]))   #herbi
+    print('carni som skal flytte', len(flykninger[1]))   #carni
+    print('herbi igjen i cellen', len(herbi))
+    print('carni igjen i cellen', len(carni))
 
 
 

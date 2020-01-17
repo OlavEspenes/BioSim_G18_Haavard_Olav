@@ -34,11 +34,12 @@ class BioSim:
         for row in range(len(self.fodder_map)):
             for col in range(len(self.fodder_map[1])):
                 if self.fodder_map[row][col] == ['J']:
-                    self.fodder_map[row][col].append(800) #må endres!!!111!
+                    self.fodder_map[row][col].append(self.landscape.jungle_para['f_max']) #må endres!!!111!
                 if self.fodder_map[row][col] == ['S']:
-                    self.fodder_map[row][col].append(300)
+                    self.fodder_map[row][col].append(self.landscape.savannah_para['f_max'])
                 if self.fodder_map[row][col] == ['D']:
                     self.fodder_map[row][col].append(0)
+
         self.island_map = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
         for i in range(len(self.island_map)): #put input pop in
             for j in range(len(self.island_map[0])):
@@ -78,7 +79,6 @@ class BioSim:
                     elif self.island_map[i][j] is not None:
                         self.island_map[i][j][0] += list_herbi
                         self.island_map[i][j][1] += list_carni
-
 
 
     def set_animal_parameters(self, species, params):
