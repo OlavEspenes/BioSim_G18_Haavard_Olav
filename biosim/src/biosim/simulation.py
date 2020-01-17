@@ -34,16 +34,16 @@ class BioSim:
         for row in range(len(self.fodder_map)):
             for col in range(len(self.fodder_map[1])):
                 if self.fodder_map[row][col] == ['J']:
-                    self.fodder_map[row][col].append(800)
+                    self.fodder_map[row][col].append(800) #må endres!!!111!
                 if self.fodder_map[row][col] == ['S']:
                     self.fodder_map[row][col].append(300)
                 if self.fodder_map[row][col] == ['D']:
                     self.fodder_map[row][col].append(0)
         self.island_map = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
-        for i in range(len(self.island_map)):
+        for i in range(len(self.island_map)): #put input pop in
             for j in range(len(self.island_map[0])):
-                if ([i], [j]) == self.ini_position:
-                    self.island_map[i][j] = [ini_carni, ini_herbi]
+                if (i, j) == self.ini_position:
+                    self.island_map[i][j] = [ini_herbi, ini_carni]
 
         """
         :param island_map: Multi-line string specifying island geography
@@ -68,6 +68,11 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
+    def set_in_population(self, list_carni, list_herbi, position):
+        for i in range(len(self.island_map)): #put input pop in
+            for j in range(len(self.island_map[0])):
+                if (i, j) == position:
+                    self.island_map[i][j] = [list_herbi, list_carni]
 
 
     def set_animal_parameters(self, species, params):
