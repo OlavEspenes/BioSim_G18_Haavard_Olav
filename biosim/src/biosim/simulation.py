@@ -6,6 +6,7 @@
 __author__ = ""
 __email__ = ""
 
+import math
 from cell import Cell
 from landscape import Landscape
 
@@ -136,7 +137,7 @@ class BioSim:
                 if self.fodder_map[row][col] is not None:
                     herbi = herbi_map[row][col]
                     carni = carni_map[row][col]
-                    fodder = self.fodder_map[row][col]
+                    fodder = self.fodder_map[row][col][1]
                     cell = Cell(herbi, carni, fodder, h_para, c_para)
                     cell.feeding_herbi()
                     cell.feeding_carni()
@@ -149,10 +150,53 @@ class BioSim:
                     carnivores[row][col] = cell.carni
                     herbi_migration[row][col] = emigrations[0]
                     carni_migration[row][col] = emigrations[1]
+                    self.fodder_map[row][col][1] = cell.fodder
+
+            # Migration
+        for row in range(rows):
+            for col in range(columns):
+                if herbi_migration[row][col] is None:
+                    continue
+                else:
+                    for herbi in herbi_migration[row][col]:
+                        north_f = self.fodder_map[row-1][col][1]
+                        east_f = self.fodder_map[row][col+1][1]
+                        south_f = self.fodder_map[row+1][col][1]
+                        west_f = self.fodder_map[row][col-1][1]
+                        epsilon_north =  north_f/(len(self.island_map[row-1][col][0])+1)*h_para['F']
+                        epsilon_east = east_f/(len(self.island_map[row][col+1][0])+1)*h_para['F']
+                        epsilon_south = south_f/(len(self.island_map[row+1][col][0])+1)*h_para['F']
+                        epsilon_west = west_f/(len(self.island_map[row][col-1][0]+1))*h_para['F']
 
 
-                neighbors_cells = []
-                epsilon
+                        if self.fodder_map[row-1][col][0] == 'M' or 'O':
+                            propensity_north = 0
+                        else:
+                            propensity_north = math.exp(h_para['lambda']*epsilon_north)
+                        if self.fodder_map[row][col+1][0] == 'M' or 'O':
+                            propensity_east = 0
+                        else:
+                            propensity_east = math.exp(h_para['lambda']*epsilon_east)
+                        if self.fodder_map[row+1][col][0] == 'M' or 'O':
+                            propensity_south = 0
+                        else:
+                            propensity_south = math.exp(h_para['lambda']*epsilon_south)
+                        if self.fodder_map[row][col-1][0] == 'M' or 'O'
+                            propensity_west = 0
+                        else:
+                            propensity_west = math.exp(h_para['lambda']*epsilon_west)
+
+                        propensity_tot = propensity_north+propensity_east+propensity_south+propensity_west
+
+                        probability_north = propensity_north/propensity_tot
+                        probability_east = propensity_east/propensity_tot
+                        probability_south = propensity_south/propensity_tot
+                        probability_west = propensity_west/propensity_tot
+
+
+
+
+
 
 
 

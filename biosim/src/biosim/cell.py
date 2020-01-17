@@ -52,6 +52,7 @@ class Cell:
                 self.fodder = 0
             else:
                 pass
+        return self.fodder
         self.update_fitness_sorted(self.herbi, self.h_parameters)
 
     def feeding_carni(self):
