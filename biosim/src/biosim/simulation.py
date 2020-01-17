@@ -138,6 +138,14 @@ class BioSim:
                     carni_migration[row][col] = emigrations[1]
 
 
+                neighbors_cells = []
+                epsilon
+
+
+
+
+
+
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
@@ -148,6 +156,13 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
+
+
+        for year in num_years:
+
+
+
+
         for i in range(num_years):
             self.simulation_one_year()
 
