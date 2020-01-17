@@ -19,7 +19,6 @@ class Cell:
             # Liste med herbivores med dictionary med egenskapene age, weight og fitness
             # i gitt rute sortert etter fitness.
         self.carni = carni
-        self.position = position
         self.fodder = fodder         # Hvor mye Fodder som er tilgjengelig i gitt rute.
         self.h_parameters = herbi_para     # Parameters for herbivores.
         self.c_parameters = carni_para     # Parameters for carnivores.
@@ -183,7 +182,6 @@ class Cell:
                     self.herbi.remove(dead_herbis[animal])
 
 
-
     def procreation(self, list_animal, parameters, species):
         """Animals procreate by a certain probability.
         probability 0: w < c(w-birth + o-birth)
@@ -248,9 +246,11 @@ class Cell:
             list_animal.remove(el)
 
 
-    def death(self): #NB!! make sure fitness is updated before use
+    def death(self):
         """uses simple death function and updates herbi and carni
         with fewer animals after natural death"""
+        self.update_fitness_sorted(self.herbi, self.h_parameters)
+        self.update_fitness_sorted(self.carni, self.c_parameters)
         self.death_function(self.carni, self.c_parameters)
         self.death_function(self.herbi, self.h_parameters)
 

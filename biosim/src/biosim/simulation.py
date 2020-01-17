@@ -103,15 +103,29 @@ class BioSim:
         c_para = self.landscape.c_parameters
         rows = range(len(self.island_map))
         columns = range(len(self.island_map[1]))
-        #fodder_island = [[None]*columns*rows]
+        herbi_migration = [[None]*columns]*rows
+        carni_migration = [[None]*columns]*rows
 
         for row in rows:
             for col in columns:
-                if self.island_map[row][col] == ['J']:
+                if self.island_map[row][col] is not None:
+                    herbi = herbivores[row][col]
+                    carni = carnivores[row][col]
+                    fodder =
                     cell = Cell(herbi, carni, fodder, h_para, c_para)
+                    cell.feeding_herbi()
+                    cell.feeding_carni()
+                    cell.birth()
+                    cell.age()
+                    cell.weight_loss()
+                    cell.death()
+                    emigrators = send_out_emigrators()
+                    herbivores[row][col] = cell.herbi
+                    carnivores[row][col] = cell.carni
+                    herbi_migration[row][col] = emigrators[0]
+                    carni_migration[row][col] = emigrators[1]
 
-                if island[row][col] == 'S':
-                fodder = fodder_island[row][columns] + 
+
 
 
 
