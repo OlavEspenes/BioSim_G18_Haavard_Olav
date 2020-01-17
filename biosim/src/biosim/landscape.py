@@ -333,7 +333,6 @@ class Landscape:
         self.jungle_para = self.landscape_parameters[0]
         self.savannah_para = self.landscape_parameters[1]
 
-    def o
 
     def string_to_matrix(self):
         """string made to nested list"""
