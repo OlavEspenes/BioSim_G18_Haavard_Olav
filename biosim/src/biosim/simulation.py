@@ -113,13 +113,13 @@ class BioSim:
     def simulation_one_year(self):
         h_para = self.landscape.h_parameters
         c_para = self.landscape.c_parameters
-        rows = range(len(self.island_map))
-        columns = range(len(self.island_map[1]))
+        rows = len(self.fodder_map)
+        columns = len(self.fodder_map[1])
         herbi_migration = [[None]*columns]*rows
         carni_migration = [[None]*columns]*rows
 
-        for row in rows:
-            for col in columns:
+        for row in range(rows):
+            for col in range(columns):
                 if self.fodder_map[row][col] is not None:
                     herbi = herbi_map[row][col]
                     carni = carni_map[row][col]
