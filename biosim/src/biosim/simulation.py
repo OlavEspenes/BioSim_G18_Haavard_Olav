@@ -115,13 +115,13 @@ class BioSim:
     def simulation_one_year(self):
         h_para = self.landscape.h_parameters
         c_para = self.landscape.c_parameters
-        rows = range(len(self.island_map))
-        columns = range(len(self.island_map[1]))
+        rows = len(self.fodder_map)
+        columns = len(self.fodder_map[1])
         herbi_migration = [[None]*columns]*rows
         carni_migration = [[None]*columns]*rows
 
-        for row in rows:
-            for col in columns:
+        for row in range(rows):
+            for col in range(columns):
                 if self.fodder_map[row][col] is not None:
                     herbi = herbi_map[row][col]
                     carni = carni_map[row][col]
@@ -140,6 +140,14 @@ class BioSim:
                     carni_migration[row][col] = emigrations[1]
 
 
+                neighbors_cells = []
+                epsilon
+
+
+
+
+
+
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
@@ -150,6 +158,13 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
+
+
+        for year in num_years:
+
+
+
+
         for i in range(num_years):
             self.simulation_one_year()
 
