@@ -21,6 +21,7 @@ class BioSim:
         img_fmt="png",
     ):
         self.ini_pop = ini_pop
+        self.ini_position = self.ini_pop[0].get('loc')
         self.ini_carni = []
         self.ini_herbi = []
         for i in self.ini_pop[1].get('pop'):
@@ -29,7 +30,19 @@ class BioSim:
             elif i.get('species') == 'Carnivore':
                 self.ini_carni.append(i)
         self.landscape = Landscape()
-        self.island_map = [[[i] for i in j] for j in island_map.split()]
+        self.fodder_map = [[[i] for i in j] for j in island_map.split()]
+
+        for row in range(len(self.fodder_map)):
+            for col in range(len(self.fodder_map[1])):
+                if self.fodder_map[row][col] == ['J']:
+                    self.fodder_map[row][col].append(800)
+                if self.fodder_map[row][col] == ['S']:
+                    self.fodder_map[row][col].append(300)
+                if self.fodder_map[row][col] == ['D']:
+                    self.fodder_map[row][col].append(0)
+
+        self.herbi_map = [[None]*len(self.fodder_map[0])] * len(self.fodder_map)
+        self.carni_map = [[None] * len(self.fodder_map[0])] * len(self.fodder_map)
 
         """
         :param island_map: Multi-line string specifying island geography

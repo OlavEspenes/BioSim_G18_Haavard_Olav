@@ -7,3 +7,4 @@ if __name__ == "__main__":
     OOO""")
     test.string_to_matrix()
     print(test.assign_tile())
+    test.c_parameters('mu')
