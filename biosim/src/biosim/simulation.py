@@ -39,9 +39,11 @@ class BioSim:
                     self.fodder_map[row][col].append(300)
                 if self.fodder_map[row][col] == ['D']:
                     self.fodder_map[row][col].append(0)
-
-        self.herbi_map = [[None]*len(self.fodder_map[0])] * len(self.fodder_map)
-        self.carni_map = [[None] * len(self.fodder_map[0])] * len(self.fodder_map)
+        self.island_map = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
+        for i in range(len(self.island_map)):
+            for j in range(len(self.island_map[0])):
+                if ([i], [j]) == self.ini_position:
+                    self.island_map[i][j] = [ini_carni, ini_herbi]
 
         """
         :param island_map: Multi-line string specifying island geography
