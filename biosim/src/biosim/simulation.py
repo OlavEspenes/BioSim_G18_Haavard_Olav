@@ -20,15 +20,14 @@ class BioSim:
         img_base=None,
         img_fmt="png",
     ):
-        self.ini_pop = ini_pop
-        self.ini_position = self.ini_pop[0].get('loc')
-        self.ini_carni = []
-        self.ini_herbi = []
-        for i in self.ini_pop[1].get('pop'):
+        self.ini_position = ini_pop[0].get('loc')
+        ini_carni = []
+        ini_herbi = []
+        for i in ini_pop[1].get('pop'):
             if i.get('species') == 'Herbivore':
-                self.ini_herbi.append(i)
+                ini_herbi.append(i)
             elif i.get('species') == 'Carnivore':
-                self.ini_carni.append(i)
+                ini_carni.append(i)
         self.landscape = Landscape()
         self.fodder_map = [[[i] for i in j] for j in island_map.split()]
 
