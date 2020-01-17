@@ -68,11 +68,17 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
-    def set_in_population(self, list_carni, list_herbi, position):
-        for i in range(len(self.island_map)): #put input pop in
+
+    def append_emigrators(self, list_carni, list_herbi, position):
+        for i in range(len(self.island_map)):
             for j in range(len(self.island_map[0])):
                 if (i, j) == position:
-                    self.island_map[i][j] = [list_herbi, list_carni]
+                    if self.island_map[i][j] is None:
+                        self.island_map[i][j] = [list_herbi, list_carni]
+                    elif self.island_map[i][j] is not None:
+                        self.island_map[i][j][0] += list_herbi
+                        self.island_map[i][j][1] += list_carni
+
 
 
     def set_animal_parameters(self, species, params):
