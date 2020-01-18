@@ -70,7 +70,7 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
-
+    #add one population to a position in specific map??
     def append_emigrators(self, list_carni, list_herbi, position):
         for i in range(len(self.island_map)):
             for j in range(len(self.island_map[0])):

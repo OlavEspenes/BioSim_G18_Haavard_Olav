@@ -33,14 +33,15 @@ class Cell:
         for i, j in enumerate(input_list):
             j['fitness'] = self.fitness_single_animal(
                 input_list[i]['age'], input_list[i]['weight'], parameters)
-        sorted(input_list, key=lambda j: j['fitness'], reverse=True)
+        input_list.sort(key=lambda item: item.get('fitness'), reverse=True)
 
     def feeding_herbi(self):
-        """Eats plants and removes fodder from cell.
+        """
+        Eats plants and removes fodder from cell.
         Eats by fitness order and gains weight.
         """
         self.update_fitness_sorted(self.herbi, self.h_parameters)
-        for animal,_ in enumerate(self.herbi):
+        for animal, _ in enumerate(self.herbi):
             appetite = self.h_parameters['F']
             if appetite <= self.fodder:
                 self.herbi[animal]['weight'] = self.herbi[animal]['weight'] + self.h_parameters['beta'] * appetite
@@ -52,8 +53,8 @@ class Cell:
                 self.fodder = 0
             else:
                 pass
-        return self.fodder
         self.update_fitness_sorted(self.herbi, self.h_parameters)
+        return self.fodder
 
     def feeding_carni(self):
         """Kills with a probability p.

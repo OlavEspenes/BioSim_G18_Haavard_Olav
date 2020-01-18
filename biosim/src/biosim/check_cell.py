@@ -60,16 +60,18 @@ if __name__ == "__main__":
     fodder = 1000
     test = Cell(herbi, carni, fodder, h_parameters, c_parameters)
     test.feeding_herbi()
-    test.feeding_carni()
-    test.birth()
-    test.age()
-    test.weight_loss()
-    test.death()
-    flykninger = test.send_out_emigrators()         #gives us emigrants. two lists for each species
-    print('herbi som skal flytte', len(flykninger[0]))   #herbi
-    print('carni som skal flytte', len(flykninger[1]))   #carni
-    print('herbi igjen i cellen', len(herbi))
-    print('carni igjen i cellen', len(carni))
+    #test.feeding_carni()
+    #test.birth()
+    #test.age()
+    #test.weight_loss()
+    #test.death()
+    #flykninger = test.send_out_emigrators()         #gives us emigrants. two lists for each species
+    #print('herbi som skal flytte', len(flykninger[0]))   #herbi
+    #print('carni som skal flytte', len(flykninger[1]))   #carni
+    #print('herbi igjen i cellen', len(herbi))
+    #print('carni igjen i cellen', len(carni))
+    print(herbi)
+
 
 
 
