@@ -226,7 +226,7 @@ class BioSim:
                     continue
                 else:
                     for c in carni_migration[row][col]:
-                        north_f = self.fodder_map[row-1][col][1] # START HERFRA I MORGEN 
+                        north_f = self.fodder_map[row-1][col][1] # START HERFRA I MORGEN
                         east_f = self.fodder_map[row][col+1][1]
                         south_f = self.fodder_map[row+1][col][1]
                         west_f = self.fodder_map[row][col-1][1]
