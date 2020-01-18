@@ -331,12 +331,3 @@ class Landscape:
         self.c_parameters = self.parameters[1]
         self.jungle_para = self.landscape_parameters[0]
         self.savannah_para = self.landscape_parameters[1]
-
-
-
-
-
-
-
-
-
