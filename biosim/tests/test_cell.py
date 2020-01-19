@@ -9,14 +9,17 @@ __email__ = "olaves@nmbu.no, havardei@nmbu.no"
 
 from biosim.cell import Cell
 import pytest
+import random
 
 class TestCell:
     @pytest.fixture()
     def create_animals(self):
         self.herbi = [{'species': 'Herbivore', 'age': 3, 'weight': 20},
-                      {'species': 'Herbivore', 'age': 4, 'weight': 50}]
-        self.carni = [{'species': 'Carnivore', 'age': 3, 'weight': 20},
-                      {'species': 'Carnivore', 'age': 3, 'weight': 20}]
+                      {'species': 'Herbivore', 'age': 4, 'weight': 50},
+                      {'species': 'Herbivore', 'age': 2, 'weight': 10},
+                      {'species': 'Herbivore', 'age': 1, 'weight': 5}]
+        self.carni = [{'species': 'Carnivore', 'age': 20, 'weight': 100},
+                      {'species': 'Carnivore', 'age': 15, 'weight': 200}]
         self.h_parameter = {'w_birth': 8.0,
                                 'sigma_birth': 1.5,
                                 'beta': 0.9,
@@ -51,10 +54,6 @@ class TestCell:
         self.fodder = 800
         self.cell = Cell(self.herbi, self.carni, self.fodder, self.h_parameter, self.c_parameter)
 
-
-    def test_cell(self):
-        pass
-
     def test_fitness_single_animal(self):
         """
         Checks that animal with slightly greater
@@ -67,20 +66,105 @@ class TestCell:
 
     def test_update_fitness_sorted(self):
         """
-        Checks that
+        Checks that animals is sorted by fitness from highes to lowest.
         """
         self.create_animals()
         self.cell.update_fitness_sorted(self.herbi, self.h_parameter)
-        assert self.herbi[0].get('fitness') < self.herbi[1].get('fitness')
+        assert self.herbi[0].get('fitness') > self.herbi[1].get('fitness')
+        assert self.herbi[1].get('fitness') > self.herbi[2].get('fitness')
 
     def test_feeding_herbi(self):
-        pass
+        """
+        Checks that its less fodder after eating.
+        """
+        self.create_animals()
+        after_feed = self.cell.feeding_herbi()
+        assert self.fodder > after_feed
+
+    def test_feeding_herbi_no_fodder(self):
+        """
+        Checks that animals is not fed when there's no fodder.
+        """
+        random.seed(42)
+        self.create_animals()
+        cell2 = Cell(self.herbi, self.carni, 0, self.h_parameter, self.c_parameter)
+        cell2.feeding_herbi()
+        assert self.herbi[0].get('weight') == 50
+
+    def test_feeding_herbi_eat_less_than_appetite(self):
+        random.seed(42)
+        self.create_animals()
+        cell2 = Cell(self.herbi, self.carni, 3, self.h_parameter,
+                     self.c_parameter)
+        fodder = cell2.feeding_herbi()
+        assert self.herbi[0].get('weight') > 50
+        assert fodder == 0
 
     def test_feeding_carni(self):
-        pass
+        """
+        Checks that at least one herivore has been eaten.
+        """
+        random.seed(134)
+        self.create_animals()
+        self.cell.feeding_carni()
+        assert len(self.herbi) < 4
+
+    def test_procreation(self):
+        """
+        Checks that there have been added at least one child.
+        Also checks that child's age is 0.
+        """
+        random.seed(190923)
+        self.create_animals()
+        self.cell.procreation(self.herbi, self.h_parameter, 'Herbivore')
+        assert len(self.herbi) > 4
+        assert self.herbi[4].get('age') == 0
 
     def test_age(self):
+        """
+        Checks that one year have been added to age.
+        """
         self.create_animals()
         self.cell.age()
         assert self.herbi[0].get('age') == 4
+
+    def test_weight_loss(self):
+        """
+        Checks that weight have become less.
+        """
+        self.create_animals()
+        self.cell.weight_loss()
+        assert self.herbi[0].get('weight') < 20
+
+    def test_death_function(self):
+        """
+        Checks that at least one herbivore has been killed off.
+        """
+        random.seed(425)
+        self.create_animals()
+        self.cell.death_function(self.herbi, self.h_parameter)
+        assert len(self.herbi) < 4
+
+    def test_death_function_negative_fitness(self):
+        """
+        Checks that animal with 0 weight and fitness i killed.
+        """
+        self.create_animals()
+        herbivore = [{'species': 'Herbivore', 'age': 0, 'weight': 0}]
+        self.cell.death_function(herbivore, self.h_parameter)
+        assert len(herbivore) == 0
+
+    def test_who_will_migrate(self):
+        """
+        Checks that it's at least one less herbivore and
+        one migrant. Also that the combined amount og animals
+        is the same at before the migration.
+        """
+        random.seed(1234)
+        self.create_animals()
+        emigrant = self.cell.who_will_migrate(self.herbi, self.h_parameter)
+        assert len(self.herbi) < 4
+        assert len(emigrant) > 0
+        assert len(self.herbi) + len(emigrant) == 4
+
 

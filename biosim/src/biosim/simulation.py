@@ -30,8 +30,8 @@ class BioSim:
             elif i.get('species') == 'Carnivore':
                 ini_carni.append(i)
         self.landscape = Landscape()
-        self.fodder_map = [[[i] for i in j] for j in island_map.split()]
 
+        self.fodder_map = [[[i] for i in j] for j in island_map.split()]
         for row in range(len(self.fodder_map)):
             for col in range(len(self.fodder_map[1])):
                 if self.fodder_map[row][col] == ['J']:
