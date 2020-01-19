@@ -184,7 +184,6 @@ class BioSim:
                             else:
                                 propensity_west = math.exp(h_para['lambda']*epsilon_west)
 
-
                             propensity_tot = propensity_north+propensity_east+propensity_south+propensity_west
 
                             probability_north = propensity_north / propensity_tot
