@@ -193,7 +193,7 @@ class BioSim:
                             probability_south = propensity_south / propensity_tot
                             probability_west = propensity_west / propensity_tot
                             probability_not_to_move = 1 - probability_north - probability_east - probability_south - probability_west
-                    
+
                             choosen_cell = random.choices(['move_north',
                                                            'move_east',
                                                            'move_south',

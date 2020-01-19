@@ -11,7 +11,14 @@ if __name__ == "__main__":
                                          'weight': 15},
                         {'species': 'Herbivore',
                          'age': 5,
-                         'weight': 20}]}]
+                         'weight': 200},
+                        {'species': 'Herbivore',
+                         'age': 5,
+                         'weight': 200},
+                        {'species': 'Herbivore',
+                         'age': 5,
+                         'weight': 200}
+                        ]}]
     island_map = """
         OOOOO
         OJJJO
@@ -21,7 +28,7 @@ if __name__ == "__main__":
         """
     sim = BioSim(island_map,
         ini_pop,
-        54,
+        50373,
         ymax_animals=None,
         cmax_animals=None,
         img_base=None,
