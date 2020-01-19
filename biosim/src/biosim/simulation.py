@@ -143,10 +143,23 @@ class BioSim:
                         east_f = self.fodder_map[row][col+1][1]
                         south_f = self.fodder_map[row+1][col][1]
                         west_f = self.fodder_map[row][col-1][1]
-                        epsilon_north =  north_f/(len(self.island_map[row-1][col][0])+1)*h_para['F']
-                        epsilon_east = east_f/(len(self.island_map[row][col+1][0])+1)*h_para['F']
-                        epsilon_south = south_f/(len(self.island_map[row+1][col][0])+1)*h_para['F']
-                        epsilon_west = west_f/(len(self.island_map[row][col-1][0]+1))*h_para['F']
+
+                        if len(self.island_map[row-1][col][0]) is None:
+                            epsilon_north = north_f/(1*h_para['F'])
+                        else:
+                            epsilon_north =  north_f/(len(self.island_map[row-1][col][0])+1)*h_para['F']
+                        if len(self.island_map[row][col+1][0]) is None:
+                            epsilon_east = east_f/(1*h_para['F'])
+                        else:
+                            epsilon_east = east_f/(len(self.island_map[row][col+1][0])+1)*h_para['F']
+                        if len(self.island_map[row+1][col][0] is None:
+                            epsilon_south = south_f / (1*h_para['F'])
+                        else:
+                            epsilon_south = south_f/(len(self.island_map[row+1][col][0])+1)*h_para['F']
+                        if len(self.island_map[row][col-1][0] is None:
+                            epsilon_west = west_f / (1*h_para['F'])
+                        else:
+                            epsilon_west = west_f/(len(self.island_map[row][col-1][0]+1))*h_para['F']
 
 
                         if self.fodder_map[row-1][col][0] == 'M' or 'O':

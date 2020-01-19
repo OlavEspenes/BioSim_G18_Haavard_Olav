@@ -13,8 +13,22 @@ import numpy as np
 
 
 class Cell:
+    """
+    A class with methods to be used for a annual cycle in one cell.
+    """
 
     def __init__(self, herbi, carni, fodder, herbi_para, carni_para):
+
+        """
+        ==============   ==================================================
+            *herbi*       A list with dictionaries, one for each herbivore.
+            *carni*       A list with dictionaries, one for each carnivore.
+            *fodder*      Amount of plant fodder available based on type.
+         *herbi_para*           Dictionary of herbivore parameters.
+         *carni_para*           Dictionary of carnivore parameters.
+        ==============   ==============================================
+        """
+
         self.herbi = herbi
         self.carni = carni
         self.fodder = fodder
@@ -22,6 +36,15 @@ class Cell:
         self.c_parameters = carni_para
 
     def fitness_single_animal(self, age, weight, parameters):
+        """
+        Method to calculate fitness for a animal.
+
+        :param age: Age of the animal.
+        :param weight: Weight of the animal.
+        :param parameters: Input parameters for
+        :return: Returns fitness for one animal based on formulas (3) and (4)
+                on page 3 in "Modelling the Ecosystem of Rossumøya".
+        """
         q_plus = (1 + math.e ** (parameters['phi_age']
                                  * (age - parameters['a_half'])))
         q_minus = (1 + math.e ** (-parameters['phi_weight']
@@ -30,6 +53,12 @@ class Cell:
         return fitness
 
     def update_fitness_sorted(self, input_list, parameters):
+        """
+        Gives fitness for a
+        :param input_list:
+        :param parameters:
+        :return:
+        """
         for i, j in enumerate(input_list):
             j['fitness'] = self.fitness_single_animal(
                 input_list[i]['age'], input_list[i]['weight'], parameters)
