@@ -144,7 +144,7 @@ class BioSim:
                     if herbi_migration[row][col] is None:
                         continue
                     else:
-                        for h, _ in enumerate(herbi_migration[row][col]):
+                        for h_migrant, _ in enumerate(herbi_migration[row][col]):
                             north_f = self.fodder_map[row-1][col][1]
                             east_f = self.fodder_map[row][col+1][1]
                             south_f = self.fodder_map[row+1][col][1]
@@ -206,17 +206,33 @@ class BioSim:
                                                            probability_west,
                                                            probability_not_to_move])
                             if choosen_cell == ['move_north']:
-                                migrated_carni[row-1][col] += herbi_migration[row][col]
+                                if migrated_herbi[row-1][col] == None:
+                                    migrated_herbi[row-1][col] = herbi_migration[row][col][h_migrant]
+                                else:
+                                    migrated_herbi[row - 1][col] + herbi_migration[row][col][h_migrant]
                             elif choosen_cell == ['move_east']:
-                                migrated_herbi[row][col+1] += herbi_migration[row][col]
+                                if migrated_herbi[row][col+1] == None:
+                                    migrated_herbi[row][col+1] = herbi_migration[row][col][h_migrant]
+                                else:
+                                    migrated_herbi[row][col + 1] + herbi_migration[row][col][h_migrant]
                             elif choosen_cell == ['move_south']:
-                                migrated_herbi[row+1][col] += herbi_migration[row][col]
+                                if migrated_herbi[row+1][col] == None:
+                                    migrated_herbi[row+1][col] = herbi_migration[row][col][h_migrant]
+                                else:
+                                    migrated_herbi[row+1][col] + herbi_migration[row][col][h_migrant]
                             elif choosen_cell == ['move_west']:
-                                migrated_herbi[row][col-1] += herbi_migration[row][col]
+                                if migrated_herbi[row][col-1] == None:
+                                    migrated_herbi[row][col-1] = herbi_migration[row][col][h_migrant]
+                                else:
+                                    migrated_herbi[row][col - 1] + herbi_migration[row][col][h_migrant]
                             elif choosen_cell == ['stay']:
-                                migrated_herbi[row][col] += herbi_migration[row][col]
-
+                                if migrated_herbi[row][col] == None:
+                                    migrated_herbi[row][col] = herbi_migration[row][col][h_migrant]
+                                else:
+                                    migrated_herbi[row][col] + herbi_migration[row][col][h_migrant]
         print(migrated_herbi)
+
+
 
         """
         for row in range(rows):

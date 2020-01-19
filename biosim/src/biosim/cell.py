@@ -83,7 +83,7 @@ class Cell:
                 self.fodder = self.fodder - appetite
 
             elif 0 < self.fodder < appetite:
-                self.herbi[animal]['weight'] = self.herbi[animal]['weight']\
+                self.herbi[animal]['weight'] = self.herbi[animal]['weight'] \
                                                + self.h_parameters['beta'] \
                                                * self.fodder
                 self.fodder = 0
@@ -129,8 +129,8 @@ class Cell:
 
                                 self.carni[hunter]['fitness'] = \
                                     self.fitness_single_animal(
-                                    self.carni[hunter]['age'],
-                                    self.carni[hunter]['weight'],
+                                        self.carni[hunter]['age'],
+                                        self.carni[hunter]['weight'],
                                         self.c_parameters)
                                 dead_herbis.append(herbi[preyer])
                                 appetite = appetite - herbi[preyer]['weight']
@@ -160,15 +160,15 @@ class Cell:
                                 self.c_parameters['DeltaPhiMax']:
                             probability = random.random() < \
                                           ((self.carni[hunter]['fitness']
-                                               - herbi[preyer]['fitness'])
-                                              / self.c_parameters['DeltaPhiMax'])
+                                            - herbi[preyer]['fitness'])
+                                           / self.c_parameters['DeltaPhiMax'])
 
                             if probability is True:
                                 self.carni[hunter]['weight'] = \
                                     self.carni[hunter]['weight'] + \
                                     self.c_parameters['beta'] * appetite
                                 self.carni[hunter]['fitness'] = \
-                                    self.fitness_single_animal\
+                                    self.fitness_single_animal \
                                         (self.carni[hunter]['age'],
                                          self.carni[hunter]['weight'],
                                          self.c_parameters)
@@ -186,8 +186,8 @@ class Cell:
                                 self.c_parameters['beta'] * appetite
                             self.carni[hunter]['fitness'] = \
                                 self.fitness_single_animal(
-                                self.carni[hunter]['age'],
-                                self.carni[hunter]['weight'],
+                                    self.carni[hunter]['age'],
+                                    self.carni[hunter]['weight'],
                                     self.c_parameters)
 
                             dead_herbis.append(herbi[preyer])
@@ -283,7 +283,6 @@ class Cell:
         for el in should_del2:
             list_animal.remove(el)
 
-
     def death(self):
         """uses simple death function and updates herbi and carni
         with fewer animals after natural death"""
@@ -310,7 +309,8 @@ class Cell:
 
     def send_out_emigrators(self):
         """
-         
+        Returns two lists, one for herbivores and one for carnivores, with
+        animals that can migrate.
         """
         herbi_migration_list = self.who_will_migrate(self.herbi,
                                                      self.h_parameters)
