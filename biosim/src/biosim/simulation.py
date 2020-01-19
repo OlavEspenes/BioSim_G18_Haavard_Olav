@@ -164,7 +164,7 @@ class BioSim:
                             if self.island_map[row][col-1][0] is None:
                                 epsilon_west = west_f / (1*h_para['F'])
                             else:
-                                epsilon_west = west_f/(len(self.island_map[row][col-1][0]+1))*h_para['F']
+                                epsilon_west = west_f/(len(self.island_map[row][col-1][0])+1)*h_para['F']
 
 
                             if self.fodder_map[row-1][col][0] == 'M' or 'O':
@@ -192,7 +192,7 @@ class BioSim:
                             probability_south = propensity_south / propensity_tot
                             probability_west = propensity_west / propensity_tot
                             probability_not_to_move = 1 - probability_north - propensity_east - propensity_south - propensity_west
-                    
+
                             choosen_cell = random.choices(['move_north',
                                                            'move_east',
                                                            'move_south',

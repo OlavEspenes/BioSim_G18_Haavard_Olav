@@ -53,6 +53,12 @@ class Cell:
         return fitness
 
     def update_fitness_sorted(self, input_list, parameters):
+        """
+        Method to calculate fitness to all animals in a list.
+        :param input_list: List with animals of same species.
+        :param parameters: Corresponding parameters to species
+        :return:
+        """
         if input_list is not None:
             for i, j in enumerate(input_list):
                 j['fitness'] = self.fitness_single_animal(
