@@ -13,9 +13,9 @@ if __name__ == "__main__":
                          'age': 5,
                          'weight': 20}]}]
     island_map = """
-        OOO
-        DJS
-        OOO
+        JJJ
+        JJJ
+        JJJ
         """
     sim = BioSim(island_map,
         ini_pop,
@@ -26,3 +26,4 @@ if __name__ == "__main__":
         img_fmt="png")
 
     sim.simulation_one_year()
+

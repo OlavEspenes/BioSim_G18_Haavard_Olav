@@ -53,16 +53,13 @@ class Cell:
         return fitness
 
     def update_fitness_sorted(self, input_list, parameters):
-        """
-        Gives fitness for a
-        :param input_list:
-        :param parameters:
-        :return:
-        """
-        for i, j in enumerate(input_list):
-            j['fitness'] = self.fitness_single_animal(
-                input_list[i]['age'], input_list[i]['weight'], parameters)
-        input_list.sort(key=lambda item: item.get('fitness'), reverse=True)
+        if input_list is not None:
+            for i, j in enumerate(input_list):
+                j['fitness'] = self.fitness_single_animal(
+                    input_list[i]['age'], input_list[i]['weight'], parameters)
+            input_list.sort(key=lambda item: item.get('fitness'), reverse=True)
+        else:
+            pass
 
     def feeding_herbi(self):
         """
