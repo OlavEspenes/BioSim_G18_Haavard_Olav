@@ -13,9 +13,10 @@ if __name__ == "__main__":
                          'age': 5,
                          'weight': 20}]}]
     island_map = """
-        JJJ
-        JJJ
-        JJJ
+        JJJJ
+        JJJJ
+        JJJJ
+        JJJJ
         """
     sim = BioSim(island_map,
         ini_pop,
