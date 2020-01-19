@@ -64,13 +64,13 @@ if __name__ == "__main__":
     #test.birth()
     #test.age()
     #test.weight_loss()
-    test.death()
-    #flykninger = test.send_out_emigrators()         #gives us emigrants. two lists for each species
-    #print('herbi som skal flytte', len(flykninger[0]))   #herbi
-    #print('carni som skal flytte', len(flykninger[1]))   #carni
+    #test.death()
+    flykninger = test.send_out_emigrators()         #gives us emigrants. two lists for each species
+    print(flykninger[0])   #herbi
+    print(flykninger[1])   #carni
     #print('herbi igjen i cellen', len(herbi))
     #print('carni igjen i cellen', len(carni))
-    print(len(herbi))
+
 
 
 

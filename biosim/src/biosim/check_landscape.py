@@ -1,6 +1,6 @@
 from simulation import BioSim
 if __name__ == "__main__":
-    ini_pop = [{'loc': (1, 1)},
+    ini_pop = [{'loc': (2, 2)},
                {'pop': [{'species': 'Herbivore',
                          'age': 2,
                          'weight': 10}, {'species': 'Herbivore',
@@ -13,10 +13,11 @@ if __name__ == "__main__":
                          'age': 5,
                          'weight': 20}]}]
     island_map = """
-        JJJJ
-        JJJJ
-        JJJJ
-        JJJJ
+        OOOOO
+        OJJJO
+        OJJJO
+        OJJJO
+        OOOOO
         """
     sim = BioSim(island_map,
         ini_pop,
