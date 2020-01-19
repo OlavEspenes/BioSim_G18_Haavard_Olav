@@ -164,7 +164,7 @@ class BioSim:
                             if self.island_map[row][col-1][0] is None:
                                 epsilon_west = west_f / (1*h_para['F'])
                             else:
-                                epsilon_west = west_f/(len(self.island_map[row][col-1][0]+1))*h_para['F']
+                                epsilon_west = west_f/(len(self.island_map[row][col-1][0])+1)*h_para['F']
 
                             if self.fodder_map[row-1][col][0] == 'M' or \
                                     self.fodder_map[row-1][col][0] == 'O':

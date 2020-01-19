@@ -53,6 +53,12 @@ class Cell:
         return fitness
 
     def update_fitness_sorted(self, input_list, parameters):
+        """
+        Method to calculate fitness to all animals in a list.
+        :param input_list: List with animals of same species.
+        :param parameters: Corresponding parameters to specie in input_list.
+        :return: Updated fitness for the animals in input list.
+        """
         if input_list is not None:
             for i, j in enumerate(input_list):
                 j['fitness'] = self.fitness_single_animal(
@@ -65,7 +71,7 @@ class Cell:
         """
         All herbivores eat fodder and the remaining amount is returned.
         If all fodder is eaten, remaining herbivores won't eat.
-        Eats in order of fitness and gains weight.
+        Eats in order of fitness, from highest to lowest, and gains weight.
         """
         self.update_fitness_sorted(self.herbi, self.h_parameters)
         for animal, _ in enumerate(self.herbi):
@@ -303,6 +309,9 @@ class Cell:
         return emigrant
 
     def send_out_emigrators(self):
+        """
+         
+        """
         herbi_migration_list = self.who_will_migrate(self.herbi,
                                                      self.h_parameters)
         carni_migration_list = self.who_will_migrate(self.carni,
