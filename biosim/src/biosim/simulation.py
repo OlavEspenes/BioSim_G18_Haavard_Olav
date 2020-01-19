@@ -22,6 +22,7 @@ class BioSim:
         img_base=None,
         img_fmt="png",
     ):
+        random.seed(seed)
         self.ini_position = ini_pop[0].get('loc')
         ini_carni = []
         ini_herbi = []
@@ -30,7 +31,7 @@ class BioSim:
                 ini_herbi.append(i)
             elif i.get('species') == 'Carnivore':
                 ini_carni.append(i)
-        self.landscape = Landscape()
+        self.landscape = Landscape(island_map)
 
         self.fodder_map = [[[i] for i in j] for j in island_map.split()]
         for row in range(len(self.fodder_map)):
@@ -71,17 +72,6 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
-    #add one population to a position in specific map??
-    def append_emigrators(self, list_carni, list_herbi, position):
-        for i in range(len(self.island_map)):
-            for j in range(len(self.island_map[0])):
-                if (i, j) == position:
-                    if self.island_map[i][j] is None:
-                        self.island_map[i][j] = [list_herbi, list_carni]
-                    elif self.island_map[i][j] is not None:
-                        self.island_map[i][j][0] += list_herbi
-                        self.island_map[i][j][1] += list_carni
-
 
     def set_animal_parameters(self, species, params):
         """
@@ -112,18 +102,6 @@ class BioSim:
         else:
             raise ValueError("'landscape' must be 'J' (Jungel) "
                              "or 'S' (savannah)")
-
-
-    def where_to_migrate(self, migrator_list):
-        pass
-
-
-    #  [['O', 'O', 'O', 'K', 'K', 'O', 'O', 'O'],
-    #  ['O', 'O', 'O', 'L', 'L', 'L', 'O', 'O'],
-    #   ['O', 'O', 'O', 'O', 'L', 'O', 'O', 'O']]
-
-
-
 
     def simulation_one_year(self):
         h_para = self.landscape.h_parameters
@@ -183,7 +161,7 @@ class BioSim:
                             propensity_south = 0
                         else:
                             propensity_south = math.exp(h_para['lambda']*epsilon_south)
-                        if self.fodder_map[row][col-1][0] == 'M' or 'O'
+                        if self.fodder_map[row][col-1][0] == 'M' or 'O':
                             propensity_west = 0
                         else:
                             propensity_west = math.exp(h_para['lambda']*epsilon_west)
@@ -239,7 +217,7 @@ class BioSim:
                         for h,_ in enumerate(self.island_map[row][col-1][0]):
                             west_f += self.island_map[row][col-1][0][h]['weight']
 
-                        epsilon_north =  north_f/(len(self.island_map[row-1][col][1])+1)*c_para['F']
+                        epsilon_north = north_f/(len(self.island_map[row-1][col][1])+1)*c_para['F']
                         epsilon_east = east_f/(len(self.island_map[row][col+1][1])+1)*c_para['F']
                         epsilon_south = south_f/(len(self.island_map[row+1][col][1])+1)*c_para['F']
                         epsilon_west = west_f/(len(self.island_map[row][col-1][1]+1))*c_para['F']
@@ -257,7 +235,7 @@ class BioSim:
                             propensity_south = 0
                         else:
                             propensity_south = math.exp(c_para['lambda']*epsilon_south)
-                        if self.fodder_map[row][col-1][0] == 'M' or 'O'
+                        if self.fodder_map[row][col-1][0] == 'M' or 'O':
                             propensity_west = 0
                         else:
                             propensity_west = math.exp(c_para['lambda']*epsilon_west)
@@ -307,14 +285,10 @@ class BioSim:
         """
 
 
-        for year in num_years:
-
-
-
-
-        for i in range(num_years):
-            self.simulation_one_year()
-
+        #for year in num_years:
+        #for i in range(num_years):
+        #    self.simulation_one_year()
+    pass
 
 
     def add_population(self, population):
