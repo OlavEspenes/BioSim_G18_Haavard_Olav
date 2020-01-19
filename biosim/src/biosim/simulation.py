@@ -43,11 +43,12 @@ class BioSim:
                 if self.fodder_map[row][col] == ['D']:
                     self.fodder_map[row][col].append(0)
 
-        self.island_map = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))] ## HUSK Å LEGGE INN TOM LISTE
-        for i in range(len(self.island_map)): #put input pop in
+        self.island_map = [[[None, None] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))] ## HUSK Å LEGGE INN TOM LISTE
+        for i in range(len(self.island_map)):
             for j in range(len(self.island_map[0])):
                 if (i, j) == self.ini_position:
-                    self.island_map[i][j] = [ini_herbi, ini_carni]
+                    self.island_map[i][j][0] = ini_herbi
+                    self.island_map[i][j][1] = ini_carni
 
         """
         :param island_map: Multi-line string specifying island geography
@@ -112,9 +113,9 @@ class BioSim:
         carni_migration = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
         migrated_herbi = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
         migrated_carni = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
-        for row in range(rows):
-            for col in range(columns):
-                if self.fodder_map[row][col] is not None:
+        for row, _ in enumerate(self.island_map):
+            for col, _ in enumerate(self.island_map[0]):
+                if self.island_map[row][col][0] is not None:
                     herbi = self.island_map[row][col][0]
                     carni = self.island_map[row][col][1]
                     fodder = self.fodder_map[row][col][1]
@@ -125,25 +126,23 @@ class BioSim:
                     cell.age()
                     cell.weight_loss()
                     cell.death()
-                    emigrations = send_out_emigrators()
-                    herbivores[row][col] = cell.herbi
-                    carnivores[row][col] = cell.carni
+                    emigrations = cell.send_out_emigrators()
                     herbi_migration[row][col] = emigrations[0]
                     carni_migration[row][col] = emigrations[1]
                     self.fodder_map[row][col][1] = cell.fodder
 
             # Migration herbivores
-        for row in range(rows):
-            for col in range(columns):
+        for row, _ in enumerate(herbi_migration):
+            for col, _ in enumerate(herbi_migration[0]):
                 if herbi_migration[row][col] is None:
                     continue
                 else:
-                    for h in herbi_migration[row][col]:
+                    for h, _ in enumerate(herbi_migration[row][col]):
                         north_f = self.fodder_map[row-1][col][1]
                         east_f = self.fodder_map[row][col+1][1]
                         south_f = self.fodder_map[row+1][col][1]
                         west_f = self.fodder_map[row][col-1][1]
-                        epsilon_north =  north_f/(len(self.island_map[row-1][col][0])+1)*h_para['F']
+                        epsilon_north = north_f/(len(self.island_map[row-1][col][0])+1)*h_para['F']
                         epsilon_east = east_f/(len(self.island_map[row][col+1][0])+1)*h_para['F']
                         epsilon_south = south_f/(len(self.island_map[row+1][col][0])+1)*h_para['F']
                         epsilon_west = west_f/(len(self.island_map[row][col-1][0]+1))*h_para['F']
@@ -198,6 +197,7 @@ class BioSim:
                         elif choosen_cell == 'stay':
                             migrated_herbi[row][col] += herbi_migration[row][col][h]
 
+        """
         for row in range(rows):
             for col in range(columns):
                 if carni_migration[row][col] is None:
@@ -270,6 +270,7 @@ class BioSim:
                             migrated_carni[row][col-1] += carni_migration[row][col][c]
                         elif choosen_cell == 'stay':
                             migrated_carni[row][col] += carni_migration[row][col][c]
+        """
 
 
 

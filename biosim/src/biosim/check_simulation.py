@@ -22,4 +22,4 @@ if __name__ == "__main__":
     DJS
     OOO
     """
-    test = BioSim(ini_pop,ini_island)
+    test = BioSim(ini_pop, ini_island)
