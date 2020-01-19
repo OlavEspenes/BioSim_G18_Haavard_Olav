@@ -137,8 +137,8 @@ class BioSim:
         for row in range(rows):
             for col in range(columns):
                 if self.fodder_map[row][col] is not None:
-                    herbi = herbi_map[row][col]
-                    carni = carni_map[row][col]
+                    herbi = self.island_map[row][col][0]
+                    carni = self.island_map[row][col][1]
                     fodder = self.fodder_map[row][col][1]
                     cell = Cell(herbi, carni, fodder, h_para, c_para)
                     cell.feeding_herbi()
