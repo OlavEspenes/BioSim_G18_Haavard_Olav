@@ -42,7 +42,7 @@ class BioSim:
                 if self.fodder_map[row][col] == ['D']:
                     self.fodder_map[row][col].append(0)
 
-        self.island_map = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
+        self.island_map = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))] ## HUSK Å LEGGE INN TOM LISTE
         for i in range(len(self.island_map)): #put input pop in
             for j in range(len(self.island_map[0])):
                 if (i, j) == self.ini_position:
@@ -210,7 +210,7 @@ class BioSim:
                                                        probability_west,
                                                        probability_not_to_move])
                         if choosen_cell == 'move_north':
-                            migrated_herbi[row-1][col] += herbi_migration[row][col][h]
+                            migrated_carni[row-1][col] += herbi_migration[row][col][h]
                         elif choosen_cell == 'move_east':
                             migrated_herbi[row][col+1] += herbi_migration[row][col][h]
                         elif choosen_cell == 'move_south':
@@ -226,35 +226,43 @@ class BioSim:
                     continue
                 else:
                     for c in carni_migration[row][col]:
-                        north_f = self.fodder_map[row-1][col][1] # START HERFRA I MORGEN
-                        east_f = self.fodder_map[row][col+1][1]
-                        south_f = self.fodder_map[row+1][col][1]
-                        west_f = self.fodder_map[row][col-1][1]
-                        epsilon_north =  north_f/(len(self.island_map[row-1][col][0])+1)*h_para['F']
-                        epsilon_east = east_f/(len(self.island_map[row][col+1][0])+1)*h_para['F']
-                        epsilon_south = south_f/(len(self.island_map[row+1][col][0])+1)*h_para['F']
-                        epsilon_west = west_f/(len(self.island_map[row][col-1][0]+1))*h_para['F']
+                        north_f = 0
+                        east_f = 0
+                        south_f = 0
+                        west_f = 0
+                        for h,_ in enumerate(self.island_map[row-1][col][0]):
+                            north_f += self.island_map[row-1][col][0][h]['weight']
+                        for h,_ in enumerate(self.island_map[row][col+1][0]):
+                            east_f += self.island_map[row][col+1][0][h]['weight']
+                        for h,_ in enumerate(self.island_map[row+1][col][0]):
+                            south_f += self.island_map[row+1][col][0][h]['weight']
+                        for h,_ in enumerate(self.island_map[row][col-1][0]):
+                            west_f += self.island_map[row][col-1][0][h]['weight']
+
+                        epsilon_north =  north_f/(len(self.island_map[row-1][col][1])+1)*c_para['F']
+                        epsilon_east = east_f/(len(self.island_map[row][col+1][1])+1)*c_para['F']
+                        epsilon_south = south_f/(len(self.island_map[row+1][col][1])+1)*c_para['F']
+                        epsilon_west = west_f/(len(self.island_map[row][col-1][1]+1))*c_para['F']
 
 
                         if self.fodder_map[row-1][col][0] == 'M' or 'O':
                             propensity_north = 0
                         else:
-                            propensity_north = math.exp(h_para['lambda']*epsilon_north)
+                            propensity_north = math.exp(c_para['lambda']*epsilon_north)
                         if self.fodder_map[row][col+1][0] == 'M' or 'O':
                             propensity_east = 0
                         else:
-                            propensity_east = math.exp(h_para['lambda']*epsilon_east)
+                            propensity_east = math.exp(c_para['lambda']*epsilon_east)
                         if self.fodder_map[row+1][col][0] == 'M' or 'O':
                             propensity_south = 0
                         else:
-                            propensity_south = math.exp(h_para['lambda']*epsilon_south)
+                            propensity_south = math.exp(c_para['lambda']*epsilon_south)
                         if self.fodder_map[row][col-1][0] == 'M' or 'O'
                             propensity_west = 0
                         else:
-                            propensity_west = math.exp(h_para['lambda']*epsilon_west)
+                            propensity_west = math.exp(c_para['lambda']*epsilon_west)
 
                         propensity_tot = propensity_north+propensity_east+propensity_south+propensity_west
-
 
                         probability_north = propensity_north/propensity_tot
                         probability_east = propensity_east/propensity_tot
@@ -275,29 +283,15 @@ class BioSim:
                                                        probability_west,
                                                        probability_not_to_move])
                         if choosen_cell == 'move_north':
-                            migrated_herbi[row-1][col] += herbi_migration[row][col][h]
+                            migrated_carni[row-1][col] += carni_migration[row][col][c]
                         elif choosen_cell == 'move_east':
-                            migrated_herbi[row][col+1] += herbi_migration[row][col][h]
+                            migrated_carni[row][col+1] += carni_migration[row][col][c]
                         elif choosen_cell == 'move_south':
-                            migrated_herbi[row+1][col] += herbi_migration[row][col][h]
+                            migrated_carni[row+1][col] += carni_migration[row][col][c]
                         elif choosen_cell == 'move_west':
-                            migrated_herbi[row][col-1] += herbi_migration[row][col][h]
+                            migrated_carni[row][col-1] += carni_migration[row][col][c]
                         elif choosen_cell == 'stay':
-                            migrated_herbi[row][col] += herbi_migration[row][col][h]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            migrated_carni[row][col] += carni_migration[row][col][c]
 
 
 
