@@ -11,6 +11,8 @@ from biosim.cell import Cell
 from biosim.landscape import Landscape
 import random
 import pandas as pd
+import numpy as np
+
 
 class BioSim:
     def __init__(
@@ -24,19 +26,7 @@ class BioSim:
         img_fmt="png",
     ):
         random.seed(seed)
-        self.year = 0
-        rows = len(self.island_map)
-        columns = len(self.island_map[0])
-        df_labels = ['x', 'y', 'Herbivores', 'Carnivores']
-        empty_df = [[i + 1, j + 1, 0, 0] for j in range(columns)
-                    for i in range(rows)]
-        self.pop_by_cell = pd.DataFrame(data=empty_df, columns=df_labels)
-        self.pop_by_cell.update(pop)
-        self.graph_label = None
-        self.herbi_label = None
-        self.carni_label = None
-        self.map_label = None
-        self.
+
 
         ini_carni = []
         ini_herbi = []
@@ -58,6 +48,19 @@ class BioSim:
                 if (i, j) == self.ini_position:
                     self.island_map[i][j][0] = ini_herbi
                     self.island_map[i][j][1] = ini_carni
+
+        self.year_count = 0
+        rows = len(self.island_map)
+        columns = len(self.island_map[0])
+        df_labels = ['x', 'y', 'Herbivores', 'Carnivores']
+        empty_df = [[i + 1, j + 1, 0, 0] for j in range(columns)
+                    for i in range(rows)]
+        self.pop_by_cell = pd.DataFrame(data=empty_df, columns=df_labels)
+        #self.pop_by_cell.update(pop)
+        self.graph_label = None
+        self.herbi_label = None
+        self.carni_label = None
+        self.map_label = None
 
 
         """
@@ -343,24 +346,24 @@ class BioSim:
                 else:
                     self.island_map[row][col][1] += migrated_carni[row][col]
 
-        self.year += 1
+        self.year_count += 1
 
     def animal_in_cell_counter(self):
-        total_pop_herbi = [[[] for i in range(len(island_map))] for j in
-                           range(len(island_map))]
-        total_pop_carni = [[[] for i in range(len(island_map))] for j in
-                           range(len(island_map))]
-        for row, _ in enumerate(island_map):
-            for col, _ in enumerate(island_map[0]):
+        total_pop_herbi = [[[] for i in range(len(self.island_map))] for j in
+                           range(len(self.island_map))]
+        total_pop_carni = [[[] for i in range(len(self.island_map))] for j in
+                           range(len(self.island_map))]
+        for row, _ in enumerate(self.island_map):
+            for col, _ in enumerate(self.island_map[0]):
 
-                if not island_map[row][col][0]:
+                if not self.island_map[row][col][0]:
                     continue
                 else:
-                    total_pop_herbi[row][col] = len(island_map[row][col][0])
-                if not island_map[row][col][1]:
+                    total_pop_herbi[row][col] = len(self.island_map[row][col][0])
+                if not self.island_map[row][col][1]:
                     continue
                 else:
-                    total_pop_carni[row][col] = len(island_map[row][col][1])
+                    total_pop_carni[row][col] = len(self.island_map[row][col][1])
         self.animal_dis = np.column_stack((total_pop_herbi, total_pop_carni))
 
     def simulate(self, num_years, vis_years=1, img_years=None):
@@ -378,6 +381,7 @@ class BioSim:
             self.animal_in_cell_counter()
         print(self.island_map)
         print(self.fodder_map)
+        print(self.animal_in_cell_counter)
 
 
 
