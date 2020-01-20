@@ -10,6 +10,7 @@ import math
 from biosim.cell import Cell
 from biosim.landscape import Landscape
 import random
+import pandas as pd
 
 class BioSim:
     def __init__(
@@ -23,6 +24,20 @@ class BioSim:
         img_fmt="png",
     ):
         random.seed(seed)
+        self.year = 0
+        rows = len(self.island_map)
+        columns = len(self.island_map[0])
+        df_labels = ['x', 'y', 'Herbivores', 'Carnivores']
+        empty_df = [[i + 1, j + 1, 0, 0] for j in range(columns)
+                    for i in range(rows)]
+        self.pop_by_cell = pd.DataFrame(data=empty_df, columns=df_labels)
+        self.pop_by_cell.update(pop)
+        self.graph_label = None
+        self.herbi_label = None
+        self.carni_label = None
+        self.map_label = None
+        self.
+
         ini_carni = []
         ini_herbi = []
         self.ini_position = (0, 0)
@@ -43,6 +58,7 @@ class BioSim:
                 if (i, j) == self.ini_position:
                     self.island_map[i][j][0] = ini_herbi
                     self.island_map[i][j][1] = ini_carni
+
 
         """
         :param island_map: Multi-line string specifying island geography
@@ -101,8 +117,6 @@ class BioSim:
     def simulation_one_year(self):
         h_para = self.landscape.h_parameters
         c_para = self.landscape.c_parameters
-        rows = len(self.fodder_map)
-        columns = len(self.fodder_map[1])
         herbi_migration = [[[] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
         carni_migration = [[[] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
         migrated_herbi = [[[] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
@@ -329,6 +343,26 @@ class BioSim:
                 else:
                     self.island_map[row][col][1] += migrated_carni[row][col]
 
+        self.year += 1
+
+    def animal_in_cell_counter(self):
+        total_pop_herbi = [[[] for i in range(len(island_map))] for j in
+                           range(len(island_map))]
+        total_pop_carni = [[[] for i in range(len(island_map))] for j in
+                           range(len(island_map))]
+        for row, _ in enumerate(island_map):
+            for col, _ in enumerate(island_map[0]):
+
+                if not island_map[row][col][0]:
+                    continue
+                else:
+                    total_pop_herbi[row][col] = len(island_map[row][col][0])
+                if not island_map[row][col][1]:
+                    continue
+                else:
+                    total_pop_carni[row][col] = len(island_map[row][col][1])
+        self.animal_dis = np.column_stack((total_pop_herbi, total_pop_carni))
+
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
@@ -341,6 +375,7 @@ class BioSim:
         """
         for i in range(num_years):
             self.simulation_one_year()
+            self.animal_in_cell_counter()
         print(self.island_map)
         print(self.fodder_map)
 
@@ -358,20 +393,38 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
+        print('Last year simulated: ', self.year)
+        return self.year
 
     @property
     def num_animals(self):
         """Total number of animals on island."""
+        return self.total_count_herbi + self.total_count_carni
+
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
 
-        #for h,_ in enumerate
+        self.total_count_herbi = 0
+        self.total_count_carni = 0
+        for row, _ in enumerate(self.island_map):
+            for col, _ in enumerate(self.island_map[0]):
+                self.total_count_herbi += len(island_map[row][col][0])
+                self.total_sount_carni += len(island_map[row][col][1])
+        return(self.total_count_herbi)
+        return(self.total_count_carni)
+
+
 
     @property
     def animal_distribution(self):
         """Pandas DataFrame with animal count per species for each cell on island."""
+
+        population = pd.DataFrame(self.animal_in_cell_counter(), columns=['Herbivores', 'Carnivores'])
+        self.pop_by_cell.update(pop)
+        return self.pop_by_cell
+
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
