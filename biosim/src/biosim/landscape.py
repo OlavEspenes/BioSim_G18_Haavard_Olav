@@ -338,14 +338,16 @@ class Landscape:
             for col, _ in enumerate(fodder_map[0]):
                 if fodder_map[row][col] == ['J']:
                     fodder_map[row][col].append(
-                        landscape.jungle_para['f_max'])
-                if fodder_map[row][col] == ['S']:
+                        self.jungle_para['f_max'])
+                elif fodder_map[row][col] == ['S']:
                     fodder_map[row][col].append(
-                        landscape.savannah_para['f_max'])
-                if fodder_map[row][col] == ['D']:
+                        self.savannah_para['f_max'])
+                elif fodder_map[row][col] == ['D']:
                     fodder_map[row][col].append(0)
-                if fodder_map[row][col] == ['O']:
-                    odder_map[row][col].append(0)
-                if fodder_map[row][col] == ['M']:
+                elif fodder_map[row][col] == ['O']:
                     fodder_map[row][col].append(0)
+                elif fodder_map[row][col] == ['M']:
+                    fodder_map[row][col].append(0)
+                else:
+                    raise ValueError('Use only letter J, S, D, O or M in map')
         return fodder_map
