@@ -28,7 +28,7 @@ if __name__ == "__main__":
         """
     sim = BioSim(island_map,
         ini_pop,
-        50373,
+        507373,
         ymax_animals=None,
         cmax_animals=None,
         img_base=None,
