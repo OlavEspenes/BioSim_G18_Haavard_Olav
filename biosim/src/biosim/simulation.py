@@ -12,6 +12,8 @@ from biosim.landscape import Landscape
 import random
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 
 class BioSim:
@@ -61,6 +63,7 @@ class BioSim:
         self.herbi_label = None
         self.carni_label = None
         self.map_label = None
+        self.new_sim = False
 
 
         """
@@ -346,7 +349,7 @@ class BioSim:
                 else:
                     self.island_map[row][col][1] += migrated_carni[row][col]
 
-        self.year_count += 1
+
 
     def animal_in_cell_counter(self):
         total_pop_herbi = [[[] for i in range(len(self.island_map))] for j in
@@ -376,13 +379,24 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
+
+        self.new_sim = True
         for i in range(num_years):
             self.simulation_one_year()
             self.animal_in_cell_counter()
+
+            if self.year_count % vis_years == 1:
+                plt.ion()
+                self.simulation_plot()
+
+            self.year_count += 1
+            if self.year_count % img_years == 1:
+                plt.savefig('biosim/animation/biosim_' +
+                            str(self.year_count).zyfill(5) + '.png')
+
         print(self.island_map)
         print(self.fodder_map)
         print(self.animal_in_cell_counter)
-
 
 
     def add_population(self, population):
@@ -429,6 +443,75 @@ class BioSim:
         self.pop_by_cell.update(pop)
         return self.pop_by_cell
 
+    def simulation_plot(self):
+        if self.new_sim:
+            fig, ((self.ax_graph, self.ax_map), (self.ax_herb, self.ax_carn)) \
+                = plt.subplots(2, 2)
+            self.ax_map = plt.subplot2grid((3, 3), (2, 1))
+            self.ax_herb = plt.subplot2grid((3, 3), (2, 0))
+            self.ax_carn = plt.subplot2grid((3, 3), (2, 2))
+            self.ax_graph = plt.subplot2grid((3, 3), (0, 0),
+                                             colspan=3, rowspan=2)
+            plt.tight_layout()
+        self.heat_map()
+        self.plot_map()
+        self.plot_pop_density()
+        if self.new_sim:
+            fig.colorbar(self.hax, ax=self.ax_herb, orientation='horizontal',
+                         ticks=[0, 100, 200], shrink=0.85)
+            self.ax_herb.axes.get_xaxis().set_ticklabels([])
+            self.ax_herb.axes.get_yaxis().set_ticklabels([])
+            self.ax_carn.axes.get_xaxis().set_ticklabels([])
+            self.ax_carn.axes.get_yaxis().set_ticklabels([])
+            self.ax_map.axes.get_xaxis().set_ticklabels([])
+            self.ax_map.axes.get_yaxis().set_ticklabels([])
+            self.ax_map.axes.get_xaxis().set_ticks([])
+            self.ax_map.axes.get_yaxis().set_ticks([])
+            self.ax_herb.axes.get_xaxis().set_ticks([])
+            self.ax_herb.axes.get_yaxis().set_ticks([])
+            self.ax_carn.axes.get_xaxis().set_ticks([])
+            self.ax_carn.axes.get_yaxis().set_ticks([])
+            self.ax_graph.legend(["Herbivores", "Carnivores"], loc=2)
+            fig.colorbar(self.cax, ax=self.ax_carn, ticks=[0, 100, 200],
+                         orientation='horizontal', shrink=0.85)
+            self.ax_graph.set_ylabel('number of animals')
+
+        plt.pause(0.000001)
+        self.new_sim = False
+
+
+
+    def plot_map(self):
+        rgb_value = {'O': (0.0, 0.0, 1.0),  # blue
+                     'M': (0.5, 0.5, 0.5),  # grey
+                     'J': (0.0, 0.6, 0.0),  # dark green
+                     'S': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
+
+        map_rgb = [[rgb_value[column] for column in row]
+                    for row in kart.splitlines()]
+
+        fig = plt.figure()
+
+        axim = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
+        axim.imshow(kart_rgb)
+        axim.set_xticks(range(len(kart_rgb[0])))
+        axim.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
+        axim.set_yticks(range(len(kart_rgb)))
+        axim.set_yticklabels(range(1, 1 + len(kart_rgb)))
+
+        axlg = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
+        axlg.axis('off')
+        for ix, name in enumerate(('Ocean', 'Mountain', 'Jungle',
+                                   'Savannah', 'Desert')):
+            axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
+                                         edgecolor='none',
+                                         facecolor=rgb_value[name[0]]))
+            axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
+
+        plt.show()
+
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
+
