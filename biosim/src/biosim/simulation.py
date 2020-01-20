@@ -28,6 +28,15 @@ class BioSim:
         rows = len(self.island_map)
         columns = len(self.island_map[0])
         df_labels = ['x', 'y', 'Herbivores', 'Carnivores']
+        empty_df = [[i + 1, j + 1, 0, 0] for j in range(columns)
+                    for i in range(rows)]
+        self.pop_by_cell = pd.DataFrame(data=empty_df, columns=df_labels)
+        self.pop_by_cell.update(pop)
+        self.graph_label = None
+        self.herbi_label = None
+        self.carni_label = None
+        self.map_label = None
+        self.
 
         ini_carni = []
         ini_herbi = []
@@ -358,11 +367,13 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
+        print('Last year simulated: ', self.year)
+        return self.year
 
     @property
     def num_animals(self):
         """Total number of animals on island."""
-
+        return self.total_count_herbi + self.total_count_carni
 
 
     @property
@@ -384,10 +395,9 @@ class BioSim:
     def animal_distribution(self):
         """Pandas DataFrame with animal count per species for each cell on island."""
 
-        population = pd.DataFrame(self.animal_in_cell_counter(), )
-
-        print(total_pop_herbi)
-        print(total_pop_carni)
+        population = pd.DataFrame(self.animal_in_cell_counter(), columns=['Herbivores', 'Carnivores'])
+        self.pop_by_cell.update(pop)
+        return self.pop_by_cell
 
 
     def make_movie(self):
