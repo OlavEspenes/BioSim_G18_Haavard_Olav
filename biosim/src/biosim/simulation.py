@@ -354,6 +354,8 @@ class BioSim:
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
 
+        for h,_ in enumerate
+
     @property
     def animal_distribution(self):
         """Pandas DataFrame with animal count per species for each cell on island."""
