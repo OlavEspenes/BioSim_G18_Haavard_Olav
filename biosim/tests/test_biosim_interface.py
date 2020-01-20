@@ -47,7 +47,7 @@ def test_invalid_boundary(bad_boundary):
     """Non-ocean boundary must raise error"""
     with pytest.raises(ValueError):
         BioSim(
-            island_map="{}OO\nOJO\nOOO".format(bad_boundary),
+            island_map="{OO\nOJO\nOOO".format(bad_boundary),
             ini_pop=[],
             seed=1,
         )

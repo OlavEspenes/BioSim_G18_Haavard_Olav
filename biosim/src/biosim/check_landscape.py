@@ -1,7 +1,7 @@
 from biosim.simulation import BioSim
 from biosim.landscape import Landscape
 if __name__ == "__main__":
-    ini_pop = [{'loc': (1, 1)},
+    ini_pop = [{'loc': (0, 0)},
                {'pop': [{'species': 'Herbivore',
                          'age': 5,
                          'weight': 20},
@@ -22,13 +22,11 @@ if __name__ == "__main__":
                          'weight': 80}
                         ]}]
     island_map = """
-        OOO
-        OJO
-        OOO
+        O
         """
     land = Landscape(island_map)
     sim = BioSim(island_map,
-        ini_pop,
+        [],
         12345,
         ymax_animals=None,
         cmax_animals=None,

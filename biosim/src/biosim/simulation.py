@@ -28,8 +28,6 @@ class BioSim:
         img_fmt="png",
     ):
         random.seed(seed)
-
-
         ini_carni = []
         ini_herbi = []
         self.ini_position = (0, 0)
@@ -43,15 +41,11 @@ class BioSim:
 
         self.landscape = Landscape(island_map)
         self.fodder_map = self.landscape.make_fodder_island(island_map)
+        self.island_map = self.landscape.make_island_map(self.fodder_map,
+                                                         self.ini_position,
+                                                         ini_herbi, ini_carni)
 
-        self.island_map = [[[[], []] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))] ## HUSK Å LEGGE INN TOM LISTE
-        for i in range(len(self.island_map)):
-            for j in range(len(self.island_map[0])):
-                if (i, j) == self.ini_position:
-                    self.island_map[i][j][0] = ini_herbi
-                    self.island_map[i][j][1] = ini_carni
-
-        self.year_count = 0
+        self.year = 0
         rows = len(self.island_map)
         columns = len(self.island_map[0])
         df_labels = ['x', 'y', 'Herbivores', 'Carnivores']
@@ -98,11 +92,11 @@ class BioSim:
         :param params: Dict with valid parameter specification for species
         """
         if species == 'Herbivores':
-            landscape.set_parameters_herbi(params)
+            self.landscape.set_parameters_herbi(params)
         elif species == 'Carnivores':
-            landscape.set_parameters_carni(params)
+            self.landscape.set_parameters_carni(params)
         else:
-            raise ValueError("'species' must be Herbivores or Carnivores")
+            raise ValueError("species' must be Herbivores or Carnivores")
 
 
     def set_landscape_parameters(self, landscape, params):
@@ -113,9 +107,9 @@ class BioSim:
         :param params: Dict with valid parameter specification for landscape
         """
         if landscape == 'J':
-            landscape.set_jungle_parameters(params)
+            self.landscape.set_jungle_parameters(params)
         elif landscape == 'S':
-            landscape.set_savannah_parameters(params)
+            self.landscape.set_savannah_parameters(params)
         else:
             raise ValueError("'landscape' must be 'J' (Jungel) "
                              "or 'S' (savannah)")
