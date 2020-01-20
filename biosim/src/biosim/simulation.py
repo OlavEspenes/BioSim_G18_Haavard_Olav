@@ -7,8 +7,8 @@ __author__ = ""
 __email__ = ""
 
 import math
-from cell import Cell
-from landscape import Landscape
+from biosim.cell import Cell
+from biosim.landscape import Landscape
 import random
 
 class BioSim:
@@ -23,31 +23,21 @@ class BioSim:
         img_fmt="png",
     ):
         random.seed(seed)
-        self.ini_position = ini_pop[0].get('loc')
+
         ini_carni = []
         ini_herbi = []
+
         for i in ini_pop[1].get('pop'):
             if i.get('species') == 'Herbivore':
                 ini_herbi.append(i)
             elif i.get('species') == 'Carnivore':
                 ini_carni.append(i)
+        self.ini_position = ini_pop[0].get('loc')
+
         self.landscape = Landscape(island_map)
+        self.fodder_map = self.landscape.make_fodder_island(island_map)
 
-        self.fodder_map = [[[i] for i in j] for j in island_map.split()]
-        for row, _ in enumerate(self.fodder_map):
-            for col, _ in enumerate(self.fodder_map[0]):
-                if self.fodder_map[row][col] == ['J']:
-                    self.fodder_map[row][col].append(self.landscape.jungle_para['f_max'])
-                if self.fodder_map[row][col] == ['S']:
-                    self.fodder_map[row][col].append(self.landscape.savannah_para['f_max'])
-                if self.fodder_map[row][col] == ['D']:
-                    self.fodder_map[row][col].append(0)
-                if self.fodder_map[row][col] == ['O']:
-                    self.fodder_map[row][col].append(0)
-                if self.fodder_map[row][col] == ['M']:
-                    self.fodder_map[row][col].append(0)
-
-        self.island_map = [[[None, None] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))] ## HUSK Å LEGGE INN TOM LISTE
+        self.island_map = [[[[], []] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))] ## HUSK Å LEGGE INN TOM LISTE
         for i in range(len(self.island_map)):
             for j in range(len(self.island_map[0])):
                 if (i, j) == self.ini_position:
@@ -115,8 +105,8 @@ class BioSim:
         columns = len(self.fodder_map[1])
         herbi_migration = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
         carni_migration = [[None for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
-        migrated_herbi = [[[None] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
-        migrated_carni = [[[None] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
+        migrated_herbi = [[[] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
+        migrated_carni = [[[] for i in range(len(self.fodder_map[1]))] for j in range(len(self.fodder_map))]
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
                 if self.island_map[row][col][0] is not None:
@@ -149,19 +139,19 @@ class BioSim:
                             east_f = self.fodder_map[row][col+1][1]
                             south_f = self.fodder_map[row+1][col][1]
                             west_f = self.fodder_map[row][col-1][1]
-                            if self.island_map[row-1][col][0] is None:
+                            if not self.island_map[row-1][col][0]:
                                 epsilon_north = north_f/(1*h_para['F'])
                             else:
                                 epsilon_north = north_f/(len(self.island_map[row-1][col][0])+1)*h_para['F']
-                            if self.island_map[row][col+1][0] is None:
+                            if not self.island_map[row][col+1][0]:
                                 epsilon_east = east_f/(1*h_para['F'])
                             else:
                                 epsilon_east = east_f/(len(self.island_map[row][col+1][0])+1)*h_para['F']
-                            if self.island_map[row+1][col][0] is None:
+                            if not self.island_map[row+1][col][0]:
                                 epsilon_south = south_f / (1*h_para['F'])
                             else:
                                 epsilon_south = south_f/(len(self.island_map[row+1][col][0])+1)*h_para['F']
-                            if self.island_map[row][col-1][0] is None:
+                            if not self.island_map[row][col-1][0]:
                                 epsilon_west = west_f / (1*h_para['F'])
                             else:
                                 epsilon_west = west_f/(len(self.island_map[row][col-1][0])+1)*h_para['F']
@@ -170,21 +160,29 @@ class BioSim:
                                     self.fodder_map[row-1][col][0] == 'O':
                                 propensity_north = 0
                             else:
+                                if epsilon_north > 600:
+                                    epsilon_north = 600
                                 propensity_north = math.exp(h_para['lambda']*epsilon_north)
                             if self.fodder_map[row][col+1][0] == 'M' or \
                                     self.fodder_map[row][col+1][0] == 'O':
                                 propensity_east = 0
                             else:
+                                if epsilon_east > 600:
+                                    epsilon_east = 600
                                 propensity_east = math.exp(h_para['lambda']*epsilon_east)
                             if self.fodder_map[row+1][col][0] == 'M' or \
                                     self.fodder_map[row+1][col][0] == 'O':
                                 propensity_south = 0
                             else:
+                                if epsilon_south > 600:
+                                    epsilon_south = 600
                                 propensity_south = math.exp(h_para['lambda']*epsilon_south)
                             if self.fodder_map[row][col-1][0] == 'M' or \
                                     self.fodder_map[row][col-1][0] == 'O':
                                 propensity_west = 0
                             else:
+                                if epsilon_west > 600:
+                                    epsilon_west = 600
                                 propensity_west = math.exp(h_para['lambda']*epsilon_west)
 
                             propensity_tot = propensity_north+propensity_east+propensity_south+propensity_west
@@ -216,21 +214,12 @@ class BioSim:
                             elif choosen_cell == ['stay']:
                                 migrated_herbi[row][col] += herbi_migration[row][col]
 
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        for row, _ in enumerate(self.island_map):
+            for col, _ in enumerate(self.island_map[0]):
+                if not migrated_herbi[row][col]:
+                    continue
+                else:
+                    self.island_map[row][col][0] += migrated_herbi[row][col]
 
         if not carni_migration:
             pass
@@ -261,7 +250,7 @@ class BioSim:
 
 
                             if self.fodder_map[row-1][col][0] == 'M' or \
-                                    self.fodder_map[row-1][col][0] == 'O']:
+                                    self.fodder_map[row-1][col][0] == 'O':
                                 propensity_north = 0
                             else:
                                 propensity_north = math.exp(c_para['lambda']*epsilon_north)
@@ -294,9 +283,7 @@ class BioSim:
                                                            'move_east',
                                                            'move_south',
                                                            'move_west',
-                                                           'not_move'],
-                                                          weights =
-                                                          [probability_north,
+                                                           'not_move'], weights=[probability_north,
                                                            probability_east,
                                                            probability_south,
                                                            probability_west,
@@ -312,8 +299,12 @@ class BioSim:
                             elif choosen_cell == ['stay']:
                                 migrated_carni[row][col] += carni_migration[row][col]
 
-
-
+        for row, _ in enumerate(self.island_map):
+            for col, _ in enumerate(self.island_map[0]):
+                if not migrated_carni[row][col]:
+                    continue
+                else:
+                    self.island_map[row][col][2] += migrated_carni[row][col]
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -325,12 +316,10 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
+        for i in range(num_years):
+            self.simulation_one_year()
+        print(self.island_map)
 
-
-        #for year in num_years:
-        #for i in range(num_years):
-        #    self.simulation_one_year()
-    pass
 
 
     def add_population(self, population):

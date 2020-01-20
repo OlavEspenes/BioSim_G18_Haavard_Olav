@@ -331,3 +331,21 @@ class Landscape:
         self.c_parameters = self.parameters[1]
         self.jungle_para = self.landscape_parameters[0]
         self.savannah_para = self.landscape_parameters[1]
+
+    def make_fodder_island(self, island):
+        fodder_map = [[[i] for i in j] for j in island.split()]
+        for row, _ in enumerate(fodder_map):
+            for col, _ in enumerate(fodder_map[0]):
+                if fodder_map[row][col] == ['J']:
+                    fodder_map[row][col].append(
+                        landscape.jungle_para['f_max'])
+                if fodder_map[row][col] == ['S']:
+                    fodder_map[row][col].append(
+                        landscape.savannah_para['f_max'])
+                if fodder_map[row][col] == ['D']:
+                    fodder_map[row][col].append(0)
+                if fodder_map[row][col] == ['O']:
+                    odder_map[row][col].append(0)
+                if fodder_map[row][col] == ['M']:
+                    fodder_map[row][col].append(0)
+        return fodder_map
