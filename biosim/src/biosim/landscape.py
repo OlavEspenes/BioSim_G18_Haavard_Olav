@@ -333,6 +333,24 @@ class Landscape:
         self.savannah_para = self.landscape_parameters[1]
 
     def make_fodder_island(self, island):
+        fodder_map = [[i for i in j] for j in island.split()]
+        for line in fodder_map:
+            for index in range(len(fodder_map)):
+                if len(fodder_map[index]) == len(line):
+                    continue
+                else:
+                    raise ValueError('Map must have equal length for each row')
+        c = np.array(fodder_map)
+        edge = []
+        edge += list(c[0, :])
+        edge += list(c[-1, :])
+        edge += list(c[1:-1, 0])
+        edge += list(c[1:-1, -1])
+        if set(edge) == {'O'}:
+            pass
+        else:
+            raise SyntaxError('All edges must consist of only ocean!')
+
         fodder_map = [[[i] for i in j] for j in island.split()]
         for row, _ in enumerate(fodder_map):
             for col, _ in enumerate(fodder_map[0]):
@@ -351,3 +369,12 @@ class Landscape:
                 else:
                     raise ValueError('Use only letter J, S, D, O or M in map')
         return fodder_map
+    def make_island_map(self, dim_map, ini_position, ini_herbi, ini_carni):
+        island_map = [[[[], []] for i in range(len(dim_map[1]))]
+                           for j in range(len(dim_map))]
+        for i in range(len(island_map)):
+            for j in range(len(island_map[0])):
+                if (i, j) == ini_position:
+                    island_map[i][j][0] = ini_herbi
+                    island_map[i][j][1] = ini_carni
+        return island_map

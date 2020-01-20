@@ -18,8 +18,6 @@ if __name__ == "__main__":
                                          'age': 3,
                                          'weight': 20}, ]}]
     ini_island = """
-    OOO
-    DJS
-    OOO
+    J
     """
-    test = BioSim(ini_pop, ini_island)
+    test = BioSim(ini_pop, ini_island, 123)
