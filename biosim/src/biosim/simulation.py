@@ -11,6 +11,7 @@ from biosim.cell import Cell
 from biosim.landscape import Landscape
 import random
 import pandas as pd
+import seaborn as sns; sns.set()
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -52,12 +53,11 @@ class BioSim:
         empty_df = [[i + 1, j + 1, 0, 0] for j in range(columns)
                     for i in range(rows)]
         self.pop_by_cell = pd.DataFrame(data=empty_df, columns=df_labels)
-        #self.pop_by_cell.update(pop)
+        self.pop_by_cell.update(ini_pop)
         self.graph_label = None
-        self.herbi_label = None
-        self.carni_label = None
+        self.ax_herb = None
+        self.ax_carn = None
         self.map_label = None
-        self.new_sim = False
 
 
         """
@@ -346,9 +346,9 @@ class BioSim:
 
 
     def animal_in_cell_counter(self):
-        total_pop_herbi = [[[] for i in range(len(self.island_map))] for j in
+        self.total_pop_herbi = [[[] for i in range(len(self.island_map))] for j in
                            range(len(self.island_map))]
-        total_pop_carni = [[[] for i in range(len(self.island_map))] for j in
+        self.total_pop_carni = [[[] for i in range(len(self.island_map))] for j in
                            range(len(self.island_map))]
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
@@ -356,12 +356,12 @@ class BioSim:
                 if not self.island_map[row][col][0]:
                     continue
                 else:
-                    total_pop_herbi[row][col] = len(self.island_map[row][col][0])
+                    self.total_pop_herbi[row][col] = len(self.island_map[row][col][0])
                 if not self.island_map[row][col][1]:
                     continue
                 else:
-                    total_pop_carni[row][col] = len(self.island_map[row][col][1])
-        self.animal_dis = np.column_stack((total_pop_herbi, total_pop_carni))
+                    self.total_pop_carni[row][col] = len(self.island_map[row][col][1])
+        self.animal_dis = np.column_stack((self.total_pop_herbi, self.total_pop_carni))
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -386,7 +386,7 @@ class BioSim:
             self.year_count += 1
             if self.year_count % img_years == 1:
                 plt.savefig('biosim/animation/biosim_' +
-                            str(self.year_count).zyfill(5) + '.png')
+                            str(self.year_count).zfill(5) + '.png')
 
         print(self.island_map)
         print(self.fodder_map)
@@ -437,45 +437,52 @@ class BioSim:
         self.pop_by_cell.update(pop)
         return self.pop_by_cell
 
-    def simulation_plot(self):
-        if self.new_sim:
-            fig, ((self.ax_graph, self.ax_map), (self.ax_herb, self.ax_carn)) \
-                = plt.subplots(2, 2)
-            self.ax_map = plt.subplot2grid((3, 3), (2, 1))
-            self.ax_herb = plt.subplot2grid((3, 3), (2, 0))
-            self.ax_carn = plt.subplot2grid((3, 3), (2, 2))
-            self.ax_graph = plt.subplot2grid((3, 3), (0, 0),
-                                             colspan=3, rowspan=2)
-            plt.tight_layout()
-        self.heat_map()
-        self.plot_map()
-        self.plot_pop_density()
-        if self.new_sim:
-            fig.colorbar(self.hax, ax=self.ax_herb, orientation='horizontal',
-                         ticks=[0, 100, 200], shrink=0.85)
-            self.ax_herb.axes.get_xaxis().set_ticklabels([])
-            self.ax_herb.axes.get_yaxis().set_ticklabels([])
-            self.ax_carn.axes.get_xaxis().set_ticklabels([])
-            self.ax_carn.axes.get_yaxis().set_ticklabels([])
-            self.ax_map.axes.get_xaxis().set_ticklabels([])
-            self.ax_map.axes.get_yaxis().set_ticklabels([])
-            self.ax_map.axes.get_xaxis().set_ticks([])
-            self.ax_map.axes.get_yaxis().set_ticks([])
-            self.ax_herb.axes.get_xaxis().set_ticks([])
-            self.ax_herb.axes.get_yaxis().set_ticks([])
-            self.ax_carn.axes.get_xaxis().set_ticks([])
-            self.ax_carn.axes.get_yaxis().set_ticks([])
-            self.ax_graph.legend(["Herbivores", "Carnivores"], loc=2)
-            fig.colorbar(self.cax, ax=self.ax_carn, ticks=[0, 100, 200],
-                         orientation='horizontal', shrink=0.85)
-            self.ax_graph.set_ylabel('number of animals')
+    def replot(n_steps):
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_xlim(0, n_steps)
+        ax.set_ylim(0, 1)
 
-        plt.pause(0.000001)
-        self.new_sim = False
+        data = []
+        for _ in range(n_steps):
+            data.append(np.random.random())
+            ax.plot(data, 'b-')
+            plt.pause(1e-6)
 
+    def update(n_steps):
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_xlim(0, n_steps)
+        ax.set_ylim(0, 1)
 
+        line = ax.plot(np.arange(n_steps),
+                       np.full(n_steps, np.nan), 'b-')[0]
+
+        for n in range(n_steps):
+            ydata = line.get_ydata()
+            ydata[n] = np.random.random()
+            line.set_ydata(ydata)
+            plt.pause(1e-6)
+
+    def heat_map(self):
+        """
+        Returns a heat-map, describing population density and movements
+        """
+
+        self.herbi_per_cell = np.asarray(self.total_pop_herbi)
+        self.ax_herb = sns.heatmap(self.herbi_per_cell, vmin = 0, vmax = 200)
+        self.ax_herb.set_title('Herbivore density')
+
+        self.carni_per_cell = np.asarray(self.total_pop_carni)
+        self.ax_herb = sns.heatmap(self.carni_per_cell)
+        self.ax_carn.set_title('Carnivore density')
 
     def plot_map(self):
+        """
+        Yngve plot: https://github.com/yngvem/INF200-2019/blob/master/lectures/J05/Plotting/mapping.py
+
+        """
+        #                   R    G    B
         rgb_value = {'O': (0.0, 0.0, 1.0),  # blue
                      'M': (0.5, 0.5, 0.5),  # grey
                      'J': (0.0, 0.6, 0.0),  # dark green
@@ -483,16 +490,16 @@ class BioSim:
                      'D': (1.0, 1.0, 0.5)}  # light yellow
 
         map_rgb = [[rgb_value[column] for column in row]
-                    for row in kart.splitlines()]
+                    for row in map.splitlines()]
 
         fig = plt.figure()
 
         axim = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
-        axim.imshow(kart_rgb)
-        axim.set_xticks(range(len(kart_rgb[0])))
-        axim.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
-        axim.set_yticks(range(len(kart_rgb)))
-        axim.set_yticklabels(range(1, 1 + len(kart_rgb)))
+        axim.imshow(map_rgb)
+        axim.set_xticks(range(len(map_rgb[0])))
+        axim.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+        axim.set_yticks(range(len(map_rgb)))
+        axim.set_yticklabels(range(1, 1 + len(map_rgb)))
 
         axlg = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
         axlg.axis('off')
