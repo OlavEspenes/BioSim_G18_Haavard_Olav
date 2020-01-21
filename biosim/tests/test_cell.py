@@ -11,6 +11,7 @@ from biosim.cell import Cell
 import pytest
 import random
 
+
 class TestCell:
     @pytest.fixture()
     def create_animals(self):
@@ -185,7 +186,3 @@ class TestCell:
     def test_run_cell(self):
         self.create_animals()
         self.cell.run_cell()
-
-
-
-

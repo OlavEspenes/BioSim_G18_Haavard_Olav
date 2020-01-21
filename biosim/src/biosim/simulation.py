@@ -18,11 +18,12 @@ import subprocess
 import os
 import textwrap
 
-_FFMPEG_BINARY = 'C:/Users/olav9/Documents/NMBU, ' \
-                 'Geomatikk 2019-2020/INF200/Visualisering/ffmpeg.exe'
+_FFMPEG_BINARY = r'C:/Users/olav9/' \
+                 r'OneDrive - Norwegian University of Life Sciences/' \
+                 r'Documents/NMBU/H2019/INF200/' \
+                 r'ffmpeg-20200115-0dc0837-win64-static/' \
+                 r'ffmpeg-20200115-0dc0837-win64-static/bin/ffmpeg'
 
-# update this to the directory and file-name beginning
-# for the graphics files
 DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
 DEFAULT_GRAPHICS_NAME = 'dv'
 DEFAULT_MOVIE_FORMAT = 'mp4'
@@ -625,16 +626,18 @@ class BioSim:
         data['Carnivore'] = carni
         return pd.DataFrame(data)
 
-    """
-    def make_movie(self):
-        Create MPEG4 movie from visualization images saved.
 
+    def make_movie(self):
+        """
+        Create MPEG4 movie from visualization images saved.
+        """
         if self._img_base is None:
             raise RuntimeError("No filename defined.")
 
         if movie_fmt == 'mp4':
             try:
-                # Parameters chosen according to http://trac.ffmpeg.org/wiki/Encode/H.264,
+                # Parameters chosen according to http://trac.ffmpeg.org/wiki/
+                # Encode/H.264,
                 # section "Compatibility"
                 subprocess.check_call([_FFMPEG_BINARY,
                                        '-i', '{}_%05d.png'.format(self._img_base),
@@ -659,7 +662,7 @@ class BioSim:
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
     """
-    """
+
     def heat_map(self):
        
                Returns a heat-map, describing population density and movements
@@ -679,3 +682,27 @@ class BioSim:
         plot.show()()
 
     """
+
+if __name__ == "__main__":
+    Geo = """\
+                 OOOOOOO
+                 OJSSDDO
+                 OJSDDOO
+                 OOOOOOO"""
+
+    ini_herbs = [{'loc': (1, 1),
+                  'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 10}
+                          for _ in range(5)]}]
+    ini_carns = [{'loc': (2, 2),
+                  'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 60}
+                          for _ in range(5)]}]
+    sim = BioSim(Geo, ini_herbs, seed=123456)
+    sim.simulate(20)
+
+        # print(sim.num_animals_per_species)
+    #sim.plot_island_population()
+    sim.heat_map_herbivore()
+    sim.heat_map_carnivore()
+    sim.heat_map_carnivore()
+    sim.setup_graphics()
+    sim.standard_map()
