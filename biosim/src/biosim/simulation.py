@@ -13,8 +13,20 @@ import random
 import pandas as pd
 import seaborn as sns; sns.set()
 import numpy as np
+from matplotlib import colors
 import matplotlib.pyplot as plt
+import subprocess
+import os
+import textwrap
 import matplotlib.patches as patches
+
+_FFMPEG_BINARY = 'C:/Users/olav9/Documents/NMBU, Geomatikk 2019-2020/INF200/Visualisering/ffmpeg.exe'
+
+# update this to the directory and file-name beginning
+# for the graphics files
+_DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
+_DEFAULT_GRAPHICS_NAME = 'dv'
+_DEFAULT_MOVIE_FORMAT = 'mp4'
 
 
 class BioSim:
@@ -46,18 +58,32 @@ class BioSim:
                                                          self.ini_position,
                                                          ini_herbi, ini_carni)
 
-        self.year_count = 0
-        rows = len(self.island_map)
-        columns = len(self.island_map[0])
-        df_labels = ['x', 'y', 'Herbivores', 'Carnivores']
-        empty_df = [[i + 1, j + 1, 0, 0] for j in range(columns)
-                    for i in range(rows)]
-        self.pop_by_cell = pd.DataFrame(data=empty_df, columns=df_labels)
-        self.pop_by_cell.update(ini_pop)
-        self.graph_label = None
-        self.ax_herb = None
-        self.ax_carn = None
-        self.map_label = None
+
+        self.island_string = island_map
+        self.ymax_animals = ymax_animals
+        self._year = 0
+        self._final_year = None
+        self._img_fmt = img_fmt
+        self._img_ctr = 0
+        if img_base == None:
+            self.img_base = os.path.join('..', 'BioSim')
+        if cmax_animals is None:
+            self.cmax_animals = {}
+
+
+        # the following will be initialized by _setup_graphics
+        self._fig = None
+        self.ax_year = None
+        self.ax_map = None
+        self.ax_line = None
+        self.ax_heat_h = None
+        self.ax_heat_c = None
+        self.h_density = None
+        self.c_density = None
+        self.ax_map = None
+        self.y_label_h = None
+        self.y_label_c = None
+
 
 
         """
@@ -376,30 +402,139 @@ class BioSim:
         Image files will be numbered consecutively.
         """
 
-        for i in range(num_years):
+        if img_years is None:
+            img_years = vis_years
+
+        self._final_year = self._year + num_years
+        self._setup_graphics()
+
+        while self._year < self._final_year:
+
+            if self._year % vis_years == 0:
+                self._update_all
+
+            if self._year % img_years == 0:
+                self._save_graphics()
+
             self.simulation_one_year()
-            self.animal_in_cell_counter()
+            self._year += 1
 
-            if img_years is None:
-                img_steps = vis_years
 
-            self._final_year = self.year_count + num_years
-            self._setup_graphics()
+    def standard_map(self):
+        string_map = textwrap.dedent(self.island_string)
+        string_map.replace('\n', ' ')
 
-            while self.year_count < self._final_year:
+        color_code = {'O': colors.to_rgb('aqua'),
+                      'M': colors.to_rgb('grey'),
+                      'J': colors.to_rgb('forestgreen'),
+                      'S': colors.to_rgb('yellowgreen'),
+                      'D': colors.to_rgb('khaki')}
 
-                if self.year_count % vis_years == 0:
-                    self._update_graphics()
+        island_map = [[color_code[column] for column in row]
+                      for row in string_map.splitlines()]
 
-                if self.year_count % img_year == 0:
-                    self._save_graphics()
+        self.ax_map.imshow(island_map, interpolation='nearest')
+        self.ax_map.set_xticks(range(len(island_map[0])))
+        self.ax_map.set_xticklabels(range(0, 1 + len(island_map[0])))
+        self.ax_map.set_yticks(range(len(island_map)))
+        self.ax_map.set_yticklabels(range(0, 1 + len(island_map)))
 
-                self._system.update()
-                self.year_count += 1
+        """for ix, name in enumerate(('Ocean', 'Mountain', 'Jungle',
+                                  'Savannah', 'Desert')):
+            self.ax_map.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
+                                             edgecolor='none',
+                                             facecolor=color_code[name[0]]))
+                self.ax_map.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
 
-        print(self.island_map)
-        print(self.fodder_map)
-        print(self.animal_in_cell_counter)
+        """
+
+        """
+            map_colors = []
+            for coord, cell in self.map.island.items():
+                if cell.__name__ == 'Ocean':
+                    map_colors.append(coord, map_colors['O'])
+                elif cell.__name__ == 'Mountain':
+                    map_colors.append([coord, map_colors['M'])
+            [((0,2),  ]
+            fig = plt.figure()
+        """
+
+    def _setup_graphics(self):
+        """Creates subplots."""
+
+        # create new figure window
+        if self._fig is None:
+            self._fig = plt.figure()
+
+        # Add left subplot for images created with imshow().
+        # We cannot create the actual ImageAxis object before we know
+        # the size of the image, so we delay its creation.
+        if self.ax_map is None:
+            self.ax_map = self._fig.add_subplot(221)
+            self.standard_map()
+
+        # Add right subplot for line graph of mean.
+        if self.h_density is None:
+            self.ax_heat_h = self._fig.add_subplot(223)
+            self.heat_map()
+
+        if self.c_density is None:
+            self.ax_heat_c = self.fig.add_subplot(224)
+            self.heat_map()
+
+        if self.ax_line is None:
+            self.ax_line = self.fig.add_subplot(322)
+            if self.ymax_animals is not None:
+                self.ax_line.set_ylim(0, self.ymax_animals)
+            self.ax_line.set_xlim(0, self._final_year + 1)
+            self.ax_line.set_title('Populations')
+
+
+    def save_graphic(self):
+        if self.img_base is None:
+            return
+
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=self.img_base,
+                                                     num=self.img_ctr,
+                                                     type=self.img_fmt))
+        self.img_ctr += 1
+
+    def update_population_plot(self):
+        n_herb = self.total_count_herbi
+        n_carn = self.total_count_carni
+        self.y_label_h.append(n_herb)
+        self.y_label_c.append(n_carn)
+        self.ax_line.plot(range(self._year + 1), self.y_label_h,
+                          'g', self.y_label_c, 'r')
+        self.ax_line.legend(['Herbivore', 'Carnivore'])
+
+
+    def heat_map(self):
+        """
+        Returns a heat-map, describing population density and movements
+        """
+
+        self.herbi_per_cell = np.asarray(self.total_pop_herbi)
+        self.ax_heat_h = sns.heatmap(self.herbi_per_cell,
+                                     interpolation = 'nearest',
+                                     cmap='Greens',
+                                     vmin = 0,
+                                     vmax = 200)
+        self.ax_heat_h.set_title('Herbivore density')
+
+        self.carni_per_cell = np.asarray(self.total_pop_carni)
+        self.ax_heat_c = sns.heatmap(self.carni_per_cell,
+                                     interpolation = 'nearest',
+                                     cmap='Reds',
+                                     vmin = 0,
+                                     vmax = 200)
+        self.ax_heat_c.set_title('Carnivore density')
+        plot.show()()
+
+    def update_all(self):
+        self.heat_map
+        self.update_population_plot()
+        plt.pause(1e-6)
 
 
     def add_population(self, population):
@@ -414,8 +549,8 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
-        print('Last year simulated: ', self.year_count)
-        return self.year_count
+        print('Last year simulated: ', self._year)
+        return self._year
 
     @property
     def num_animals(self):
@@ -432,7 +567,7 @@ class BioSim:
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
                 self.total_count_herbi += len(self.island_map[row][col][0])
-                self.total_sount_carni += len(self.island_map[row][col][1])
+                self.total_count_carni += len(self.island_map[row][col][1])
         return(self.total_count_herbi)
         return(self.total_count_carni)
 
@@ -446,84 +581,9 @@ class BioSim:
         self.pop_by_cell.update(ini_pop)
         return self.pop_by_cell
 
-    def replot(n_steps):
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_xlim(0, n_steps)
-        ax.set_ylim(0, 1)
-
-        data = []
-        for _ in range(n_steps):
-            data.append(np.random.random())
-            ax.plot(data, 'b-')
-            plt.pause(1e-6)
-
-    def update(n_steps):
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_xlim(0, n_steps)
-        ax.set_ylim(0, 1)
-
-        line = ax.plot(np.arange(n_steps),
-                       np.full(n_steps, np.nan), 'b-')[0]
-
-        for n in range(n_steps):
-            ydata = line.get_ydata()
-            ydata[n] = np.random.random()
-            line.set_ydata(ydata)
-            plt.pause(1e-6)
-
-    def heat_map(self):
-        """
-        Returns a heat-map, describing population density and movements
-        """
-
-        self.herbi_per_cell = np.asarray(self.total_pop_herbi)
-        self.ax_herb = sns.heatmap(self.herbi_per_cell, vmin = 0, vmax = 200)
-        self.ax_herb.set_title('Herbivore density')
-
-        self.carni_per_cell = np.asarray(self.total_pop_carni)
-        self.ax_herb = sns.heatmap(self.carni_per_cell)
-        self.ax_carn.set_title('Carnivore density')
-
-    def plot_map(self):
-        """
-        Yngve plot: https://github.com/yngvem/INF200-2019/blob/master/lectures/J05/Plotting/mapping.py
-
-        """
-        #                   R    G    B
-        rgb_value = {'O': (0.0, 0.0, 1.0),  # blue
-                     'M': (0.5, 0.5, 0.5),  # grey
-                     'J': (0.0, 0.6, 0.0),  # dark green
-                     'S': (0.5, 1.0, 0.5),  # light green
-                     'D': (1.0, 1.0, 0.5)}  # light yellow
-
-        map_rgb = [[rgb_value[column] for column in row]
-                    for row in map.splitlines()]
-
-        fig = plt.figure()
-
-        axim = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
-        axim.imshow(map_rgb)
-        axim.set_xticks(range(len(map_rgb[0])))
-        axim.set_xticklabels(range(1, 1 + len(map_rgb[0])))
-        axim.set_yticks(range(len(map_rgb)))
-        axim.set_yticklabels(range(1, 1 + len(map_rgb)))
-
-        axlg = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
-        axlg.axis('off')
-        for ix, name in enumerate(('Ocean', 'Mountain', 'Jungle',
-                                   'Savannah', 'Desert')):
-            axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                         edgecolor='none',
-                                         facecolor=rgb_value[name[0]]))
-            axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
-
-        plt.show()
-
-
+    """
     def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
+        Create MPEG4 movie from visualization images saved.
 
         if self._img_base is None:
             raise RuntimeError("No filename defined.")
@@ -554,4 +614,4 @@ class BioSim:
                 raise RuntimeError('ERROR: convert failed with: {}'.format(err))
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
-        
+    """
