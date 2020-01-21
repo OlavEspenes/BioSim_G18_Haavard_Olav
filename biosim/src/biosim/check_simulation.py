@@ -21,7 +21,7 @@ if __name__ == "__main__":
                          'age': 20,
                          'weight': 80}
                         ]}]
-    island_map = """
+    island_map = """\
         OOO
         OJO
         OOO
@@ -37,5 +37,5 @@ if __name__ == "__main__":
 
     #sim.simulation_one_year()
     #sim._setup_graphics()
-    sim.simulate(1)
+    sim.simulate(5)
 

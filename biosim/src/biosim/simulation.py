@@ -46,7 +46,8 @@ class BioSim:
                                                          ini_position,
                                                          ini_herbi, ini_carni)
 
-
+        self.total_count_herbi = 0
+        self.total_count_carni = 0
         self.island_string = island_map
         self.ymax_animals = ymax_animals
         self._year = 0
@@ -75,6 +76,8 @@ class BioSim:
         self.line_herb = None
         self.line_carn = None
         self.year_plot = None
+        self.map_geo = None
+        self.animal_dis = None
 
 
         """
@@ -365,16 +368,17 @@ class BioSim:
                 if not self.island_map[row][col][0]:
                     continue
                 else:
-                    self.total_pop_herbi = len(self.island_map[row][col][0])
+                    self.total_pop_herbi += len(self.island_map[row][col][0])
                 if not self.island_map[row][col][1]:
                     continue
                 else:
-                    self.total_pop_carni = len(self.island_map[row][col][1])
+                    self.total_pop_carni += len(self.island_map[row][col][1])
         self.animal_dis = np.column_stack((self.total_pop_herbi, self.total_pop_carni))
 
 
     def standard_map(self):
-        string_map = textwrap.dedent(self.island_string)
+        island_string = self.island_string
+        string_map = textwrap.dedent(island_string)
         string_map.replace('\n', ' ')
 
         color_code = {'O': colors.to_rgb('aqua'),
@@ -386,7 +390,7 @@ class BioSim:
         island_map_vis = [[color_code[column] for column in row]
                           for row in string_map.splitlines()]
 
-        #self.ax_map.imshow(island_map_vis, interpolation='nearest')
+        self.ax_map.imshow(island_map_vis, interpolation='nearest')
         self.ax_map.set_xticks(range(len(island_map_vis[0])))
         self.ax_map.set_xticklabels(range(0, 1 + len(island_map_vis[0])))
         self.ax_map.set_yticks(range(len(island_map_vis)))
@@ -442,7 +446,6 @@ class BioSim:
             self.ax_line.set_xlim(0, self._final_year + 1)
             self.ax_line.set_title('Populations')
 
-
     def save_graphic(self):
         if self.img_base is None:
             return
@@ -453,8 +456,7 @@ class BioSim:
         self.img_ctr += 1
 
     def update_population_plot(self):
-        n_herb = self.total_count_herbi
-        n_carn = self.total_count_carni
+        n_herb, n_carn = self.total_count_herbi
         self.y_label_h.append(n_herb)
         self.y_label_c.append(n_carn)
         self.ax_line.plot(range(self._year + 1), self.y_label_h,
@@ -469,20 +471,19 @@ class BioSim:
 
         herb_cell = self.animal_distribution.pivot('Row', 'Col', 'Herbivore')
 
-        self.herb_density = self.ax_heat_h.imshow(herb_cell,
-                                                  interpolation='nearest',
-                                                  cmap='Greens')
+        self.h_density = self.ax_heat_h.imshow(herb_cell,
+                                               interpolation='nearest',
+                                               cmap='Greens')
         self.ax_heat_h.set_title('Herbivore population density')
 
     def heat_map_carnivore(self):
 
         carn_cell = self.animal_distribution.pivot('Row', 'Col', 'Carnivore')
 
-        self.herb_density = self.ax_heat_c.imshow(carn_cell,
-                                                  interpolation='nearest',
-                                                  cmap='Reds')
+        self.c_density = self.ax_heat_c.imshow(carn_cell,
+                                               interpolation='nearest',
+                                               cmap='Reds')
         self.ax_heat_c.set_title('Carnivore population density')
-
 
     def update_all(self):
         self.heat_map_herbivore()
@@ -500,7 +501,6 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
-
         if img_years is None:
             img_years = vis_years
 
@@ -508,19 +508,15 @@ class BioSim:
         self._setup_graphics()
 
         while self._year < self._final_year:
-
             if self.num_animals == 0:
                 break
-
             if self._year % vis_years == 0:
                 self.update_all()
-
             if self._year % img_years == 0:
-                self.save_graphics()
+                self.save_graphic()
 
             self.simulation_one_year()
             self._year += 1
-
 
     def add_population(self, population):
         """
@@ -550,15 +546,11 @@ class BioSim:
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
-
-        self.total_count_herbi = 0
-        self.total_count_carni = 0
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
                 self.total_count_herbi += len(self.island_map[row][col][0])
                 self.total_count_carni += len(self.island_map[row][col][1])
-        return(self.total_count_herbi)
-        return(self.total_count_carni)
+        return self.total_count_herbi, self.total_count_carni
 
 
 
@@ -568,18 +560,20 @@ class BioSim:
 
         data = {}
         rows = []
-        col = []
-        herbs = []
-        carns = []
-        for coord, cell in self.map.island.items():
-            herbs.append(cell.herbivore_pop)
-            carns.append(cell.carnivore_pop)
-            rows.append(coord[0])
-            col.append(coord[1])
+        cols = []
+        herbi = []
+        carni = []
+
+        for row in range(len(self.island_map)):
+            for col in range(len(self.island_map[0])):
+                herbi.append(len(self.island_map[row][col][0]))
+                carni.append(len(self.island_map[row][col][1]))
+                rows.append(row)
+                cols.append(col)
         data['Row'] = rows
-        data['Col'] = col
-        data['Herbivore'] = herbs
-        data['Carnivore'] = carns
+        data['Col'] = cols
+        data['Herbivore'] = herbi
+        data['Carnivore'] = carni
         return pd.DataFrame(data)
 
     """
