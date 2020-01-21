@@ -383,7 +383,6 @@ class BioSim:
 
             if self.year_count % vis_years == 0:
                 plt.ion()
-                self.simulation_plot()
 
             self.year_count += 1
             if self.year_count % img_years == 0:
@@ -436,7 +435,7 @@ class BioSim:
         """Pandas DataFrame with animal count per species for each cell on island."""
 
         population = pd.DataFrame(self.animal_in_cell_counter(), columns=['Herbivores', 'Carnivores'])
-        self.pop_by_cell.update(pop)
+        self.pop_by_cell.update(ini_pop)
         return self.pop_by_cell
 
     def replot(n_steps):
