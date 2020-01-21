@@ -12,6 +12,9 @@ import numpy as np
 
 
 class Landscape:
+    """
+    Method 
+    """
     default_herbivores_para = {'w_birth': 8.0,
                                'sigma_birth': 1.5,
                                'beta': 0.9,

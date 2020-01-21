@@ -290,7 +290,7 @@ class Cell:
 
     def death(self):
         """
-        uses simple death function and updates herbi and carni
+        Uses simple death function and updates herbi and carni
         with fewer animals after natural death
         """
         self.update_fitness_sorted(self.herbi, self.h_parameters)
