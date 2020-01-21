@@ -587,7 +587,6 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
-        print('Last year simulated: ', self._year)
         return self._year
 
     @property
@@ -602,18 +601,20 @@ class BioSim:
             for col, _ in enumerate(self.island_map[0]):
                 self.total_count_herbi += len(self.island_map[row][col][0])
                 self.total_count_carni += len(self.island_map[row][col][1])
-        return self.total_count_herbi, self.total_count_carni
+        dic_animal_per_species = {'Herbivore': self.total_count_herbi,
+                                  'Carnivore': self.total_count_carni}
+        return dic_animal_per_species
 
     @property
     def animal_distribution(self):
-        """Pandas DataFrame with animal count per species for each cell on island."""
-
+        """
+        Pandas DataFrame with animal count per species for each cell on island.
+        """
         data = {}
         rows = []
         cols = []
         herbi = []
         carni = []
-
         for row in range(len(self.island_map)):
             for col in range(len(self.island_map[0])):
                 herbi.append(len(self.island_map[row][col][0]))
@@ -624,7 +625,9 @@ class BioSim:
         data['Col'] = cols
         data['Herbivore'] = herbi
         data['Carnivore'] = carni
-        return pd.DataFrame(data)
+        df = pd.DataFrame(data)
+        df = df[['Herbivore', 'Carnivore', 'Row', 'Col']]
+        return df
 
 
     def make_movie(self):

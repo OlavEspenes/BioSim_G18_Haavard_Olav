@@ -21,6 +21,11 @@ if __name__ == "__main__":
                          'age': 20,
                          'weight': 80}
                         ]}]
+    ini_herbs = [{"loc": (10, 10),
+                  {"pop": [
+                {"species": "Herbivore", "age": 5, "weight": 20}
+                for _ in range(150)
+                  }]]
     island_map = """\
         OOO
         OJO
@@ -28,7 +33,7 @@ if __name__ == "__main__":
         """
     land = Landscape(island_map)
     sim = BioSim(island_map,
-        ini_pop,
+        ini_herbs,
         12345,
         ymax_animals=None,
         cmax_animals=None,

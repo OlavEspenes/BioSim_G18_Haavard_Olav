@@ -401,12 +401,12 @@ class Landscape:
         ini_herbi = []
         ini_position = (0, 0)
         if ini_pop:
-            for i in ini_pop[1].get('pop'):
-                if i.get('species') == 'Herbivore':
-                    ini_herbi.append(i)
-                elif i.get('species') == 'Carnivore':
-                    ini_carni.append(i)
+            for i, _ in enumerate(ini_pop[0]['pop']):
+                if ini_pop[0]['pop'][i]['species'] == 'Herbivore':
+                    ini_herbi.append(ini_pop[0]['pop'][i])
+                elif ini_pop[0]['pop'][i]['species'] == 'Carnivore':
+                    ini_herbi.append(ini_pop[0]['pop'][i])
                 else:
                     raise ValueError('Something about the input is wrong')
-            ini_position = ini_pop[0].get('loc')
+            ini_position = ini_pop[0]['loc']
         return ini_herbi, ini_carni, ini_position
