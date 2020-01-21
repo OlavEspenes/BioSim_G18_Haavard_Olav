@@ -35,20 +35,20 @@ if __name__ == "__main__":
                                 'DeltaPhiMax': 10.0}
     ini_pop = [{'loc': (1, 1)},
                {'pop': [{'species': 'Herbivore',
-                         'age': 2,
-                         'weight': 10}, {'species': 'Herbivore',
-                                         'age': 3,
+                         'age': 5,
+                         'weight': 20}, {'species': 'Herbivore',
+                                         'age': 5,
                                          'weight': 20},
                         {'species': 'Carnivore',
-                         'age': 3,
+                         'age': 5,
                          'weight': 40}, {'species': 'Herbivore',
-                                         'age': 4,
-                                         'weight': 15},
+                                         'age': 5,
+                                         'weight': 20},
                         {'species': 'Herbivore',
                          'age': 5,
                          'weight': 20}, {'species': 'Carnivore',
-                                         'age': 3,
-                                         'weight': 20}, ]}]
+                                         'age': 5,
+                                         'weight': 40}, ]}]
     carni = []
     herbi = []
     for i in ini_pop[1].get('pop'):
@@ -65,11 +65,16 @@ if __name__ == "__main__":
     #test.age()
     #test.weight_loss()
     #test.death()
-    flykninger = test.send_out_emigrators()         #gives us emigrants. two lists for each species
-    print(flykninger[0])   #herbi
-    print(flykninger[1])   #carni
+    #flykninger = test.send_out_emigrators()         #gives us emigrants. two lists for each species
+    #print(flykninger[0])   #herbi
+    #print(flykninger[1])   #carni
     #print('herbi igjen i cellen', len(herbi))
     #print('carni igjen i cellen', len(carni))
+    h, c, food, migr = test.run_cell()
+    print(h)
+    print(c)
+    print(food)
+    print(migr)
 
 
 

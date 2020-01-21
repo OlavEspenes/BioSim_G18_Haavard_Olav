@@ -56,7 +56,7 @@ class Landscape:
 
         Parameters
         ----------
-        parameter_changes : dictionary
+        herbi_para : dictionary
             A dictionary with one or more keys to set new parameters for the
             animal. The items should be numeric.
         Raises
@@ -147,7 +147,7 @@ class Landscape:
                 elif key is 'xi':
                     if herbi_para[key] < 1:
                         raise ValueError("'xi' must be greater than"
-                                             " or equal to 1")
+                                         " or equal to 1")
                     else:
                         cls.parameters[0][key] = herbi_para[key]
 
@@ -164,8 +164,7 @@ class Landscape:
                         cls.parameters[0][key] = herbi_para[key]
 
                 else:
-                        pass
-
+                    pass
             else:
                 raise KeyError(
                     "Your input is not a correct parameter key:'{0}'."
@@ -255,7 +254,7 @@ class Landscape:
                 elif key is 'xi':
                     if carni_para[key] < 1:
                         raise ValueError("'xi' must be greater than"
-                                             " or equal to 1")
+                                         " or equal to 1")
                     else:
                         cls.parameters[1][key] = carni_para[key]
 
@@ -277,7 +276,7 @@ class Landscape:
                     else:
                         cls.parameters[1][key] = carni_para[key]
                 else:
-                        pass
+                    pass
 
             else:
                 raise KeyError(
@@ -289,15 +288,17 @@ class Landscape:
 
     @classmethod
     def set_jungle_parameters(cls, jungle_para):
-        if jungle_para in cls.landscape_parameters[0]:
-            if jungle_para < 0:
-                raise ValueError("'f_max' must be positive")
+        for key in jungle_para:
+            if key in cls.landscape_parameters[0]:
+                if key is 'f_max':
+                    if jungle_para[key] < 0:
+                        raise ValueError("'f_max' must be positive")
+                    else:
+                        cls.landscape_parameters[0][key] = jungle_para[key]
+                else:
+                    pass
             else:
-                cls.landscape_parameters[0] = jungle_para
-        else:
-            raise KeyError(
-                "Your input is not a correct parameter."
-                "Valid key for jungle must be 'f_max'")
+                raise KeyError('You have entered wrong information')
 
     @classmethod
     def set_savannah_parameters(cls, savannah_para):
@@ -308,14 +309,15 @@ class Landscape:
                         raise ValueError("'f_max' must be positive")
                     else:
                         cls.landscape_parameters[1][key] = savannah_para[key]
-
                 elif key is 'alpha':
-                    if 0 <= savannah_para[key] <= 1:
+                    if 1 <= savannah_para[key] <= 0:
                         raise ValueError("'alpha' must be between 0 and 1")
                     else:
                         cls.landscape_parameters[1][key] = savannah_para[key]
                 else:
                     pass
+            else:
+                raise KeyError('You have entered wrong information')
 
     def __init__(self, island):
         self.island = island
@@ -367,11 +369,33 @@ class Landscape:
         return fodder_map
 
     def make_island_map(self, dim_map, ini_position, ini_herbi, ini_carni):
-        island_map = [[[[], []] for i in range(len(dim_map[1]))]
-                      for j in range(len(dim_map))]
+        if len(dim_map[0]) >= 1:
+            island_map = [[[[], []] for i in range(len(dim_map[0]))] for j
+                          in range(len(dim_map))]
+        elif len(dim_map[1]) is True:
+            island_map = [[[[], []] for i in range(len(dim_map[1]))] for j
+                          in range(len(dim_map))]
+        else:
+            raise ValueError('No map given')
+
         for i in range(len(island_map)):
             for j in range(len(island_map[0])):
                 if (i, j) == ini_position:
                     island_map[i][j][0] = ini_herbi
                     island_map[i][j][1] = ini_carni
         return island_map
+
+    def set_pop(self, ini_pop):
+        ini_carni = []
+        ini_herbi = []
+        ini_position = (0, 0)
+        if ini_pop:
+            for i in ini_pop[1].get('pop'):
+                if i.get('species') == 'Herbivore':
+                    ini_herbi.append(i)
+                elif i.get('species') == 'Carnivore':
+                    ini_carni.append(i)
+                else:
+                    raise ValueError('Something about the input is wrong')
+            ini_position = ini_pop[0].get('loc')
+        return ini_herbi, ini_carni, ini_position

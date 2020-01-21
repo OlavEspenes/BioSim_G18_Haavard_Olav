@@ -3,8 +3,8 @@
 """
 """
 
-__author__ = ""
-__email__ = ""
+__author__ = "Olav Vikøren Espenes & Håvard Brobakken Eig"
+__email__ = "olaves@nmbu.no, havardei@nmbu.no"
 
 import math
 from biosim.cell import Cell
@@ -41,21 +41,11 @@ class BioSim:
         img_fmt="png",
     ):
         random.seed(seed)
-        ini_carni = []
-        ini_herbi = []
-        self.ini_position = (0, 0)
-        if ini_pop:
-            for i in ini_pop[1].get('pop'):
-                if i.get('species') == 'Herbivore':
-                    ini_herbi.append(i)
-                elif i.get('species') == 'Carnivore':
-                    ini_carni.append(i)
-            self.ini_position = ini_pop[0].get('loc')
-
         self.landscape = Landscape(island_map)
+        ini_herbi, ini_carni, ini_position = self.landscape.set_pop(ini_pop)
         self.fodder_map = self.landscape.make_fodder_island(island_map)
         self.island_map = self.landscape.make_island_map(self.fodder_map,
-                                                         self.ini_position,
+                                                         ini_position,
                                                          ini_herbi, ini_carni)
 
 
@@ -117,9 +107,9 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
-        if species == 'Herbivores':
+        if species == 'Herbivore':
             self.landscape.set_parameters_herbi(params)
-        elif species == 'Carnivores':
+        elif species == 'Carnivore':
             self.landscape.set_parameters_carni(params)
         else:
             raise ValueError("species' must be Herbivores or Carnivores")
@@ -165,13 +155,6 @@ class BioSim:
                     herbi, carni, food, emigrators = cell.run_cell()
                     self.island_map[row][col][1] = carni
                     self.island_map[row][col][0] = herbi
-                    #food = cell.feeding_herbi()
-                    #cell.feeding_carni()
-                    #cell.birth()
-                    #cell.age()
-                    #cell.weight_loss()
-                    #cell.death()
-                    #emigrations = cell.send_out_emigrators()
                     herbi_migration[row][col] = emigrators[0]
                     carni_migration[row][col] = emigrators[1]
                     self.fodder_map[row][col][1] = food
@@ -543,8 +526,12 @@ class BioSim:
 
         :param population: List of dictionaries specifying population
         """
-        pass
-
+        new_herbi, new_carni, position = self.landscape.set_pop(population)
+        for i in range(len(self.island_map)):
+            for j in range(len(self.island_map[0])):
+                if (i, j) == position:
+                    self.island_map[i][j][0] += new_herbi
+                    self.island_map[i][j][1] += new_carni
 
     @property
     def year(self):

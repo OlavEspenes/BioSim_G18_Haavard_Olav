@@ -240,10 +240,13 @@ class Cell:
         """
         Uses procreation function to modify herbi and carni list.
         """
+        herbi = self.herbi
+        carni = self.carni
         self.update_fitness_sorted(self.herbi, self.h_parameters)
         self.update_fitness_sorted(self.carni, self.c_parameters)
-        self.procreation(self.herbi, self.h_parameters, 'Herbivore')
-        self.procreation(self.carni, self.c_parameters, 'Carnivore')
+        self.procreation(herbi, self.h_parameters, 'Herbivore')
+        self.procreation(carni, self.c_parameters, 'Carnivore')
+        return herbi, carni
 
     def age(self):
         """
@@ -272,6 +275,7 @@ class Cell:
         """
         self.update_fitness_sorted(list_animal, parameters)
         should_del = []
+        'Deletes animals with nagative fitness and fodder.'
         for a, _ in enumerate(list_animal):
             if list_animal[a].get('fitness') < 0 or \
                     list_animal[a].get('weight') <= 0:
@@ -288,8 +292,10 @@ class Cell:
             list_animal.remove(el)
 
     def death(self):
-        """uses simple death function and updates herbi and carni
-        with fewer animals after natural death"""
+        """
+        uses simple death function and updates herbi and carni
+        with fewer animals after natural death
+        """
         self.update_fitness_sorted(self.herbi, self.h_parameters)
         self.update_fitness_sorted(self.carni, self.c_parameters)
         self.death_function(self.carni, self.c_parameters)
@@ -297,7 +303,8 @@ class Cell:
         return self.herbi, self.carni
 
     def who_will_migrate(self, list_animal, parameter):
-        """Make migration list as output from this function
+        """
+        Make migration list as output from this function
         and remove from list her in cell
         """
         self.update_fitness_sorted(list_animal, parameter)
@@ -324,16 +331,21 @@ class Cell:
         return herbi_migration_list, carni_migration_list
 
     def run_cell(self):
+        """
+        Method that runs Cell class. Outputs
+        the modified input lists, list of migrating animals
+        and fodder left in the cell.
+        """
         food = self.feeding_herbi()
         updated_herbi = self.feeding_carni()
         self.herbi = updated_herbi
-        self.birth()
+        herbi_born, carni_born = self.birth()
+        self.herbi = herbi_born
+        self.carni = carni_born
         self.age()
         self.weight_loss()
         herbi_new, carni_new = self.death()
         self.herbi = herbi_new
         self.carni = carni_new
         emigrations = self.send_out_emigrators()
-        #herbi_migration = emigrations[0]
-        #carni_migration = emigrations[1]
         return self.herbi, self.carni, food, emigrations
