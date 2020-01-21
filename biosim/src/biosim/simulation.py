@@ -365,7 +365,7 @@ class BioSim:
                     self.total_pop_carni[row][col] = len(self.island_map[row][col][1])
         self.animal_dis = np.column_stack((self.total_pop_herbi, self.total_pop_carni))
 
-    def simulate(self, num_years, vis_years=1, img_years=None):
+    def simulate(self, num_years, vis_years=1, img_years=1):
         """
         Run simulation while visualizing the result.
 
@@ -380,22 +380,22 @@ class BioSim:
             self.simulation_one_year()
             self.animal_in_cell_counter()
 
-            if img_steps is None:
-                img_steps = vis_steps
+            if img_years is None:
+                img_steps = vis_years
 
-            self._final_step = self._step + num_steps
+            self._final_year = self.year_count + num_years
             self._setup_graphics()
 
-            while self._step < self._final_step:
+            while self.year_count < self._final_year:
 
-                if self._step % vis_steps == 0:
+                if self.year_count % vis_years == 0:
                     self._update_graphics()
 
-                if self._step % img_steps == 0:
+                if self.year_count % img_year == 0:
                     self._save_graphics()
 
                 self._system.update()
-                self._step += 1
+                self.year_count += 1
 
         print(self.island_map)
         print(self.fodder_map)

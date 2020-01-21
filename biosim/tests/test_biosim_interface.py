@@ -62,7 +62,7 @@ def test_invalid_landscape():
 def test_inconsistent_length():
     """Inconsistent line length must raise error"""
     with pytest.raises(ValueError):
-        BioSim(island_map="OOO\nOJJO\nOOO", ini_pop=[], seed=1)
+        BioSim(island_map="O", ini_pop=[], seed=1)
 
 
 @pytest.mark.parametrize(
@@ -89,7 +89,7 @@ def test_set_param_animals(species, extra):
     }
     params.update(extra)
 
-    BioSim(island_map="O", ini_pop=[], seed=1).set_animal_parameters(
+    BioSim(island_map="OOO\nOJO\nOOO", ini_pop=[], seed=1).set_animal_parameters(
         species, params
     )
 

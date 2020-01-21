@@ -36,5 +36,5 @@ if __name__ == "__main__":
         img_fmt="png")
 
     #sim.simulation_one_year()
-    sim.simulate(7)
+    sim.simulate(5)
 
