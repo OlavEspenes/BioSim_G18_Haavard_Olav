@@ -570,9 +570,21 @@ class BioSim:
     def animal_distribution(self):
         """Pandas DataFrame with animal count per species for each cell on island."""
 
-        population = pd.DataFrame(self.animal_in_cell_counter(), columns=['Herbivores', 'Carnivores'])
-        self.pop_by_cell.update(ini_pop)
-        return self.pop_by_cell
+        data = {}
+        rows = []
+        col = []
+        herbs = []
+        carns = []
+        for coord, cell in self.map.island.items():
+            herbs.append(cell.herbivore_pop)
+            carns.append(cell.carnivore_pop)
+            rows.append(coord[0])
+            col.append(coord[1])
+        data['Row'] = rows
+        data['Col'] = col
+        data['Herbivore'] = herbs
+        data['Carnivore'] = carns
+        return pd.DataFrame(data)
 
     """
     def make_movie(self):
