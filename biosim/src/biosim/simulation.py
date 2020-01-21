@@ -376,7 +376,6 @@ class BioSim:
         Image files will be numbered consecutively.
         """
 
-        self.new_sim = True
         for i in range(num_years):
             self.simulation_one_year()
             self.animal_in_cell_counter()
@@ -386,7 +385,7 @@ class BioSim:
 
             self.year_count += 1
             if self.year_count % img_years == 0:
-                plt.savefig('biosim/animation/biosim_' +
+                plt.savefig('biosim/animation' +
                             str(self.year_count).zfill(5) + '.png')
 
         print(self.island_map)
