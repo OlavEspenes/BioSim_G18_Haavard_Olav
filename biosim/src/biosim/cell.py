@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 """
-
 """
 
 __author__ = "Olav Vikøren Espenes & Håvard Brobakken Eig"
@@ -191,10 +190,8 @@ class Cell:
                                     self.carni[hunter]['age'],
                                     self.carni[hunter]['weight'],
                                     self.c_parameters)
-
                             dead_herbis.append(herbi[preyer])
                             appetite = appetite - appetite
-
                             if appetite != 0:
                                 raise ValueError("Wrong in appetite list")
                             else:

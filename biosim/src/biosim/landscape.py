@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+
+"""
+"""
+
+__author__ = "Olav Vikøren Espenes & Håvard Brobakken Eig"
+__email__ = "olaves@nmbu.no, havardei@nmbu.no"
+
 
 import copy
 import numpy as np
