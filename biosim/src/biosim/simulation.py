@@ -46,7 +46,7 @@ class BioSim:
                                                          self.ini_position,
                                                          ini_herbi, ini_carni)
 
-        self.year = 0
+        self.year_count = 0
         rows = len(self.island_map)
         columns = len(self.island_map[0])
         df_labels = ['x', 'y', 'Herbivores', 'Carnivores']
@@ -98,7 +98,6 @@ class BioSim:
         else:
             raise ValueError("species' must be Herbivores or Carnivores")
 
-
     def set_landscape_parameters(self, landscape, params):
         """
         Set parameters for landscape type.
@@ -125,8 +124,8 @@ class BioSim:
             for col, _ in enumerate(self.island_map[0]):
                 if self.island_map[row][col][0] is not None or \
                         self.island_map[row][col][1] is not None:
-                    #herbi = self.island_map[row][col][0]
-                    #carni = self.island_map[row][col][1]
+                    herbi = self.island_map[row][col][0]
+                    carni = self.island_map[row][col][1]
                     if self.fodder_map[row][col][0] == 'J':
                         fodder = self.landscape.jungle_para['f_max']
                     elif self.fodder_map[row][col][0] == 'S':
@@ -136,16 +135,19 @@ class BioSim:
                                     - self.fodder_map[row][col][1])
                     else:
                         fodder = self.fodder_map[row][col][1]
-                    cell = Cell(self.island_map[row][col][0], self.island_map[row][col][1], fodder, h_para, c_para)
-                    food = cell.feeding_herbi()
-                    cell.feeding_carni()
-                    cell.birth()
-                    cell.age()
-                    cell.weight_loss()
-                    cell.death()
-                    emigrations = cell.send_out_emigrators()
-                    herbi_migration[row][col] = emigrations[0]
-                    carni_migration[row][col] = emigrations[1]
+                    cell = Cell(herbi, carni, fodder, h_para, c_para)
+                    herbi, carni, food, emigrators = cell.run_cell()
+                    self.island_map[row][col][1] = carni
+                    self.island_map[row][col][0] = herbi
+                    #food = cell.feeding_herbi()
+                    #cell.feeding_carni()
+                    #cell.birth()
+                    #cell.age()
+                    #cell.weight_loss()
+                    #cell.death()
+                    #emigrations = cell.send_out_emigrators()
+                    herbi_migration[row][col] = emigrators[0]
+                    carni_migration[row][col] = emigrators[1]
                     self.fodder_map[row][col][1] = food
 
         # Migration herbivores
@@ -379,12 +381,12 @@ class BioSim:
             self.simulation_one_year()
             self.animal_in_cell_counter()
 
-            if self.year_count % vis_years == 1:
+            if self.year_count % vis_years == 0:
                 plt.ion()
                 self.simulation_plot()
 
             self.year_count += 1
-            if self.year_count % img_years == 1:
+            if self.year_count % img_years == 0:
                 plt.savefig('biosim/animation/biosim_' +
                             str(self.year_count).zfill(5) + '.png')
 
@@ -405,8 +407,8 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
-        print('Last year simulated: ', self.year)
-        return self.year
+        print('Last year simulated: ', self.year_count)
+        return self.year_count
 
     @property
     def num_animals(self):
@@ -422,8 +424,8 @@ class BioSim:
         self.total_count_carni = 0
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
-                self.total_count_herbi += len(island_map[row][col][0])
-                self.total_sount_carni += len(island_map[row][col][1])
+                self.total_count_herbi += len(self.island_map[row][col][0])
+                self.total_sount_carni += len(self.island_map[row][col][1])
         return(self.total_count_herbi)
         return(self.total_count_carni)
 

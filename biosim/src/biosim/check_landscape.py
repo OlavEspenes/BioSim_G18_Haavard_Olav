@@ -22,7 +22,9 @@ if __name__ == "__main__":
                          'weight': 80}
                         ]}]
     island_map = """
-        O
+        OOO
+        OJO
+        OOO
         """
     land = Landscape(island_map)
     sim = BioSim(island_map,

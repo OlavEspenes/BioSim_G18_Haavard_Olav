@@ -57,16 +57,20 @@ class TestCell:
     def test_fitness_single_animal(self):
         """
         Checks that animal with slightly greater
-        weight has better fitness
+        weight has better fitness and that its
+        between 0 and 1.
         """
         self.create_animals()
         ani_one = self.cell.fitness_single_animal(3, 10, self.h_parameter)
         ani_two = self.cell.fitness_single_animal(3, 11, self.h_parameter)
         assert ani_one < ani_two
+        assert 0 < ani_one < 1
+        assert 0 < ani_two < 1
 
     def test_update_fitness_sorted(self):
         """
-        Checks that animals is sorted by fitness from highes to lowest.
+        Checks that animals is sorted by fitness
+        from highest to lowest.
         """
         self.create_animals()
         self.cell.update_fitness_sorted(self.herbi, self.h_parameter)
@@ -80,6 +84,17 @@ class TestCell:
         self.create_animals()
         after_feed = self.cell.feeding_herbi()
         assert self.fodder > after_feed
+
+    def test_feeding_herbi_negative_fodder(self):
+        """
+        Checks that ValueError is raised
+        when fodder is below 0
+        """
+        self.create_animals()
+        with pytest.raises(ValueError):
+            cell = Cell(self.herbi, self.carni, -1,
+                             self.h_parameter, self.c_parameter)
+            cell.feeding_herbi()
 
     def test_feeding_herbi_no_fodder(self):
         """
@@ -126,7 +141,7 @@ class TestCell:
         """
         self.create_animals()
         self.cell.age()
-        assert self.herbi[0].get('age') == 4
+        assert self.herbi[0]['age'] == 4
 
     def test_weight_loss(self):
         """
@@ -166,5 +181,11 @@ class TestCell:
         assert len(self.herbi) < 4
         assert len(emigrant) > 0
         assert len(self.herbi) + len(emigrant) == 4
+
+    def test_run_cell(self):
+        self.create_animals()
+        self.cell.run_cell()
+
+
 
 

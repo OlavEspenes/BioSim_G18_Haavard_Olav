@@ -4,51 +4,48 @@ import numpy as np
 
 
 class Landscape:
-
-
     default_herbivores_para = {'w_birth': 8.0,
-                                'sigma_birth': 1.5,
-                                'beta': 0.9,
-                                'eta': 0.05,
-                                'a_half': 40.0,
-                                'phi_age': 0.2,
-                                'w_half': 10.0,
-                                'phi_weight': 0.1,
-                                'mu': 0.25,
-                                'lambda': 1.0,
-                                'gamma': 0.2,
-                                'zeta': 3.5,
-                                'xi': 1.2,
-                                'omega': 0.4,
-                                'F': 10.0}
+                               'sigma_birth': 1.5,
+                               'beta': 0.9,
+                               'eta': 0.05,
+                               'a_half': 40.0,
+                               'phi_age': 0.2,
+                               'w_half': 10.0,
+                               'phi_weight': 0.1,
+                               'mu': 0.25,
+                               'lambda': 1.0,
+                               'gamma': 0.2,
+                               'zeta': 3.5,
+                               'xi': 1.2,
+                               'omega': 0.4,
+                               'F': 10.0}
 
     default_carnivores_para = {'w_birth': 6.0,
-                                'sigma_birth': 1.0,
-                                'beta': 0.75,
-                                'eta': 0.125,
-                                'a_half': 60.0,
-                                'phi_age': 0.4,
-                                'w_half': 4.0,
-                                'phi_weight': 0.4,
-                                'mu': 0.4,
-                                'lambda': 1.0,
-                                'gamma': 0.8,
-                                'zeta': 3.5,
-                                'xi': 1.1,
-                                'omega': 0.9,
-                                'F': 50.0,
-                                'DeltaPhiMax': 10.0}
+                               'sigma_birth': 1.0,
+                               'beta': 0.75,
+                               'eta': 0.125,
+                               'a_half': 60.0,
+                               'phi_age': 0.4,
+                               'w_half': 4.0,
+                               'phi_weight': 0.4,
+                               'mu': 0.4,
+                               'lambda': 1.0,
+                               'gamma': 0.8,
+                               'zeta': 3.5,
+                               'xi': 1.1,
+                               'omega': 0.9,
+                               'F': 50.0,
+                               'DeltaPhiMax': 10.0}
 
     parameters = [copy.deepcopy(default_herbivores_para),
                   copy.deepcopy(default_carnivores_para)]
 
     default_jungle_parameters = {'f_max': 800.0}
     default_savannah_parameters = {'f_max': 300.0,
-                                  'alpha': 0.3}
+                                   'alpha': 0.3}
 
     landscape_parameters = [copy.deepcopy(default_jungle_parameters),
                             copy.deepcopy(default_savannah_parameters)]
-
 
     @classmethod
     def set_parameters_herbi(cls, herbi_para):
@@ -176,7 +173,6 @@ class Landscape:
                     "; Column: 'Name'. Table 2 can be found in the"
                     "'Modelling the Ecosystem of Rossumøya' project"
                     "description".format(key))
-
 
     @classmethod
     def set_parameters_carni(cls, carni_para):
@@ -369,9 +365,10 @@ class Landscape:
                 else:
                     raise ValueError('Use only letter J, S, D, O or M in map')
         return fodder_map
+
     def make_island_map(self, dim_map, ini_position, ini_herbi, ini_carni):
         island_map = [[[[], []] for i in range(len(dim_map[1]))]
-                           for j in range(len(dim_map))]
+                      for j in range(len(dim_map))]
         for i in range(len(island_map)):
             for j in range(len(island_map[0])):
                 if (i, j) == ini_position:

@@ -73,6 +73,8 @@ class Cell:
         If all fodder is eaten, remaining herbivores won't eat.
         Eats in order of fitness, from highest to lowest, and gains weight.
         """
+        if self.fodder < 0:
+            raise ValueError('Fodder cannot be negative')
         self.update_fitness_sorted(self.herbi, self.h_parameters)
         for animal, _ in enumerate(self.herbi):
             appetite = self.h_parameters['F']
@@ -168,10 +170,10 @@ class Cell:
                                     self.carni[hunter]['weight'] + \
                                     self.c_parameters['beta'] * appetite
                                 self.carni[hunter]['fitness'] = \
-                                    self.fitness_single_animal \
-                                        (self.carni[hunter]['age'],
-                                         self.carni[hunter]['weight'],
-                                         self.c_parameters)
+                                    self.fitness_single_animal(
+                                        self.carni[hunter]['age'],
+                                        self.carni[hunter]['weight'],
+                                        self.c_parameters)
                                 dead_herbis.append(herbi[preyer])
                                 appetite = appetite - appetite
                                 if appetite != 0:
@@ -205,6 +207,7 @@ class Cell:
             for animal, _ in enumerate(dead_herbis):
                 if dead_herbis[animal] in self.herbi:
                     self.herbi.remove(dead_herbis[animal])
+        return self.herbi
 
     def procreation(self, list_animal, parameters, species):
         """
@@ -227,8 +230,9 @@ class Cell:
                 if check_mother_weight > 0:
                     newborns.append(
                         {'species': species, 'age': 0, 'weight': weight})
-                    list_animal[i]['weight'] = list_animal[i].get('weight') \
-                                               - weight * parameters['xi']
+                    list_animal[i]['weight'] = \
+                        list_animal[i].get('weight') - weight \
+                        * parameters['xi']
         for add in newborns:
             list_animal.append(add)
 
@@ -290,6 +294,7 @@ class Cell:
         self.update_fitness_sorted(self.carni, self.c_parameters)
         self.death_function(self.carni, self.c_parameters)
         self.death_function(self.herbi, self.h_parameters)
+        return self.herbi, self.carni
 
     def who_will_migrate(self, list_animal, parameter):
         """Make migration list as output from this function
@@ -317,3 +322,18 @@ class Cell:
         carni_migration_list = self.who_will_migrate(self.carni,
                                                      self.c_parameters)
         return herbi_migration_list, carni_migration_list
+
+    def run_cell(self):
+        food = self.feeding_herbi()
+        updated_herbi = self.feeding_carni()
+        self.herbi = updated_herbi
+        self.birth()
+        self.age()
+        self.weight_loss()
+        herbi_new, carni_new = self.death()
+        self.herbi = herbi_new
+        self.carni = carni_new
+        emigrations = self.send_out_emigrators()
+        #herbi_migration = emigrations[0]
+        #carni_migration = emigrations[1]
+        return self.herbi, self.carni, food, emigrations
