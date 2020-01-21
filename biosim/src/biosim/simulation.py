@@ -11,22 +11,20 @@ from biosim.cell import Cell
 from biosim.landscape import Landscape
 import random
 import pandas as pd
-import seaborn as sns; sns.set()
 import numpy as np
 from matplotlib import colors
 import matplotlib.pyplot as plt
 import subprocess
 import os
 import textwrap
-import matplotlib.patches as patches
 
 _FFMPEG_BINARY = 'C:/Users/olav9/Documents/NMBU, Geomatikk 2019-2020/INF200/Visualisering/ffmpeg.exe'
 
 # update this to the directory and file-name beginning
 # for the graphics files
-_DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
-_DEFAULT_GRAPHICS_NAME = 'dv'
-_DEFAULT_MOVIE_FORMAT = 'mp4'
+DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
+DEFAULT_GRAPHICS_NAME = 'dv'
+DEFAULT_MOVIE_FORMAT = 'mp4'
 
 
 class BioSim:
@@ -53,16 +51,22 @@ class BioSim:
         self.ymax_animals = ymax_animals
         self._year = 0
         self._final_year = None
-        self._img_fmt = img_fmt
-        self._img_ctr = 0
+        self.img_fmt = img_fmt
+        self.img_ctr = 0
         if img_base == None:
             self.img_base = os.path.join('..', 'BioSim')
         if cmax_animals is None:
             self.cmax_animals = {}
 
+        self.total_pop_herbi = [[[] for i in range(len(self.island_map))] for j
+                                in
+                                range(len(self.island_map))]
+        self.total_pop_carni = [[[] for i in range(len(self.island_map))] for j
+                                in
+                                range(len(self.island_map))]
 
-        # the following will be initialized by _setup_graphics
-        self._fig = None
+       # the following will be initialized by _setup_graphics
+        self.fig = None
         self.ax_year = None
         self.ax_map = None
         self.ax_line = None
@@ -70,10 +74,11 @@ class BioSim:
         self.ax_heat_c = None
         self.h_density = None
         self.c_density = None
-        self.ax_map = None
-        self.y_label_h = None
-        self.y_label_c = None
-
+        self.y_label_h = []
+        self.y_label_c = []
+        self.line_herb = None
+        self.line_carn = None
+        self.year_plot = None
 
 
         """
@@ -357,10 +362,7 @@ class BioSim:
 
 
     def animal_in_cell_counter(self):
-        self.total_pop_herbi = [[[] for i in range(len(self.island_map))] for j in
-                           range(len(self.island_map))]
-        self.total_pop_carni = [[[] for i in range(len(self.island_map))] for j in
-                           range(len(self.island_map))]
+
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
 
@@ -374,34 +376,6 @@ class BioSim:
                     self.total_pop_carni[row][col] = len(self.island_map[row][col][1])
         self.animal_dis = np.column_stack((self.total_pop_herbi, self.total_pop_carni))
 
-    def simulate(self, num_years, vis_years=1, img_years=1):
-        """
-        Run simulation while visualizing the result.
-
-        :param num_years: number of years to simulate
-        :param vis_years: years between visualization updates
-        :param img_years: years between visualizations saved to files (default: vis_years)
-
-        Image files will be numbered consecutively.
-        """
-
-        if img_years is None:
-            img_years = vis_years
-
-        self._final_year = self._year + num_years
-        self._setup_graphics()
-
-        while self._year < self._final_year:
-
-            if self._year % vis_years == 0:
-                self._update_all
-
-            if self._year % img_years == 0:
-                self._save_graphics()
-
-            self.simulation_one_year()
-            self._year += 1
-
 
     def standard_map(self):
         string_map = textwrap.dedent(self.island_string)
@@ -413,14 +387,14 @@ class BioSim:
                       'S': colors.to_rgb('yellowgreen'),
                       'D': colors.to_rgb('khaki')}
 
-        island_map = [[color_code[column] for column in row]
-                      for row in string_map.splitlines()]
+        island_map_vis = [[color_code[column] for column in row]
+                          for row in string_map.splitlines()]
 
-        self.ax_map.imshow(island_map, interpolation='nearest')
-        self.ax_map.set_xticks(range(len(island_map[0])))
-        self.ax_map.set_xticklabels(range(0, 1 + len(island_map[0])))
-        self.ax_map.set_yticks(range(len(island_map)))
-        self.ax_map.set_yticklabels(range(0, 1 + len(island_map)))
+        #self.ax_map.imshow(island_map_vis, interpolation='nearest')
+        self.ax_map.set_xticks(range(len(island_map_vis[0])))
+        self.ax_map.set_xticklabels(range(0, 1 + len(island_map_vis[0])))
+        self.ax_map.set_yticks(range(len(island_map_vis)))
+        self.ax_map.set_yticklabels(range(0, 1 + len(island_map_vis)))
 
         """for ix, name in enumerate(('Ocean', 'Mountain', 'Jungle',
                                   'Savannah', 'Desert')):
@@ -446,24 +420,24 @@ class BioSim:
         """Creates subplots."""
 
         # create new figure window
-        if self._fig is None:
-            self._fig = plt.figure()
+        if self.fig is None:
+            self.fig = plt.figure()
 
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
         if self.ax_map is None:
-            self.ax_map = self._fig.add_subplot(221)
+            self.ax_map = self.fig.add_subplot(221)
             self.standard_map()
 
         # Add right subplot for line graph of mean.
         if self.h_density is None:
-            self.ax_heat_h = self._fig.add_subplot(223)
-            self.heat_map()
+            self.ax_heat_h = self.fig.add_subplot(223)
+            self.heat_map_herbivore()
 
         if self.c_density is None:
             self.ax_heat_c = self.fig.add_subplot(224)
-            self.heat_map()
+            self.heat_map_carnivore()
 
         if self.ax_line is None:
             self.ax_line = self.fig.add_subplot(322)
@@ -491,33 +465,65 @@ class BioSim:
                           'g', self.y_label_c, 'r')
         self.ax_line.legend(['Herbivore', 'Carnivore'])
 
-
-    def heat_map(self):
+    def heat_map_herbivore(self):
         """
-        Returns a heat-map, describing population density and movements
+        A method that shows the population in each cell by showing colors
+        :return:
         """
 
-        self.herbi_per_cell = np.asarray(self.total_pop_herbi)
-        self.ax_heat_h = sns.heatmap(self.herbi_per_cell,
-                                     interpolation = 'nearest',
-                                     cmap='Greens',
-                                     vmin = 0,
-                                     vmax = 200)
-        self.ax_heat_h.set_title('Herbivore density')
+        herb_cell = self.animal_distribution.pivot('Row', 'Col', 'Herbivore')
 
-        self.carni_per_cell = np.asarray(self.total_pop_carni)
-        self.ax_heat_c = sns.heatmap(self.carni_per_cell,
-                                     interpolation = 'nearest',
-                                     cmap='Reds',
-                                     vmin = 0,
-                                     vmax = 200)
-        self.ax_heat_c.set_title('Carnivore density')
-        plot.show()()
+        self.herb_density = self.ax_heat_h.imshow(herb_cell,
+                                                  interpolation='nearest',
+                                                  cmap='Greens')
+        self.ax_heat_h.set_title('Herbivore population density')
+
+    def heat_map_carnivore(self):
+
+        carn_cell = self.animal_distribution.pivot('Row', 'Col', 'Carnivore')
+
+        self.herb_density = self.ax_heat_c.imshow(carn_cell,
+                                                  interpolation='nearest',
+                                                  cmap='Reds')
+        self.ax_heat_c.set_title('Carnivore population density')
+
 
     def update_all(self):
-        self.heat_map
+        self.heat_map_herbivore()
+        self.heat_map_carnivore()
         self.update_population_plot()
         plt.pause(1e-6)
+
+    def simulate(self, num_years, vis_years=1, img_years=1):
+        """
+        Run simulation while visualizing the result.
+
+        :param num_years: number of years to simulate
+        :param vis_years: years between visualization updates
+        :param img_years: years between visualizations saved to files (default: vis_years)
+
+        Image files will be numbered consecutively.
+        """
+
+        if img_years is None:
+            img_years = vis_years
+
+        self._final_year = self._year + num_years
+        self._setup_graphics()
+
+        while self._year < self._final_year:
+
+            if self.num_animals == 0:
+                break
+
+            if self._year % vis_years == 0:
+                self.update_all()
+
+            if self._year % img_years == 0:
+                self.save_graphics()
+
+            self.simulation_one_year()
+            self._year += 1
 
 
     def add_population(self, population):
@@ -601,4 +607,24 @@ class BioSim:
                 raise RuntimeError('ERROR: convert failed with: {}'.format(err))
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
+    """
+    """
+    def heat_map(self):
+       
+               Returns a heat-map, describing population density and movements
+       
+
+        self.herbi_per_cell = np.asarray(self.total_pop_herbi)
+        self.ax_heat_h = sns.heatmap(self.herbi_per_cell,
+                                     interpolation='nearest',
+                                     cmap='Greens')
+        self.ax_heat_h.set_title('Herbivore density')
+
+        self.carni_per_cell = np.asarray(self.total_pop_carni)
+        self.ax_heat_c = sns.heatmap(self.carni_per_cell,
+                                     interpolation='nearest',
+                                     cmap='Reds')
+        self.ax_heat_c.set_title('Carnivore density')
+        plot.show()()
+
     """

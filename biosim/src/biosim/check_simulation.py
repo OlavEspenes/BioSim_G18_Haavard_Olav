@@ -36,5 +36,6 @@ if __name__ == "__main__":
         img_fmt="png")
 
     #sim.simulation_one_year()
+    #sim._setup_graphics()
     sim.simulate(1)
 
