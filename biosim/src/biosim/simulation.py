@@ -58,12 +58,8 @@ class BioSim:
         if cmax_animals is None:
             self.cmax_animals = {}
 
-        self.total_pop_herbi = [[[] for i in range(len(self.island_map))] for j
-                                in
-                                range(len(self.island_map))]
-        self.total_pop_carni = [[[] for i in range(len(self.island_map))] for j
-                                in
-                                range(len(self.island_map))]
+        self.total_pop_herbi = 0
+        self.total_pop_carni = 0
 
        # the following will be initialized by _setup_graphics
         self.fig = None
@@ -369,11 +365,11 @@ class BioSim:
                 if not self.island_map[row][col][0]:
                     continue
                 else:
-                    self.total_pop_herbi[row][col] = len(self.island_map[row][col][0])
+                    self.total_pop_herbi = len(self.island_map[row][col][0])
                 if not self.island_map[row][col][1]:
                     continue
                 else:
-                    self.total_pop_carni[row][col] = len(self.island_map[row][col][1])
+                    self.total_pop_carni = len(self.island_map[row][col][1])
         self.animal_dis = np.column_stack((self.total_pop_herbi, self.total_pop_carni))
 
 
