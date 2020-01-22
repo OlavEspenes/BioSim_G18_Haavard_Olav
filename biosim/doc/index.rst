@@ -6,7 +6,12 @@
 Welcome to BioSim_G18_Haavard_Olav's documentation!
 ===================================================
 
-This is our introduction to this project.
+This project contains a simulation of the ecosystem at Rossumøya.
+In our repository you will find all classes, methods and functions to
+be used for making the simulation run. Docstrings explains what
+associated docstrings describe what the methods and classes do,
+and any input / returns. The repository also contains test-files to
+control the function of the methods in classes.
 
 Requirements:
 
@@ -16,6 +21,8 @@ Contents:
    :maxdepth: 2
    :caption:
 
+    landscape.rst
+    cell.rst
 
 Indices and tables
 ==================
