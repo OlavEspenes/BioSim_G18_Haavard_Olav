@@ -490,7 +490,7 @@ class BioSim:
             self.ax_line.set_title('Populations')
 
     def save_graphic(self):
-        if self.img_base is None:
+        if self._img_base is None:
             return
 
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
