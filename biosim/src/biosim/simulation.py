@@ -50,7 +50,7 @@ class BioSim:
         self.img_fmt = img_fmt
         self.img_ctr = 0
         if img_base is None:
-            self.img_base = os.path.join('..', 'BioSim')
+            self._img_base = os.path.join('..', 'BioSim')
         if cmax_animals is None:
             self.cmax_animals = {}
 
@@ -493,7 +493,7 @@ class BioSim:
         if self.img_base is None:
             return
 
-        plt.savefig('{base}_{num:05d}.{type}'.format(base=self.img_base,
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self.img_ctr,
                                                      type=self.img_fmt))
         self.img_ctr += 1
