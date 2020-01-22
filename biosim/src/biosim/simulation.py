@@ -131,6 +131,10 @@ class BioSim:
                              "or 'S' (savannah)")
 
     def simulation_one_year(self):
+        """
+        Simulation of one annual cycle.
+
+        """
         h_para = self.landscape.h_parameters
         c_para = self.landscape.c_parameters
         herbi_migration = [[[] for _ in range(len(self.fodder_map[1]))]
@@ -424,7 +428,9 @@ class BioSim:
                     self.island_map[row][col][1] += migrated_carni[row][col]
 
     def animal_in_cell_counter(self):
-
+        """
+        Count herbivores and carnivores in each cell.
+        """
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
 
@@ -440,6 +446,10 @@ class BioSim:
             (self.total_pop_herbi, self.total_pop_carni))
 
     def standard_map(self):
+        """
+
+
+        """
         island_string = self.island_string
         string_map = textwrap.dedent(island_string)
         string_map.replace('\n', ' ')
@@ -510,7 +520,6 @@ class BioSim:
     def heat_map_herbivore(self):
         """
         A method that shows the population in each cell by showing colors
-        :return:
         """
 
         herb_cell = self.animal_distribution.pivot('Row', 'Col', 'Herbivore')
