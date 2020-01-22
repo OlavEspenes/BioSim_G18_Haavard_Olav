@@ -530,6 +530,10 @@ class BioSim:
         self.ax_heat_h.set_title('Herbivore population density')
 
     def heat_map_carnivore(self):
+        """
+        Creats heatmap for carnivores to visu.
+
+        """
 
         carn_cell = self.animal_distribution.pivot('Row', 'Col', 'Carnivore')
 
@@ -539,6 +543,10 @@ class BioSim:
         self.ax_heat_c.set_title('Carnivore population density')
 
     def update_all(self):
+        """
+        Updates alle the visualizing.
+        """
+
         self.heat_map_herbivore()
         self.heat_map_carnivore()
         self.update_population_plot()
