@@ -73,7 +73,6 @@ class BioSim:
         self.map_geo = None
         self.animal_dis = None
 
-
         """
         :param island_map: Multi-line string specifying island geography.
         :param ini_pop: List of dictionaries specifying initial population.
@@ -134,14 +133,14 @@ class BioSim:
     def simulation_one_year(self):
         h_para = self.landscape.h_parameters
         c_para = self.landscape.c_parameters
-        herbi_migration = [[[] for i in range(len(self.fodder_map[1]))]
-                           for j in range(len(self.fodder_map))]
-        carni_migration = [[[] for i in range(len(self.fodder_map[1]))]
-                           for j in range(len(self.fodder_map))]
-        migrated_herbi = [[[] for i in range(len(self.fodder_map[1]))]
-                          for j in range(len(self.fodder_map))]
-        migrated_carni = [[[] for i in range(len(self.fodder_map[1]))]
-                          for j in range(len(self.fodder_map))]
+        herbi_migration = [[[] for _ in range(len(self.fodder_map[1]))]
+                           for __ in range(len(self.fodder_map))]
+        carni_migration = [[[] for _ in range(len(self.fodder_map[1]))]
+                           for __ in range(len(self.fodder_map))]
+        migrated_herbi = [[[] for _ in range(len(self.fodder_map[1]))]
+                          for __ in range(len(self.fodder_map))]
+        migrated_carni = [[[] for _ in range(len(self.fodder_map[1]))]
+                          for __ in range(len(self.fodder_map))]
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
                 if self.island_map[row][col][0] is not None or \
@@ -295,7 +294,6 @@ class BioSim:
                 else:
                     self.island_map[row][col][0] \
                         += migrated_herbi[row][col]
-
 
         if not carni_migration:
             pass

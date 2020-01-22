@@ -27,16 +27,15 @@ if __name__ == "__main__":
                OOOOO"""
     land = Landscape(island_map)
     sim = BioSim(island_map,
-        ini_pop,
-        123456,
-        ymax_animals=None,
-        cmax_animals=None,
-        img_base=None,
-        img_fmt="png")
+                 ini_pop,
+                 123456,
+                 ymax_animals=None,
+                 cmax_animals=None,
+                 img_base=None,
+                 img_fmt="png")
 
-    #sim.simulation_one_year()
-    #sim._setup_graphics()
-    sim.simulate(5)
+    # sim.simulation_one_year()
+    # sim._setup_graphics()
+    sim.simulate(10)
     print(sim.animal_distribution)
     print(sim.fodder_map)
-
