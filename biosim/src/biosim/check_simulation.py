@@ -1,40 +1,34 @@
 from biosim.simulation import BioSim
 from biosim.landscape import Landscape
 if __name__ == "__main__":
-    ini_pop = [{'loc': (0, 0)},
-               {'pop': [{'species': 'Herbivore',
-                         'age': 5,
-                         'weight': 20},
-                        {'species': 'Herbivore',
-                         'age': 5,
-                         'weight': 20},
-                        {'species': 'Herbivore',
-                         'age': 5,
-                         'weight': 20},
-                        {'species': 'Herbivore',
-                         'age': 5,
-                         'weight': 20},
-                        {'species': 'Herbivore',
-                         'age': 20,
-                         'weight': 80},
-                        {'species': 'Herbivore',
-                         'age': 20,
-                         'weight': 80}
-                        ]}]
-    ini_herbs = [{"loc": (10, 10),
-                  {"pop": [
-                {"species": "Herbivore", "age": 5, "weight": 20}
-                for _ in range(150)
-                  }]]
+    ini_pop = [{'loc': (2, 2),
+               'pop': [{'species': 'Herbivore',
+                        'age': 5,
+                        'weight': 20},
+                       {'species': 'Herbivore',
+                        'age': 5,
+                        'weight': 20},
+                       {'species': 'Herbivore',
+                        'age': 5,
+                        'weight': 20},
+                       {'species': 'Herbivore',
+                        'age': 5,
+                        'weight': 20},
+                       {'species': 'Herbivore',
+                        'age': 20,
+                        'weight': 80},
+                       {'species': 'Herbivore',
+                        'age': 20,
+                        'weight': 80}]}]
     island_map = """\
-        OOO
-        OJO
-        OOO
-        """
+               OOOOO
+               OSMJO
+               OJJJO
+               OOOOO"""
     land = Landscape(island_map)
     sim = BioSim(island_map,
-        ini_herbs,
-        12345,
+        ini_pop,
+        123456,
         ymax_animals=None,
         cmax_animals=None,
         img_base=None,
@@ -42,5 +36,7 @@ if __name__ == "__main__":
 
     #sim.simulation_one_year()
     #sim._setup_graphics()
-    sim.simulate(5)
+    sim.simulate(10)
+    print(sim.animal_distribution)
+    print(sim.fodder_map)
 

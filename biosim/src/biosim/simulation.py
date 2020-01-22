@@ -72,6 +72,14 @@ class BioSim:
         self.year_plot = None
         self.map_geo = None
         self.animal_dis = None
+        self.herbi_migration = [[[] for i in range(len(self.fodder_map[1]))]
+                                for j in range(len(self.fodder_map))]
+        self.carni_migration = [[[] for i in range(len(self.fodder_map[1]))]
+                                for j in range(len(self.fodder_map))]
+        self.migrated_herbi = [[[] for i in range(len(self.fodder_map[1]))]
+                               for j in range(len(self.fodder_map))]
+        self.migrated_carni = [[[] for i in range(len(self.fodder_map[1]))]
+                               for j in range(len(self.fodder_map))]
 
         """
         :param island_map: Multi-line string specifying island geography.
@@ -133,20 +141,15 @@ class BioSim:
     def simulation_one_year(self):
         h_para = self.landscape.h_parameters
         c_para = self.landscape.c_parameters
-        herbi_migration = [[[] for i in range(len(self.fodder_map[1]))] for j
-                           in range(len(self.fodder_map))]
-        carni_migration = [[[] for i in range(len(self.fodder_map[1]))] for j
-                           in range(len(self.fodder_map))]
-        migrated_herbi = [[[] for i in range(len(self.fodder_map[1]))] for j in
-                          range(len(self.fodder_map))]
-        migrated_carni = [[[] for i in range(len(self.fodder_map[1]))] for j in
-                          range(len(self.fodder_map))]
+
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
                 if self.island_map[row][col][0] is not None or \
                         self.island_map[row][col][1] is not None:
                     herbi = self.island_map[row][col][0]
                     carni = self.island_map[row][col][1]
+
+                    # Grow fodder
                     if self.fodder_map[row][col][0] == 'J':
                         fodder = self.landscape.jungle_para['f_max']
                     elif self.fodder_map[row][col][0] == 'S':
@@ -156,25 +159,27 @@ class BioSim:
                                     - self.fodder_map[row][col][1])
                     else:
                         fodder = self.fodder_map[row][col][1]
+
                     cell = Cell(herbi, carni, fodder, h_para, c_para)
                     herbi, carni, food, emigrators = cell.run_cell()
                     self.island_map[row][col][1] = carni
                     self.island_map[row][col][0] = herbi
-                    herbi_migration[row][col] = emigrators[0]
-                    carni_migration[row][col] = emigrators[1]
+                    self.herbi_migration[row][col] = emigrators[0]
+                    self.carni_migration[row][col] = emigrators[1]
                     self.fodder_map[row][col][1] = food
 
-        # Migration herbivores
-        if not herbi_migration:
+    def migrate_herbivores(self):
+        h_para = self.landscape.h_parameters
+        if not self.herbi_migration:
             pass
         else:
-            for row, _ in enumerate(herbi_migration):
-                for col, _ in enumerate(herbi_migration[0]):
-                    if herbi_migration[row][col] is None:
+            for row, _ in enumerate(self.herbi_migration):
+                for col, _ in enumerate(self.herbi_migration[0]):
+                    if self.herbi_migration[row][col] is None:
                         continue
                     else:
                         for h_migrant, _ in enumerate(
-                                herbi_migration[row][col]):
+                                self.herbi_migration[row][col]):
                             north_f = self.fodder_map[row - 1][col][1]
                             east_f = self.fodder_map[row][col + 1][1]
                             south_f = self.fodder_map[row + 1][col][1]
@@ -269,38 +274,41 @@ class BioSim:
                                              probability_west,
                                              probability_not_to_move])
                             if choosen_cell == ['move_north']:
-                                migrated_herbi[row - 1][col] += \
-                                    herbi_migration[row][col]
+                                self.migrated_herbi[row - 1][col] += \
+                                    self.herbi_migration[row][col]
                             elif choosen_cell == ['move_east']:
-                                migrated_herbi[row][col + 1] += \
-                                    herbi_migration[row][col]
+                                self.migrated_herbi[row][col + 1] += \
+                                    self.herbi_migration[row][col]
                             elif choosen_cell == ['move_south']:
-                                migrated_herbi[row + 1][col] += \
-                                    herbi_migration[row][col]
+                                self.migrated_herbi[row + 1][col] += \
+                                    self.herbi_migration[row][col]
                             elif choosen_cell == ['move_west']:
-                                migrated_herbi[row][col - 1] += \
-                                    herbi_migration[row][col]
+                                self.migrated_herbi[row][col - 1] += \
+                                    self.herbi_migration[row][col]
                             elif choosen_cell == ['stay']:
-                                migrated_herbi[row][col] += \
-                                    herbi_migration[row][col]
+                                self.migrated_herbi[row][col] += \
+                                    self.herbi_migration[row][col]
 
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
-                if not migrated_herbi[row][col]:
+                if not self.migrated_herbi[row][col]:
                     continue
                 else:
-                    self.island_map[row][col][0] += migrated_herbi[row][col]
+                    self.island_map[row][col][0] \
+                        += self.migrated_herbi[row][col]
 
-        if not carni_migration:
+    def migrate_carnivores(self):
+        c_para = self.landscape.c_parameters
+        if not self.carni_migration:
             pass
         else:
-            for row, _ in enumerate(carni_migration):
-                for col, _ in enumerate(carni_migration[0]):
-                    if carni_migration[row][col] is None:
+            for row, _ in enumerate(self.carni_migration):
+                for col, _ in enumerate(self.carni_migration[0]):
+                    if self.carni_migration[row][col] is None:
                         continue
                     else:
                         for c_migrant, _ in enumerate(
-                                carni_migration[row][col]):
+                                self.carni_migration[row][col]):
                             north_f = 0
                             east_f = 0
                             south_f = 0
@@ -369,17 +377,23 @@ class BioSim:
                                     c_para['lambda'] * epsilon_west)
 
                             propensity_tot = \
-                                propensity_north + propensity_east\
-                                + propensity_south + propensity_west
+                                propensity_north + propensity_east + \
+                                propensity_south + propensity_west
 
-                            probability_north = \
-                                propensity_north / propensity_tot
-                            probability_east = \
-                                propensity_east / propensity_tot
-                            probability_south = \
-                                propensity_south / propensity_tot
-                            probability_west = \
-                                propensity_west / propensity_tot
+                            if propensity_tot == 0:
+                                probability_north = 0
+                                probability_east = 0
+                                probability_south = 0
+                                probability_west = 0
+                            else:
+                                probability_north = \
+                                    propensity_north / propensity_tot
+                                probability_east = \
+                                    propensity_east / propensity_tot
+                                probability_south = \
+                                    propensity_south / propensity_tot
+                                probability_west = \
+                                    propensity_west / propensity_tot
                             probability_not_to_move = \
                                 1 - probability_north - probability_east\
                                 - probability_south - probability_west
@@ -391,27 +405,27 @@ class BioSim:
                                          probability_south, probability_west,
                                          probability_not_to_move])
                             if choosen_cell == ['move_north']:
-                                migrated_carni[row - 1][col] += \
-                                    carni_migration[row][col]
+                                self.migrated_carni[row - 1][col] += \
+                                    self.carni_migration[row][col]
                             elif choosen_cell == ['move_east']:
-                                migrated_carni[row][col + 1] += \
-                                    carni_migration[row][col]
+                                self.migrated_carni[row][col + 1] += \
+                                    self.carni_migration[row][col]
                             elif choosen_cell == ['move_south']:
-                                migrated_carni[row + 1][col] += \
-                                    carni_migration[row][col]
+                                self.migrated_carni[row + 1][col] += \
+                                    self.carni_migration[row][col]
                             elif choosen_cell == ['move_west']:
-                                migrated_carni[row][col - 1] += \
-                                    carni_migration[row][col]
+                                self.migrated_carni[row][col - 1] += \
+                                    self.carni_migration[row][col]
                             elif choosen_cell == ['stay']:
-                                migrated_carni[row][col] += \
-                                    carni_migration[row][col]
+                                self.migrated_carni[row][col] += \
+                                    self.carni_migration[row][col]
 
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
-                if not migrated_carni[row][col]:
+                if not self.migrated_carni[row][col]:
                     continue
                 else:
-                    self.island_map[row][col][1] += migrated_carni[row][col]
+                    self.island_map[row][col][1] += self.migrated_carni[row][col]
 
     def animal_in_cell_counter(self):
 
@@ -509,7 +523,8 @@ class BioSim:
         self.img_ctr += 1
 
     def update_population_plot(self):
-        n_herb, n_carn = self.total_count_herbi
+        n_herb = self.total_count_herbi
+        n_carn = self.total_count_carni
         self.y_label_h.append(n_herb)
         self.y_label_c.append(n_carn)
         self.ax_line.plot(range(self._year + 1), self.y_label_h,
@@ -561,14 +576,14 @@ class BioSim:
         self._setup_graphics()
 
         while self._year < self._final_year:
-            if self.num_animals == 0:
-                break
             if self._year % vis_years == 0:
                 self.update_all()
             if self._year % img_years == 0:
                 self.save_graphic()
 
             self.simulation_one_year()
+            self.migrate_herbivores()
+            self.migrate_carnivores()
             self._year += 1
 
     def add_population(self, population):
@@ -626,9 +641,8 @@ class BioSim:
         data['Herbivore'] = herbi
         data['Carnivore'] = carni
         df = pd.DataFrame(data)
-        df = df[['Herbivore', 'Carnivore', 'Row', 'Col']]
+        df = df[['Row', 'Col', 'Herbivore', 'Carnivore']]
         return df
-
 
     def make_movie(self):
         """

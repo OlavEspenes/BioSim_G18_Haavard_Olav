@@ -397,6 +397,11 @@ class Landscape:
         return island_map
 
     def set_pop(self, ini_pop):
+        """
+        Can only add one population to one position at a time.
+        :param ini_pop:
+        :return:
+        """
         ini_carni = []
         ini_herbi = []
         ini_position = (0, 0)
@@ -405,7 +410,7 @@ class Landscape:
                 if ini_pop[0]['pop'][i]['species'] == 'Herbivore':
                     ini_herbi.append(ini_pop[0]['pop'][i])
                 elif ini_pop[0]['pop'][i]['species'] == 'Carnivore':
-                    ini_herbi.append(ini_pop[0]['pop'][i])
+                    ini_carni.append(ini_pop[0]['pop'][i])
                 else:
                     raise ValueError('Something about the input is wrong')
             ini_position = ini_pop[0]['loc']

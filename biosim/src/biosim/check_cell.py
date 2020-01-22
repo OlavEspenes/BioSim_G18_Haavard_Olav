@@ -39,14 +39,14 @@ if __name__ == "__main__":
                          'weight': 20}, {'species': 'Herbivore',
                                          'age': 5,
                                          'weight': 20},
-                        {'species': 'Carnivore',
+                        {'species': 'Herbivore',
                          'age': 5,
                          'weight': 40}, {'species': 'Herbivore',
                                          'age': 5,
                                          'weight': 20},
                         {'species': 'Herbivore',
                          'age': 5,
-                         'weight': 20}, {'species': 'Carnivore',
+                         'weight': 20}, {'species': 'Herbivore',
                                          'age': 5,
                                          'weight': 40}, ]}]
     carni = []
@@ -57,9 +57,10 @@ if __name__ == "__main__":
         elif i.get('species') == 'Carnivore':
             carni.append(i)
     position = (1, 1)
-    fodder = 1000
+    fodder = 10
     test = Cell(herbi, carni, fodder, h_parameters, c_parameters)
-    #test.feeding_herbi()
+    print(test.feeding_herbi())
+    print(herbi)
     #test.feeding_carni()
     #test.birth()
     #test.age()
@@ -70,11 +71,7 @@ if __name__ == "__main__":
     #print(flykninger[1])   #carni
     #print('herbi igjen i cellen', len(herbi))
     #print('carni igjen i cellen', len(carni))
-    h, c, food, migr = test.run_cell()
-    print(h)
-    print(c)
-    print(food)
-    print(migr)
+
 
 
 
