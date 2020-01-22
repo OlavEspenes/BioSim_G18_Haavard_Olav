@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     #sim.simulation_one_year()
     #sim._setup_graphics()
-    sim.simulate(10)
+    sim.simulate(5)
     print(sim.animal_distribution)
     print(sim.fodder_map)
 
