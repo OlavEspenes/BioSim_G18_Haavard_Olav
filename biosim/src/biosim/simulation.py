@@ -655,6 +655,8 @@ class BioSim:
                                        '-profile:v', 'baseline',
                                        '-level', '3.0',
                                        '-pix_fmt', 'yuv420p',
+                                       '-r', '8',
+                                       '-fps', '25' 
                                        '{}.{}'.format(self._img_base,
                                                       movie_fmt)])
             except subprocess.CalledProcessError as err:
