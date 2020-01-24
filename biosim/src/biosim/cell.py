@@ -282,7 +282,7 @@ class Cell:
 
         should_del2 = []
         for b, _ in enumerate(list_animal):
-            p_death = parameters['omega'] * (1 - list_animal[b].get('fitness')) *2.46
+            p_death = parameters['omega'] * (1 - list_animal[b].get('fitness')
             if p_death > random.random():
                 should_del2.append(list_animal[b])
         for el in should_del2:
