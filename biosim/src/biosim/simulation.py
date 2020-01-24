@@ -18,11 +18,8 @@ import subprocess
 import os
 import textwrap
 
-_FFMPEG_BINARY = r'C:/Users/olav9/' \
-                 r'OneDrive - Norwegian University of Life Sciences/' \
-                 r'Documents/NMBU/H2019/INF200/' \
-                 r'ffmpeg-20200115-0dc0837-win64-static/' \
-                 r'ffmpeg-20200115-0dc0837-win64-static/bin/ffmpeg'
+_FFMPEG_BINARY = 'C:/Users/havar/OneDrive/Dokumenter/INF200/' \
+                 'ffmpeg-20200121-fc6fde2-win64-static/bin'
 
 DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
 DEFAULT_GRAPHICS_NAME = 'dv'
@@ -147,8 +144,8 @@ class BioSim:
                           for __ in range(len(self.fodder_map))]
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
-                if self.island_map[row][col][0] is not None or \
-                        self.island_map[row][col][1] is not None:
+                if len(self.island_map[row][col][0]) != 0 or \
+                        len(self.island_map[row][col][1]) != 0:
                     herbi = self.island_map[row][col][0]
                     carni = self.island_map[row][col][1]
 
@@ -164,9 +161,9 @@ class BioSim:
                         fodder = self.fodder_map[row][col][1]
 
                     cell = Cell(herbi, carni, fodder, h_para, c_para)
-                    herbi, carni, food, emigrators = cell.run_cell()
-                    self.island_map[row][col][1] = carni
-                    self.island_map[row][col][0] = herbi
+                    herbii, carnii, food, emigrators = cell.run_cell()
+                    self.island_map[row][col][1] = carnii
+                    self.island_map[row][col][0] = herbii
                     herbi_migration[row][col] = emigrators[0]
                     carni_migration[row][col] = emigrators[1]
                     self.fodder_map[row][col][1] = food
