@@ -71,8 +71,8 @@ if __name__ == "__main__":
 
     sim.simulate(num_years=10, vis_years=1, img_years=1)
 
-    sim.add_population(population=ini_carns)
-    sim.simulate(num_years=5, vis_years=1, img_years=1)
+    #sim.add_population(population=ini_carns)
+    #sim.simulate(num_years=5, vis_years=1, img_years=1)
 
     plt.savefig("check_sim.pdf")
     sim.make_movie()

@@ -174,119 +174,120 @@ class BioSim:
         else:
             for row, _ in enumerate(herbi_migration):
                 for col, _ in enumerate(herbi_migration[0]):
-                    if herbi_migration[row][col] is None:
+                    if len(herbi_migration[row][col]) != 0:
                         continue
                     else:
-                        for h_migrant, _ in enumerate(
-                                herbi_migration[row][col]):
-                            north_f = self.fodder_map[row - 1][col][1]
-                            east_f = self.fodder_map[row][col + 1][1]
-                            south_f = self.fodder_map[row + 1][col][1]
-                            west_f = self.fodder_map[row][col - 1][1]
-                            if not self.island_map[row - 1][col][0]:
-                                epsilon_north = north_f / (1 * h_para['F'])
-                            else:
-                                epsilon_north = north_f / (len(
-                                    self.island_map[row - 1][col][0]) + 1) * \
-                                                h_para['F']
-                            if not self.island_map[row][col + 1][0]:
-                                epsilon_east = east_f / (1 * h_para['F'])
-                            else:
-                                epsilon_east = east_f / (len(
-                                    self.island_map[row][col + 1][0]) + 1) * \
-                                               h_para['F']
-                            if not self.island_map[row + 1][col][0]:
-                                epsilon_south = south_f / (1 * h_para['F'])
-                            else:
-                                epsilon_south = south_f / (len(
-                                    self.island_map[row + 1][col][0]) + 1) * \
-                                                h_para['F']
-                            if not self.island_map[row][col - 1][0]:
-                                epsilon_west = west_f / (1 * h_para['F'])
-                            else:
-                                epsilon_west = west_f / (len(
-                                    self.island_map[row][col - 1][0]) + 1) * \
-                                               h_para['F']
+                        #for h_migrant, _ in enumerate(
+                        #        herbi_migration[row][col]):
+                        north_f = self.fodder_map[row - 1][col][1]
+                        east_f = self.fodder_map[row][col + 1][1]
+                        south_f = self.fodder_map[row + 1][col][1]
+                        west_f = self.fodder_map[row][col - 1][1]
+                        if not self.island_map[row - 1][col][0]:
+                            epsilon_north = north_f / (1 * h_para['F'])
+                        else:
+                            epsilon_north = north_f / (len(
+                                self.island_map[row - 1][col][0]) + 1) * \
+                                            h_para['F']
+                        if not self.island_map[row][col + 1][0]:
+                            epsilon_east = east_f / (1 * h_para['F'])
+                        else:
+                            epsilon_east = east_f / (len(
+                                self.island_map[row][col + 1][0]) + 1) * \
+                                           h_para['F']
+                        if not self.island_map[row + 1][col][0]:
+                            epsilon_south = south_f / (1 * h_para['F'])
+                        else:
+                            epsilon_south = south_f / (len(
+                                self.island_map[row + 1][col][0]) + 1) * \
+                                            h_para['F']
+                        if not self.island_map[row][col - 1][0]:
+                            epsilon_west = west_f / (1 * h_para['F'])
+                        else:
+                            epsilon_west = west_f / (len(
+                                self.island_map[row][col - 1][0]) + 1) * \
+                                           h_para['F']
 
-                            if self.fodder_map[row - 1][col][0] == 'M' or \
-                                    self.fodder_map[row - 1][col][0] == 'O':
-                                propensity_north = 0
-                            else:
-                                if epsilon_north > 600:
-                                    epsilon_north = 600
-                                propensity_north = math.exp(
-                                    h_para['lambda'] * epsilon_north)
-                            if self.fodder_map[row][col + 1][0] == 'M' or \
-                                    self.fodder_map[row][col + 1][0] == 'O':
-                                propensity_east = 0
-                            else:
-                                if epsilon_east > 600:
-                                    epsilon_east = 600
-                                propensity_east = math.exp(
-                                    h_para['lambda'] * epsilon_east)
-                            if self.fodder_map[row + 1][col][0] == 'M' or \
-                                    self.fodder_map[row + 1][col][0] == 'O':
-                                propensity_south = 0
-                            else:
-                                if epsilon_south > 600:
-                                    epsilon_south = 600
-                                propensity_south = math.exp(
-                                    h_para['lambda'] * epsilon_south)
-                            if self.fodder_map[row][col - 1][0] == 'M' or \
-                                    self.fodder_map[row][col - 1][0] == 'O':
-                                propensity_west = 0
-                            else:
-                                if epsilon_west > 600:
-                                    epsilon_west = 600
-                                propensity_west = math.exp(
-                                    h_para['lambda'] * epsilon_west)
+                        if self.fodder_map[row - 1][col][0] == 'M' or \
+                                self.fodder_map[row - 1][col][0] == 'O':
+                            propensity_north = 0
+                        else:
+                            if epsilon_north > 600:
+                                epsilon_north = 600
+                            propensity_north = math.exp(
+                                h_para['lambda'] * epsilon_north)
+                        if self.fodder_map[row][col + 1][0] == 'M' or \
+                                self.fodder_map[row][col + 1][0] == 'O':
+                            propensity_east = 0
+                        else:
+                            if epsilon_east > 600:
+                                epsilon_east = 600
+                            propensity_east = math.exp(
+                                h_para['lambda'] * epsilon_east)
+                        if self.fodder_map[row + 1][col][0] == 'M' or \
+                                self.fodder_map[row + 1][col][0] == 'O':
+                            propensity_south = 0
+                        else:
+                            if epsilon_south > 600:
+                                epsilon_south = 600
+                            propensity_south = math.exp(
+                                h_para['lambda'] * epsilon_south)
+                        if self.fodder_map[row][col - 1][0] == 'M' or \
+                                self.fodder_map[row][col - 1][0] == 'O':
+                            propensity_west = 0
+                        else:
+                            if epsilon_west > 600:
+                                epsilon_west = 600
+                            propensity_west = math.exp(
+                                h_para['lambda'] * epsilon_west)
 
-                            propensity_tot = \
-                                propensity_north + propensity_east + \
-                                propensity_south + propensity_west
+                        propensity_tot = \
+                            propensity_north + propensity_east + \
+                            propensity_south + propensity_west
 
-                            if propensity_tot == 0:
-                                probability_north = 0
-                                probability_east = 0
-                                probability_south = 0
-                                probability_west = 0
-                            else:
-                                probability_north = \
-                                    propensity_north / propensity_tot
-                                probability_east = \
-                                    propensity_east / propensity_tot
-                                probability_south = \
-                                    propensity_south / propensity_tot
-                                probability_west = \
-                                    propensity_west / propensity_tot
-                            probability_not_to_move = \
-                                1 - probability_north - probability_east - \
-                                probability_south - probability_west
+                        if propensity_tot == 0:
+                            probability_north = 0
+                            probability_east = 0
+                            probability_south = 0
+                            probability_west = 0
+                        else:
+                            probability_north = \
+                                propensity_north / propensity_tot
+                            probability_east = \
+                                propensity_east / propensity_tot
+                            probability_south = \
+                                propensity_south / propensity_tot
+                            probability_west = \
+                                propensity_west / propensity_tot
+                        probability_not_to_move = \
+                            1 - probability_north - probability_east - \
+                            probability_south - probability_west
 
-                            choosen_cell =\
-                                random.choices(
-                                    ['move_north', 'move_east', 'move_south',
-                                     'move_west', 'not_move'],
-                                    weights=[probability_north,
-                                             probability_east,
-                                             probability_south,
-                                             probability_west,
-                                             probability_not_to_move])
-                            if choosen_cell == ['move_north']:
-                                migrated_herbi[row - 1][col] += \
-                                    herbi_migration[row][col]
-                            elif choosen_cell == ['move_east']:
-                                migrated_herbi[row][col + 1] += \
-                                    herbi_migration[row][col]
-                            elif choosen_cell == ['move_south']:
-                                migrated_herbi[row + 1][col] += \
-                                    herbi_migration[row][col]
-                            elif choosen_cell == ['move_west']:
-                                migrated_herbi[row][col - 1] += \
-                                    herbi_migration[row][col]
-                            elif choosen_cell == ['stay']:
-                                migrated_herbi[row][col] += \
-                                    herbi_migration[row][col]
+                        choosen_cell = \
+                            random.choices(
+                                ['move_north', 'move_east', 'move_south',
+                                 'move_west', 'not_move'],
+                                weights=[probability_north,
+                                         probability_east,
+                                         probability_south,
+                                         probability_west,
+                                         probability_not_to_move])
+                        if choosen_cell == ['move_north']:
+                            migrated_herbi[row - 1][col] += \
+                                herbi_migration[row][col]
+                        elif choosen_cell == ['move_east']:
+                            migrated_herbi[row][col + 1] += \
+                                herbi_migration[row][col]
+                        elif choosen_cell == ['move_south']:
+                            migrated_herbi[row + 1][col] += \
+                                herbi_migration[row][col]
+                        elif choosen_cell == ['move_west']:
+                            migrated_herbi[row][col - 1] += \
+                                herbi_migration[row][col]
+                        elif choosen_cell == ['stay']:
+                            migrated_herbi[row][col] += \
+                                herbi_migration[row][col]
+
 
         for row, _ in enumerate(self.island_map):
             for col, _ in enumerate(self.island_map[0]):
